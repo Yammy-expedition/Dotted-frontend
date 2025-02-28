@@ -172,7 +172,7 @@ const DetailCommunityPageContainer = styled.div`
 
 const Wrapper = styled.div`
   width: 100%;
-  max-width: 144rem;
+  max-width: 1287px;
   margin-top: 5.7rem;
   padding: 0 23rem;
 

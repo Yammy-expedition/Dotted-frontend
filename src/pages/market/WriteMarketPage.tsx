@@ -375,7 +375,11 @@ const WriteMarketPageContainer = styled.div`
   align-items: center;
 
   @media (max-width: 1200px) {
-    padding: 0 10rem;
+    padding: 0 7.7rem;
+  }
+
+  @media (max-width: 900px) {
+    padding: 0 5rem;
   }
 
   @media (max-width: 700px) {
@@ -385,6 +389,7 @@ const WriteMarketPageContainer = styled.div`
 
 const WriteMarketPageWrapper = styled.div`
   width: 100%;
+  max-width: 1287px;
 `;
 
 const Title = styled.div`
@@ -392,9 +397,6 @@ const Title = styled.div`
   color: ${({ theme }) => theme.colors.gray700};
 
   font-size: 3.6rem;
-  @media (max-width: 460px) {
-    font-size: 3.1rem;
-  }
   font-style: normal;
   font-weight: 700;
   line-height: 3.6rem; /* 100% */

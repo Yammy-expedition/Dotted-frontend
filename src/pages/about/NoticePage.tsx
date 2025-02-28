@@ -168,6 +168,7 @@ const FAQPageContainer = styled.div`
 
 const Wrapper = styled.div`
   width: 100%;
+  max-width: 1287px;
 `;
 
 const Title = styled.div`

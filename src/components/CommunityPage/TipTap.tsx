@@ -302,7 +302,7 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
       </div>
 
       <div>
-        <ToolbarButton
+        {/* <ToolbarButton
           type="button"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive('bulletList') ? 'is-active' : ''}
@@ -322,7 +322,7 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
           className={editor.isActive('blockquote') ? 'is-active' : ''}
         >
           <Quote />
-        </ToolbarButton>
+        </ToolbarButton> */}
         <ToolbarButton
           type="button"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
