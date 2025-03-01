@@ -139,7 +139,7 @@ export default function WriteCommunityPage() {
         blocker.reset();
       }
       setTimeout(() => {
-        navigate(`/community/detail/${data.id}`);
+        navigate(`/community/detail/${data.id}`, { replace: true });
       }, 1500);
     },
     onError: (error) => {
