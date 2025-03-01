@@ -1,14 +1,15 @@
-import { Comment } from '@/pages/community/DetailCommunityPage';
+import { Comment, PostDetail } from '@/pages/community/DetailCommunityPage';
 import { useEffect, useRef, useState } from 'react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
 import styled from 'styled-components';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
 import More from '@/assets/svg/CommunityPage/More.svg?react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Modal from 'react-modal';
 import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
 import { formatRelativeTime } from '@/utils/formatTime';
 import Locker from '@/assets/svg/MarketPage/Locker.svg?react';
+import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
 
 // API 응답 타입 정의 (실제 API 스펙에 맞게 수정)
 interface ReplyLikeResponse {
@@ -40,6 +41,7 @@ export default function AReply({ reply }: { reply: Comment }) {
   const [editedContent, setEditedContent] = useState(reply.content);
   const [openNormalModal, setOpenNormalModal] = useState(false);
   const moreWrapperRef = useRef<HTMLDivElement | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -65,6 +67,24 @@ export default function AReply({ reply }: { reply: Comment }) {
     },
     onSuccess: () => {
       setEditedContent('Deleted Comment');
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', reply.post], // 댓글이 포함된 게시글의 캐시 수정
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.map((comment) => ({
+              ...comment,
+              replies: comment.replies.map((r) =>
+                r.id === reply.id
+                  ? { ...r, content: 'Deleted Comment', is_deleted: true } // ✅ 내용만 "Deleted Comment"로 변경
+                  : r
+              )
+            }))
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 댓글 삭제 실패:', error);
@@ -82,6 +102,28 @@ export default function AReply({ reply }: { reply: Comment }) {
     onSuccess: (data) => {
       setIsCommentLiked(data.is_liked);
       setLikeCount(data.like_count);
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', reply.post], // 대댓글이 포함된 게시글의 캐시 수정
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.map((comment) => ({
+              ...comment,
+              replies: comment.replies.map((r) =>
+                r.id === reply.id
+                  ? {
+                      ...r,
+                      is_liked: data.is_liked,
+                      like_count: data.like_count
+                    }
+                  : r
+              )
+            }))
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 대댓글 좋아요 실패:', error);
@@ -113,6 +155,24 @@ export default function AReply({ reply }: { reply: Comment }) {
     onSuccess: (updatedComment) => {
       setEditedContent(updatedComment.content);
       setIsEditing(false);
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', reply.post],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.map((comment) => ({
+              ...comment,
+              replies: comment.replies.map((r) =>
+                r.id === reply.id
+                  ? { ...r, content: updatedComment.content }
+                  : r
+              )
+            }))
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 댓글 수정 실패:', error);

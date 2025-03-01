@@ -170,6 +170,8 @@ export default function WriteCommunityPage() {
           body: JSON.stringify(data)
         }
       );
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       return response;
     },
     onSuccess: async (data) => {
@@ -184,11 +186,16 @@ export default function WriteCommunityPage() {
         blocker.reset();
       }
       setTimeout(() => {
+        setisLoading(false);
         navigate(`/community/detail/${data.id}`);
-      }, 100);
+      }, 1500);
     },
     onError: (error) => {
       console.error('❌ 글수정 실패:', error);
+      setisLoading(false);
+      if (blocker.state === 'blocked') {
+        blocker.reset();
+      }
     }
   });
 
