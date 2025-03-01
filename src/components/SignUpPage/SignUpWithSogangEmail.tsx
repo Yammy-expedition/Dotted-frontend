@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Recomended from './Recomended';
 import MainText from './MainText';
 import SogangSignUpButton from './SogangSignUpButton';
 import CreateEmailButton from './CreateEmailButton';
