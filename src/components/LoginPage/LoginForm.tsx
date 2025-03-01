@@ -61,7 +61,7 @@ export default function LoginForm() {
       return response.json();
     },
     onSuccess: (data) => {
-      console.log(data);
+      // console.log(data);
       window.localStorage.setItem('accessToken', data.access);
       window.localStorage.setItem('refreshToken', data.refresh);
       navigate('/');

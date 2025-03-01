@@ -90,14 +90,14 @@ export default function MoreButton({
       const path = origin
         ? `/api/posting/${origin}/${postId}/delete`
         : `/api/posting/${postId}/delete`;
-      console.log(`${import.meta.env.VITE_API_DOMAIN}${path}`);
+      // console.log(`${import.meta.env.VITE_API_DOMAIN}${path}`);
       return await fetchWithAuth<void>(
         `${import.meta.env.VITE_API_DOMAIN}${path}`,
         { method: 'DELETE' }
       );
     },
     onSuccess: () => {
-      console.log('✅ 삭제 성공');
+      // console.log('✅ 삭제 성공');
       if (origin) {
         navigate(`/${origin}`);
       } else {
@@ -138,7 +138,7 @@ export default function MoreButton({
           order: index + 1
         }))
       };
-      console.log(updatedPostData);
+      // console.log(updatedPostData);
       return await fetchWithAuth<any>(
         `${import.meta.env.VITE_API_DOMAIN}/api/posting/market/${post.id}/update`,
         {
@@ -148,8 +148,8 @@ export default function MoreButton({
         }
       );
     },
-    onSuccess: (data) => {
-      console.log('✅ 상태 변경 성공:', data);
+    onSuccess: () => {
+      // console.log('✅ 상태 변경 성공:', data);
       setOpenChangeModal(false);
       if (setLocalStatus) setLocalStatus(statusType);
       if ('status' in post) {
@@ -181,7 +181,7 @@ export default function MoreButton({
       );
     },
     onSuccess: () => {
-      console.log('✅ 신고 성공');
+      // console.log('✅ 신고 성공');
       setReportContent('');
       setReportType('');
       setOpenReportModal(false);

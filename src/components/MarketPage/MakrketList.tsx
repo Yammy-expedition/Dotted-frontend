@@ -18,7 +18,7 @@ export default function MakrketList({ pagedData }: MarketListProps) {
             .split('_')
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
-          console.log(status);
+          // console.log(status);
           return (
             <li key={post.id} onClick={() => navigate(`detail/${post.id}`)}>
               <Tag

@@ -52,7 +52,7 @@ class Network {
         this.refreshTokenPromise = this.getReIssuedAccessToken();
 
         const { access: reIssuedAccessToken } = await this.refreshTokenPromise;
-        console.log('새 Access Token:', reIssuedAccessToken);
+        // console.log('새 Access Token:', reIssuedAccessToken);
         localStorage.setItem('accessToken', reIssuedAccessToken);
 
         this.isRefreshing = false;

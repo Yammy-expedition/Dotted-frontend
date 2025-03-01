@@ -59,12 +59,12 @@ export default function NotificatoinPage() {
         }
       }
 
-      console.log('SSE 연결됨:', evtSource);
+      // console.log('SSE 연결됨:', evtSource);
 
       evtSource.onmessage = (event) => {
         try {
           const newEvent = JSON.parse(event.data);
-          console.log(newEvent);
+          // console.log(newEvent);
           setNotice((prev) => {
             if (prev === null) return newEvent;
 
@@ -92,7 +92,7 @@ export default function NotificatoinPage() {
 
       return () => {
         evtSource.close();
-        console.log('SSE 연결 끊김');
+        // console.log('SSE 연결 끊김');
       };
     };
 
@@ -101,7 +101,7 @@ export default function NotificatoinPage() {
 
   async function handleDelete(notificationId: number): Promise<void> {
     try {
-      console.log(notificationId);
+      // console.log(notificationId);
       // 실제 API 주소에 맞게 수정 (예: /api/notification/123)
       await fetchWithAuth<void>(
         `${import.meta.env.VITE_API_DOMAIN}/api/notification/${notificationId}`,
@@ -163,7 +163,7 @@ export default function NotificatoinPage() {
         };
       });
 
-      console.log('모든 알림 삭제 성공');
+      // console.log('모든 알림 삭제 성공');
     } catch (error) {
       console.error('모든 알림 삭제 실패:', error);
     }
@@ -193,7 +193,7 @@ export default function NotificatoinPage() {
         };
       });
 
-      console.log('모든 알림 읽음 처리 성공');
+      // console.log('모든 알림 읽음 처리 성공');
     } catch (error) {
       console.error('모든 알림 읽음 처리 실패:', error);
       // 오류 처리 로직 (알림창, 에러 메시지 등)

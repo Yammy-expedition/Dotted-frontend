@@ -15,7 +15,7 @@ export default function SendCodePart({
 }: SendCodePartProps) {
   // ✅ `onSuccess`에서 status가 200이면 `onChangeStep()` 실행
   const mutation = usePasswordResetEmail((data) => {
-    console.log('응답 데이터:', data);
+    // console.log('응답 데이터:', data);
     if (data.status === 200) {
       onChangeStep(); // ✅ 다음 단계로 이동
     }

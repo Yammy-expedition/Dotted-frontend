@@ -34,7 +34,7 @@ const fetchPosts = async ({
     if (tag && tag !== 'All') queryParams.append('tag', tag);
   }
 
-  console.log(queryParams.toString());
+  // console.log(queryParams.toString());
   const url = `${import.meta.env.VITE_API_DOMAIN}/api/${apiLink.url}?${queryParams.toString()}`;
 
   const response = await fetch(url, { method: 'GET' });
