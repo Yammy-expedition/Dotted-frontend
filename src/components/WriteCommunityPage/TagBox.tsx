@@ -63,6 +63,10 @@ const TagBoxWrapper = styled.ul`
   align-items: center;
   gap: 2rem;
 
+  @media (max-width: 700px) {
+    gap: 1rem;
+  }
+
   text-align: center;
   font-size: 1.3rem;
   font-style: normal;

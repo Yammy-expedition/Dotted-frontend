@@ -170,6 +170,11 @@ const Main = styled.main`
   align-items: center;
   margin-bottom: 13.9rem;
 
+  @media (max-width: 900px) {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+
   @media (max-width: 700px) {
     padding: 0rem 2rem 0rem 2rem;
   }

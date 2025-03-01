@@ -82,16 +82,17 @@ export default function SubHeader({ hoveredTab }: SubHeaderProps) {
 
 const SubHeaderWrapper = styled(motion.div)`
   width: 100%;
+  max-width: 1287px;
   height: 5rem;
   background-color: ${({ theme }) => theme.colors.backgroundLayer2};
-  border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray400};
+
   display: flex;
   align-items: center;
   overflow-x: auto;
   padding: 0 7.7rem;
 
-  @media (max-width: 700px) {
-    padding-left: 2rem;
+  @media (max-width: 900px) {
+    padding-left: 0rem;
   }
 
   &::-webkit-scrollbar {

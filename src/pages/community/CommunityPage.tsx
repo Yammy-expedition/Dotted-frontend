@@ -176,7 +176,11 @@ const CommunityPageContainer = styled.div`
   align-items: center;
 
   @media (max-width: 1200px) {
-    padding: 0 10rem;
+    padding: 0 7.7rem;
+  }
+
+  @media (max-width: 900px) {
+    padding: 0 5rem;
   }
 
   @media (max-width: 700px) {
@@ -185,6 +189,7 @@ const CommunityPageContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
+  max-width: 1287px;
   width: 100%;
 `;
 

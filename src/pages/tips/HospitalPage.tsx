@@ -183,7 +183,7 @@ const HeaderSection = styled.section`
   width: 100%;
   min-width: 40rem;
 
-  padding: 1rem;
+  padding: 1rem 0;
   display: flex;
   align-items: center;
 
