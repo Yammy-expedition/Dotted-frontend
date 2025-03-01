@@ -115,7 +115,7 @@ export default function WriteMarketPage() {
       setIsSubmitted(true);
       blocker.reset?.();
       setTimeout(() => {
-        navigate('/market');
+        navigate('/market', { replace: true });
       }, 100);
     },
     onError: (error) => {

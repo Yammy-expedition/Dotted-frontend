@@ -96,6 +96,7 @@ const ListWrapper = styled.div`
 `;
 
 const List = styled.ul`
+  min-height: 50vh;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
