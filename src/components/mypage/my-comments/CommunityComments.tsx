@@ -34,7 +34,7 @@ export default function CommunityComments() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data.comments);
+        // console.log(data.comments);
 
         const formattedPosts = data.comments.filter(
           (comment: any) => comment.post_type === 'post'

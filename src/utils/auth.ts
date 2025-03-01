@@ -67,7 +67,6 @@ export async function fetchWithAuth<T>(
     accessToken = localStorage.getItem('accessToken');
   }
 
-  console.log('okay now1');
   const finalOptions: RequestInit = {
     ...options,
     headers: {
@@ -79,12 +78,12 @@ export async function fetchWithAuth<T>(
     }
   };
 
-  console.log(url, finalOptions, 'okay now2');
+  // console.log(url, finalOptions, 'okay now2');
   let response = await fetch(url, finalOptions);
 
-  console.log('wait');
+  // console.log('wait');
   await new Promise((resolve) => setTimeout(resolve, 1500));
-  console.log('go');
+  // console.log('go');
 
   // console.log(response, 'okay now3');
 
@@ -101,7 +100,7 @@ export async function fetchWithAuth<T>(
         }
       });
 
-      console.log(response, 'okay now4');
+      // console.log(response, 'okay now4');
     } catch (error) {
       throw new Error('Token refresh failed, please login again.');
     }

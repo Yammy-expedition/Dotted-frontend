@@ -52,7 +52,6 @@ export default function WriteMarketPage() {
 
   useEffect(() => {
     if (state && state.postId) {
-      console.log(state);
       setEditMode(true);
 
       // state에 있는 데이터로 form 필드 채우기
@@ -110,8 +109,7 @@ export default function WriteMarketPage() {
 
       return response;
     },
-    onSuccess: (data) => {
-      console.log('🎉 글쓰기 성공:', data);
+    onSuccess: () => {
       setIsSubmitted(true);
       blocker.reset?.();
       setTimeout(() => {
@@ -172,7 +170,7 @@ export default function WriteMarketPage() {
         images: imagesPayload
       };
 
-      console.log('Update request data:', requestData); // 디버깅용
+      // console.log('Update request data:', requestData); // 디버깅용
 
       try {
         await updateMutation.mutateAsync({
@@ -203,7 +201,7 @@ export default function WriteMarketPage() {
         images: validImages
       };
 
-      console.log('Create request data:', requestData); // 디버깅용
+      // console.log('Create request data:', requestData); // 디버깅용
 
       try {
         await postingMutation.mutateAsync(requestData);
@@ -244,7 +242,6 @@ export default function WriteMarketPage() {
         setPreviews((prevPreviews) => {
           const updatedPreviews = [...prevPreviews];
           updatedPreviews[updatedPreviews.length] = reader.result as string;
-          console.log(updatedPreviews.length);
           return updatedPreviews;
         });
       };
@@ -252,7 +249,7 @@ export default function WriteMarketPage() {
   };
 
   useEffect(() => {
-    console.log(previews);
+    console.log('');
   }, [previews]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -288,7 +285,7 @@ export default function WriteMarketPage() {
       return response;
     },
     onSuccess: async (data) => {
-      console.log('🎉 글수정 성공:', data);
+      // console.log('🎉 글수정 성공:', data);
       await queryClient.refetchQueries({
         queryKey: ['postDetail', data.id],
         exact: true

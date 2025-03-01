@@ -99,10 +99,10 @@ export default function DetailMarketPage() {
     },
     onSuccess: (data) => {
       setIsScraped(data.is_scrapped);
-      console.log(data);
+      // console.log(data);
     },
     onError: (error: any) => {
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     }
   });
 

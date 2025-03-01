@@ -17,7 +17,7 @@ export default function ImageExtractor({ content }: { content: string }) {
 
   const extractedImages = extractDataURLs(content);
   setImages(extractedImages);
-  console.log('Extracted Data URLs:', extractedImages);
+  // console.log('Extracted Data URLs:', extractedImages);
 
   return images;
 }

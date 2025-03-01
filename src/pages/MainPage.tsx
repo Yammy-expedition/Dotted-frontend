@@ -19,7 +19,7 @@ async function fetchCommunityPosts(): Promise<EachPost[]> {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = (await response.json()) as CommunityPost;
-  console.log(data);
+  // console.log(data);
   return data.results;
 }
 
@@ -31,7 +31,7 @@ async function fetchMarketPosts(): Promise<EachMarketPost[]> {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = (await response.json()) as MarketPost;
-  console.log(data);
+  // console.log(data);
   return data.results;
 }
 
@@ -67,7 +67,7 @@ export default function MainPage() {
     return !!localStorage.getItem('accessToken');
   };
   const handleClick = (path: string) => {
-    console.log('path', path);
+    // console.log('path', path);
 
     if (!isLogined()) {
       setModalOpen(true);
@@ -122,7 +122,7 @@ export default function MainPage() {
                     .split('_')
                     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(' ');
-                  console.log(status);
+                  // console.lg(status);
                   return (
                     <li
                       key={post.id}

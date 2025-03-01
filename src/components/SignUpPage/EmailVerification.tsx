@@ -47,7 +47,7 @@ export default function EmailVerification({
   const sendCodeMutation = useMutation({
     mutationFn: async (email: string) => {
       if (loading === true) {
-        console.log('sending...');
+        // console.log('sending...');
         return;
       }
       setLoading(true);
@@ -79,10 +79,10 @@ export default function EmailVerification({
     },
     onSuccess: (data) => {
       setToken(data.token); // 응답 데이터 저장
-      console.log('Verification code sent successfully!');
+      // console.log('Verification code sent successfully!');
     },
     onError: (error) => {
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     }
   });
 

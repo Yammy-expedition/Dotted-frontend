@@ -89,7 +89,7 @@ export default function MarketPosting({
         return;
       }
 
-      console.log('slick-list 내부 클릭됨:', target);
+      // console.log('slick-list 내부 클릭됨:', target);
       setOpenModal(true);
     };
 

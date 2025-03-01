@@ -16,7 +16,7 @@ export default function VerifyCodePart({
   setCode
 }: VerifyCodePartProps) {
   const emailMutation = usePasswordResetEmail((data) => {
-    console.log('응답 데이터:', data);
+    // console.log('응답 데이터:', data);
     if (data.status === 200) {
       onChangeStep(); // ✅ 다음 단계로 이동
     }
@@ -29,7 +29,7 @@ export default function VerifyCodePart({
   const verifyMutation = useMutation({
     mutationFn: () => verifyCodeRequest(email, code),
     onSuccess: () => {
-      console.log('Verification successful');
+      // console.log('Verification successful');
       alert('Verified');
       onChangeStep(); // ✅ 다음 단계로 이동
     },

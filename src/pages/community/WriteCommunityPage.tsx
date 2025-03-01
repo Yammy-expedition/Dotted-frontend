@@ -132,7 +132,7 @@ export default function WriteCommunityPage() {
       return response;
     },
     onSuccess: (data) => {
-      console.log('🎉 글쓰기 성공:', data);
+      // console.log('🎉 글쓰기 성공:', data);
       setIsSubmitted(true);
       // blocker가 막고 있다면 해제하고 이동
       if (blocker.state === 'blocked') {
@@ -173,7 +173,7 @@ export default function WriteCommunityPage() {
       return response;
     },
     onSuccess: async (data) => {
-      console.log('🎉 글수정 성공:', data);
+      // console.log('🎉 글수정 성공:', data);
 
       await queryClient.refetchQueries({
         queryKey: ['postDetail', data.id],
@@ -336,7 +336,7 @@ export default function WriteCommunityPage() {
         images: imagePayload,
         tag: data.tag
       };
-      console.log(updateData);
+      // console.log(updateData);
 
       try {
         await updateMutation.mutateAsync({

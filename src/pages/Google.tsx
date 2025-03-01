@@ -11,7 +11,7 @@ const Google = () => {
       const code = urlParams.get('code'); // ✅ Google에서 받은 인증 코드
 
       if (code) {
-        console.log('✅ Google OAuth 코드 확인:', code);
+        // console.log('✅ Google OAuth 코드 확인:', code);
 
         try {
           // 백엔드의 Google OAuth 처리 엔드포인트로 인증 코드 전달
@@ -28,12 +28,12 @@ const Google = () => {
           const data = await response.json();
 
           if (data.message === 'login success') {
-            console.log('🎉 로그인 성공:', data);
+            // console.log('🎉 로그인 성공:', data);
             localStorage.setItem('accessToken', data.token.access_token);
             localStorage.setItem('refreshToken', data.token.refresh_token);
             navigate('/'); // 로그인 성공 후 홈으로 이동
           } else if (data.message === 'signup_required') {
-            console.log('회원가입 필요:', data);
+            // console.log('회원가입 필요:', data);
             navigate('/sign-up', {
               state: {
                 email: data.email,

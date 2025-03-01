@@ -66,7 +66,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
       evtSource.onmessage = (event) => {
         try {
           const newEvent = JSON.parse(event.data);
-          console.log(newEvent);
+          // console.log(newEvent);
           setNotice((prev) => {
             if (prev === null) return newEvent;
             return { ...prev, list: [newEvent.list[0], ...prev.list] };
@@ -83,7 +83,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
 
       return () => {
         evtSource.close();
-        console.log('SSE 연결 종료');
+        // console.log('SSE 연결 종료');
       };
     };
 

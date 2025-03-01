@@ -101,7 +101,7 @@ export default function DetailCommunityPage() {
       setIsLiked(data.is_liked);
     },
     onError: (error: any) => {
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     }
   });
 
@@ -123,7 +123,7 @@ export default function DetailCommunityPage() {
       setIsScraped(data.is_scrapped);
     },
     onError: (error: any) => {
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     }
   });
 
