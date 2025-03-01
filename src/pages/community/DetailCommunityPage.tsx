@@ -101,7 +101,7 @@ export default function DetailCommunityPage() {
       setIsLiked(data.is_liked);
     },
     onError: (error: any) => {
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     }
   });
 
@@ -123,7 +123,7 @@ export default function DetailCommunityPage() {
       setIsScraped(data.is_scrapped);
     },
     onError: (error: any) => {
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     }
   });
 
@@ -189,10 +189,9 @@ const Wrapper = styled.div`
 //   margin-bottom: 9rem;
 // `;
 
-// const Text = styled.div`
+// const Text = tyled.div`
 //   padding: 1.5rem;
 //   color: ${({ theme }) => theme.colors.purple600};
-//   font-family: Inter;
 //   font-size: 2rem;
 //   font-style: normal;
 //   font-weight: 600;

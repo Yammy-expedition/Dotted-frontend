@@ -33,7 +33,7 @@ export default function StudentVerificat({
         emailValue += '@sogang.ac.kr';
       }
       const passwordValue = watch('password');
-      console.log(emailValue, passwordValue);
+      // console.log(emailValue, passwordValue);
 
       const data = await fetch(
         `${import.meta.env.VITE_API_DOMAIN}/api/user/login`,
@@ -51,7 +51,7 @@ export default function StudentVerificat({
       return data.json();
     },
     onSuccess: (data) => {
-      console.log('✅ 자동 로그인 성공:', data);
+      // console.log('✅ 자동 로그인 성공:', data);
       localStorage.setItem('accessToken', data.access);
       localStorage.setItem('refreshToken', data.refresh);
     },
@@ -64,10 +64,10 @@ export default function StudentVerificat({
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      console.log('🔹 토큰 없음, 자동 로그인 시도');
+      // console.log('🔹 토큰 없음, 자동 로그인 시도');
       autoLoginMutation.mutate();
     } else {
-      console.log('✅ 이미 로그인 상태');
+      // console.log('✅ 이미 로그인 상태');
     }
   }, []);
 
@@ -91,8 +91,8 @@ export default function StudentVerificat({
       onChangeStep();
       return data;
     },
-    onSuccess: (data) => {
-      console.log('🎉 University verification request successful:', data);
+    onSuccess: () => {
+      // console.log('🎉 University verification request successful:', data);
       alert('University verification request has been successfully submitted.');
     },
     onError: (error) => {
@@ -226,7 +226,7 @@ export default function StudentVerificat({
               you are approved.
             </span>
             <span className="Mobile">
-              You can access <span>Community</span> and <span>Market</span>
+              You can access <span>Community</span> and <span>Market</span>{' '}
               after approval.
             </span>
           </div>

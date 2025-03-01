@@ -169,9 +169,9 @@ export default function KakaoMap({ modalOpen, setModalOpen }: KakaoMapProps) {
           // 마커 생성 및 표시
           datas.forEach(({ id }) => {
             // 마커 생성
-            const eng_name = buildings[id - 2]?.eng_name;
-            const lat = buildings[id - 2]?.lat;
-            const lon = buildings[id - 2]?.lon;
+            const eng_name = buildings[id]?.eng_name;
+            const lat = buildings[id]?.lat;
+            const lon = buildings[id]?.lon;
             const marker = new window.kakao.maps.Marker({
               position: new window.kakao.maps.LatLng(lat, lon),
               map,

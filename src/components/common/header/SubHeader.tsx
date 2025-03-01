@@ -1,6 +1,6 @@
 import { SubHeaderAnimation } from '@/animations/framer-motion/SubHeaderAnimation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface SubHeaderProps {
@@ -23,7 +23,7 @@ const tipssubs = [
 
 export default function SubHeader({ hoveredTab }: SubHeaderProps) {
   const { pathname } = useLocation();
-  console.log(hoveredTab);
+  // console.log(hoveredTab);
 
   //location이 tips나 about일 때만 subheader를 보여줌
   const handlePathname = (pathname: string) => {
@@ -39,22 +39,27 @@ export default function SubHeader({ hoveredTab }: SubHeaderProps) {
 
   return (
     <AnimatePresence>
+      {/* 1. 호버를 어바웃  팁스에 함
+      2. 어바웃이나 팁스에 있을 때 호버가 커뮤니티나 마켓이 아닐 때
+       -> 팁스에 호버 안하고 어바웃에 호버하거나 어바웃에 있을 때
+      */}
       {(hoveredTab === 'ABOUT' ||
         hoveredTab === 'TIPS' ||
         (handlePathname(pathname) &&
           hoveredTab !== 'COMMUNITY' &&
           hoveredTab !== 'MARKET')) && (
         <SubHeaderWrapper {...SubHeaderAnimation}>
-          {pathname.includes('about') ? (
+          {hoveredTab !== 'TIPS' &&
+          (hoveredTab === 'ABOUT' || pathname.includes('about')) ? (
             <>
               {aboutsubs.map((sub, idx) => (
                 <SubElement key={idx}>
-                  <a
+                  <Link
                     className={pathname === sub.link ? 'selected' : ''}
-                    href={sub.link}
+                    to={sub.link}
                   >
                     {sub.title}
-                  </a>
+                  </Link>
                   <p>•</p>
                 </SubElement>
               ))}
@@ -63,12 +68,12 @@ export default function SubHeader({ hoveredTab }: SubHeaderProps) {
             <>
               {tipssubs.map((sub, idx) => (
                 <SubElement key={idx}>
-                  <a
+                  <Link
                     className={pathname === sub.link ? 'selected' : ''}
-                    href={sub.link}
+                    to={sub.link}
                   >
                     {sub.title}
-                  </a>
+                  </Link>
                   <p>•</p>
                 </SubElement>
               ))}

@@ -12,8 +12,8 @@ export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
   const path = pathname.split('/')[1];
 
   const NavList = [
-    { name: 'ABOUT', defaultLink: '/about/notice' },
-    { name: 'TIPS', defaultLink: '/tips/sogang-map' },
+    { name: 'ABOUT', defaultLink: '/about/onboarding' },
+    { name: 'TIPS', defaultLink: '/tips/restaurant' },
     { name: 'COMMUNITY', defaultLink: '/community' },
     { name: 'MARKET', defaultLink: '/market' }
   ];

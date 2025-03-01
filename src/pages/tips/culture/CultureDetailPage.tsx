@@ -93,6 +93,7 @@ const Header = styled.header`
   > svg {
     position: absolute;
     left: 0;
+    top: 2rem;
     cursor: pointer;
   }
 `;

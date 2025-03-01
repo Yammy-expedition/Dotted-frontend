@@ -14,7 +14,8 @@ export default function BackButton() {
 
 const BackButtonWrapper = styled.div`
   padding: 5% 0 0 1%;
-  position: relative;
+  position: absolute;
+  z-index: 10;
 `;
 const BackButtonComponent = styled(BackButtonSVG)`
   cursor: pointer;

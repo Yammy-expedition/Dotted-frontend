@@ -41,7 +41,6 @@ export default function MarketPage() {
     // 로딩 표시를 위해 isLoading 사용
     let realTag = selectedTag;
     if (selectedTag === 'Only For Sale') {
-      console.log(selectedTag);
       realTag = 'FOR_SALE';
     }
 
@@ -55,7 +54,6 @@ export default function MarketPage() {
       },
       {
         onSuccess: (data) => {
-          console.log(data);
           setSearchResults(data as MarketPost);
           setPagedData(data.results as EachMarketPost[]); // 서버에서 이미 페이지별로 results 제공
         },
@@ -72,10 +70,8 @@ export default function MarketPage() {
     setSelectedTag(tag);
     let realTag = tag;
     if (tag === 'Only For Sale') {
-      console.log(tag);
       realTag = 'FOR_SALE';
     }
-    console.log(realTag);
     setSearchParams({ page: '1', status: realTag, keyword });
   };
 

@@ -61,7 +61,7 @@ export default function LoginForm() {
       return response.json();
     },
     onSuccess: (data) => {
-      console.log(data);
+      // console.log(data);
       window.localStorage.setItem('accessToken', data.access);
       window.localStorage.setItem('refreshToken', data.refresh);
       navigate('/');
@@ -132,6 +132,7 @@ const LoginButtonWrapper = styled.div`
 `;
 
 const LoginFormWrapper = styled.form`
+  padding-top: 5rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -166,11 +167,11 @@ const OptionBox = styled.div`
   display: flex;
   position: relative;
   gap: 5.1rem;
-  margin-top: 3.1rem;
+  margin-top: 2.1rem;
   margin-bottom: 2.9rem;
 
   @media (max-width: 440px) {
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 1rem;
   }
 
@@ -178,12 +179,10 @@ const OptionBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.2rem;
-
+    gap: 1rem;
     > span {
       color: ${({ theme }) => theme.colors.gray800};
-
-      font-size: 20px;
+      font-size: 1.6rem;
       font-style: normal;
       font-weight: 400;
       line-height: normal;
@@ -203,17 +202,12 @@ const StyledCheckBox = styled.input.attrs({ type: 'checkbox' })`
 const ForgetPassword = styled.div`
   cursor: pointer;
   color: ${({ theme }) => theme.colors.purple600};
-
-  font-size: 20px;
+  font-size: 1.6rem;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.8px;
+  letter-spacing: -0.6px;
   text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-skip-ink: auto;
-  text-decoration-thickness: auto;
-  text-underline-offset: auto;
   text-underline-position: from-font;
 `;
 
@@ -227,18 +221,17 @@ const LoginButton = styled.button`
     disabled ? theme.colors.gray500 : theme.colors.purple1050};
   color: ${({ theme }) => theme.colors.gray50};
   text-align: center;
-
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   letter-spacing: -0.6px;
-  margin-bottom: 3.7rem;
+  margin-bottom: 0.7rem;
   transition: background 0.3s;
 `;
 
 const EmailInputWrapper = styled.div`
-  margin-bottom: 2.1rem;
+  margin-bottom: 1.1rem;
   width: 100%;
   max-width: 60.5rem;
   padding: 0 2rem;

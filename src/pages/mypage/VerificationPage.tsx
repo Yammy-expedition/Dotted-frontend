@@ -98,8 +98,8 @@ export default function VerificationPage() {
       );
       return data;
     },
-    onSuccess: (data) => {
-      console.log('🎉 University verification request successful:', data);
+    onSuccess: () => {
+      // console.log('🎉 University verification request successful:', data);
       alert('University verification request has been successfully submitted.');
     },
     onError: (error) => {
@@ -114,15 +114,12 @@ export default function VerificationPage() {
       alert('Please Attach Image File');
       return;
     }
-    console.log(imgFile);
 
     uploadUniversityImageMutation.mutate(imgFile);
   };
 
   useEffect(() => {
     if (data) {
-      console.log(data.univ_certified);
-
       setIsVerified(data.univ_certified);
     }
   }, [data]);

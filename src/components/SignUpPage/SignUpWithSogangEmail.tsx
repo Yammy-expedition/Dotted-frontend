@@ -42,15 +42,14 @@ const SogangEmailContainer = styled.div`
 `;
 
 const SogangEmailWrapper = styled.div`
-  margin-top: 2.9rem;
-  margin-bottom: 5.7rem;
+  margin-top: 2rem;
+  margin-bottom: 2.7rem;
   position: relative;
   width: 100%;
   height: 23.3rem;
   flex-shrink: 0;
   border-radius: 16px;
-  background: ${({ theme }) => theme.colors.gray50};
-  backdrop-filter: blur(6.449999809265137px);
+  background: ${({ theme }) => theme.colors.opacity63};
 `;
 
 const ButtonBoxWrapper = styled.div`
@@ -61,4 +60,7 @@ const ButtonBoxWrapper = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  @media (max-width: 400px) {
+    gap: 1rem;
+  }
 `;

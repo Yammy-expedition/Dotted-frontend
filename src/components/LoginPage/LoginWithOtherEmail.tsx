@@ -22,7 +22,7 @@ const LoginWithOtherEmailWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1.2rem;
-  margin-bottom: 4.8rem;
+  margin-bottom: 1.8rem;
   padding: 0 2rem;
 `;
 

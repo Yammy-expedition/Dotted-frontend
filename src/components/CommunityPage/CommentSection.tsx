@@ -63,15 +63,15 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
         }
       );
       return response;
-    },
-    onSuccess: (data) => {
-      console.log('✅ 댓글 작성 성공:', data);
-    },
-    onError: (error) => {
-      console.error('❌ 댓글 작성 실패:', error);
     }
+    // onSuccess: (data) => {
+    //   // console.log('✅ 댓글 작성 성공:', data);
+    // },
+    // onError: (error) => {
+    //   // console.error('❌ 댓글 작성 실패:', error);
+    // }
   });
-  console.log(comment);
+  // console.log(comment);
 
   return (
     <CommentSectionWrapper>

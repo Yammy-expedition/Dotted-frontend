@@ -12,7 +12,7 @@ export default function Divider() {
 
 const LineWrapper = styled.div`
   width: 100%;
-  margin-bottom: 3.9rem;
+  margin-bottom: 1.8rem;
   display: flex;
   justify-content: center;
   align-items: center;

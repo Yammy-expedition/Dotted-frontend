@@ -47,7 +47,7 @@ export default function SignUpPage() {
 
   useEffect(() => {
     if (state) {
-      console.log(state);
+      // console.log(state);
       setisCheckedPP(true);
       setisCheckedTOS(true);
       setValue('email', state.email);
@@ -80,7 +80,7 @@ export default function SignUpPage() {
 
       //console.log(dataToSend);
 
-      console.log(dataToSend);
+      // console.log(dataToSend);
 
       const response = await fetch(
         `${import.meta.env.VITE_API_DOMAIN}/api/user/register`,
@@ -98,8 +98,8 @@ export default function SignUpPage() {
       onChangeStep();
       return response.json();
     },
-    onSuccess: (data) => {
-      console.log('🎉 회원가입 성공:', data);
+    onSuccess: () => {
+      // console.log('🎉 회원가입 성공:', data);
       window.history.replaceState(null, '', '/login');
     },
     onError: (error) => {
@@ -138,9 +138,9 @@ export default function SignUpPage() {
     closeModal();
   };
 
-  useEffect(() => {
-    console.log(step);
-  }, [step]);
+  // useEffect(() => {
+  //   // console.log(step);
+  // }, [step]);
 
   const login_type = watch('login_type');
 
@@ -224,6 +224,10 @@ const SignUpTitle = styled.p`
   line-height: normal;
   letter-spacing: -2px;
   margin-bottom: 2.6rem;
+  padding-top: 5rem;
+  @media (max-width: 400px) {
+    font-size: 3rem;
+  }
 `;
 
 const StyledModal = styled(Modal)``;

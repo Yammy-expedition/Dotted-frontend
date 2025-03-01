@@ -30,8 +30,8 @@ const CircleWrapper = styled.div`
 `;
 
 const PurpleCircle = styled.div`
-  width: 76.6rem;
-  height: 76.6rem;
+  width: 80vw;
+  height: 80vw;
   flex-shrink: 0;
   border-radius: 76.6rem;
   background: radial-gradient(
@@ -39,15 +39,15 @@ const PurpleCircle = styled.div`
     rgba(150, 120, 211, 0.4) 0%,
     rgba(150, 120, 211, 0) 100%
   );
-  filter: blur(15rem);
+  filter: blur(5rem);
 `;
 
 const GrayCircle = styled.div`
   position: absolute;
-  top: 31.5rem;
-  left: 65.4rem;
-  width: 59.9rem;
-  height: 59.9rem;
+  top: 30vh;
+  left: 10vw;
+  width: 100vw;
+  height: 100vw;
   flex-shrink: 0;
   border-radius: 59.9rem;
   background: radial-gradient(
@@ -55,5 +55,5 @@ const GrayCircle = styled.div`
     rgba(164, 164, 164, 0.6) 0%,
     rgba(164, 164, 164, 0) 100%
   );
-  filter: blur(15rem);
+  filter: blur(5rem);
 `;

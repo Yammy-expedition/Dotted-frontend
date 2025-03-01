@@ -141,7 +141,7 @@ const ProfileBox = styled.div`
 `;
 
 const Menu = styled(motion.div)`
-  z-index: 10;
+  z-index: 1000;
   position: absolute;
   top: 100%;
   margin-top: 1rem;

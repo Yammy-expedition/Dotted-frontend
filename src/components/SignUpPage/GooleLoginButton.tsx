@@ -55,7 +55,7 @@ const BlackButtonWrapper = styled.div`
     text-align: center;
     font-size: 15px;
     font-style: normal;
-    font-weight: 300;
+    font-weight: 400;
     line-height: normal;
     letter-spacing: -0.45px;
   }

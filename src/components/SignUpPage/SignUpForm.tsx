@@ -61,6 +61,7 @@ const SignUpFormWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 17.1rem;
+  padding-top: 5rem;
 `;
 
 const DividerWrapper = styled.div`

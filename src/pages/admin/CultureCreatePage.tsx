@@ -25,10 +25,10 @@ export default function CultureCreatePage() {
         formData.append('thumbnail_upload', data.thumbnail);
       }
 
-      console.log(
-        '📌 업로드할 데이터:',
-        Object.fromEntries(formData.entries())
-      );
+      // console.log(
+      //   '📌 업로드할 데이터:',
+      //   Object.fromEntries(formData.entries())
+      // );
 
       // fetchWithAuth 대신 fetch를 사용하고, 토큰 등 불필요한 헤더를 제거합니다.
       return fetch(`${import.meta.env.VITE_API_DOMAIN}/api/campus/culture`, {
@@ -57,7 +57,7 @@ export default function CultureCreatePage() {
   const onSubmit = async (data: CultureData) => {
     if (postingMutation.isPending) return;
     const newPostData = { ...data, college: 1 }; // 기본값 설정
-    console.log('📌 최종 전송 데이터:', newPostData);
+    // console.log('📌 최종 전송 데이터:', newPostData);
     await postingMutation.mutateAsync(newPostData);
   };
 

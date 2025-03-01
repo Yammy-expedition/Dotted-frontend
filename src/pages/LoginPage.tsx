@@ -8,13 +8,13 @@ export default function LoginPage() {
     <LoginPageWrapper>
       <PageLayout />
       <BackButton />
-
       <LoginForm />
     </LoginPageWrapper>
   );
 }
 
 const LoginPageWrapper = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.backgroundLayer2};

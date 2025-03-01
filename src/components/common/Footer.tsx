@@ -26,16 +26,13 @@ export default function Footer() {
           </a>
         </PolicyWrapper>
       </LeftSection>
-
       <RightSection>
         <SVGWrapper>
           <a href="https://www.instagram.com/join.dotted/" target="_blank">
             <Instagram />
           </a>
-
           <Mail />
         </SVGWrapper>
-
         <ContactWrapper>
           <span>Email</span>
           <span>join.dotted@gmail.com</span>
@@ -52,10 +49,12 @@ const FooterContainer = styled.footer`
   padding: 4.6rem 3.4rem 4rem 7rem;
   display: flex;
   justify-content: space-between;
-
   @media (max-width: 700px) {
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+  @media (max-width: 400px) {
+    flex-direction: column;
   }
 `;
 
@@ -70,7 +69,6 @@ const LogoWrapper = styled.div`
   align-items: center;
   gap: 1rem;
   color: ${({ theme }) => theme.colors.gray50};
-
   font-size: 4.8rem;
   font-style: normal;
   font-weight: 700;
@@ -78,6 +76,9 @@ const LogoWrapper = styled.div`
   letter-spacing: -0.288rem;
   @media (max-width: 700px) {
     font-size: 4rem;
+  }
+  @media (max-width: 400px) {
+    display: none;
   }
   > div > svg {
     path {
@@ -97,13 +98,11 @@ const PolicyWrapper = styled.div`
   > a {
     cursor: pointer;
     color: ${({ theme }) => theme.colors.gray50};
-
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-style: normal;
     font-weight: 300;
     line-height: 2.1rem; /* 131.25% */
-    letter-spacing: -0.016rem;
-
+    letter-spacing: -0.01rem;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
     text-decoration-thickness: auto;
@@ -135,13 +134,14 @@ const SVGWrapper = styled.div`
     cursor: pointer;
     transition: transform 0.3s ease;
   }
-
   display: flex;
   justify-content: center;
   gap: 2rem;
 
   @media (max-width: 700px) {
     justify-content: end;
+  }
+  @media (max-width: 400px) {
   }
 `;
 
@@ -161,7 +161,7 @@ const ContactWrapper = styled.div`
     font-style: normal;
     font-weight: 300;
     line-height: 2.1rem; /* 150% */
-    letter-spacing: -0.014rem;
+    letter-spacing: -0.01rem;
 
     &:first-child {
       margin-right: 3rem;

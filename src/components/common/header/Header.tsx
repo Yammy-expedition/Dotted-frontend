@@ -66,7 +66,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
       evtSource.onmessage = (event) => {
         try {
           const newEvent = JSON.parse(event.data);
-          console.log(newEvent);
+          // console.log(newEvent);
           setNotice((prev) => {
             if (prev === null) return newEvent;
             return { ...prev, list: [newEvent.list[0], ...prev.list] };
@@ -83,7 +83,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
 
       return () => {
         evtSource.close();
-        console.log('SSE 연결 종료');
+        // console.log('SSE 연결 종료');
       };
     };
 
@@ -115,7 +115,12 @@ export default function Header({ scrollY }: { scrollY: number }) {
     <HeaderContainer onMouseLeave={() => setHoveredTab('')}>
       <UpWrapper $scrollY={scrollY}>
         <LeftSection>
-          <Logo onClick={() => navigate('/')}>
+          <Logo
+            onClick={() => {
+              setHoveredTab('');
+              navigate('/');
+            }}
+          >
             <img src="/logo.svg" alt="logo" />
             <span>Dotted</span>
           </Logo>
@@ -162,12 +167,9 @@ export default function Header({ scrollY }: { scrollY: number }) {
 const LoginSignup = styled.div`
   > span {
     color: ${({ theme }) => theme.colors.purple600};
-
     border-radius: 2.4rem;
-
     text-align: center;
-
-    font-size: 2.1rem;
+    font-size: 1.6rem;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -175,58 +177,50 @@ const LoginSignup = styled.div`
 
     @media (max-width: 460px) {
       font-size: 1.8rem;
+      display: none;
     }
   }
-`;
-
-const HeaderNavWrapper = styled.div`
-  @media (max-width: 900px) {
-    display: none;
+  @media (max-width: 460px) {
+    display: flex;
+    gap: 0.6rem;
   }
 `;
-
-const MobileNav = styled.div`
-  width: 100%;
-
-  display: none;
-  @media (max-width: 900px) {
-    display: block;
-  }
-`;
-
-const ArrowWrapper = styled.div`
-  display: none;
-  cursor: pointer;
-  @media (max-width: 920px) {
-    display: block;
-  }
-`;
-
 const LoginButton = styled.button`
   position: relative;
   color: ${({ theme }) => theme.colors.gray900};
   padding: 0.7rem 1.5rem;
-  @media (max-width: 460px) {
-    padding: 0.7rem 0.5rem;
-  }
   text-align: center;
-
-  font-size: 2.1rem;
+  font-size: 1.6rem;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.07rem;
+  letter-spacing: -0.02rem;
   background: none;
   border: none;
   overflow: hidden;
-
+  @media (max-width: 460px) {
+    display: flex;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+    /* padding: 0.3rem 1.6rem; */
+    width: 8.3rem;
+    height: 2.4rem;
+    background-color: ${({ theme }) => theme.colors.purple600};
+    border-radius: 5rem;
+    color: ${({ theme }) => theme.colors.gray50};
+    &:first-child {
+      background-color: ${({ theme }) => theme.colors.gray300};
+      color: ${({ theme }) => theme.colors.gray700};
+    }
+  }
   &::after {
     content: '';
     position: absolute;
     left: 0;
     bottom: 0;
     width: 0;
-    border-bottom: 4px dashed ${({ theme }) => theme.colors.purple600};
+    /* border-bottom: 4px dashed ${({ theme }) => theme.colors.purple600}; */
     transition: width 0.5s ease;
   }
 
@@ -238,10 +232,9 @@ const LoginButton = styled.button`
 
   & > span {
     @media (max-width: 460px) {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
     display: inline-block;
-
     transform: scale(1);
   }
 
@@ -267,6 +260,29 @@ const LoginButton = styled.button`
     100% {
       transform: scale(1);
     }
+  }
+`;
+
+const HeaderNavWrapper = styled.div`
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+const MobileNav = styled.div`
+  width: 100%;
+
+  display: none;
+  @media (max-width: 900px) {
+    display: block;
+  }
+`;
+
+const ArrowWrapper = styled.div`
+  display: none;
+  cursor: pointer;
+  @media (max-width: 920px) {
+    display: block;
   }
 `;
 

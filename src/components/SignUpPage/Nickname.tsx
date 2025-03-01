@@ -32,7 +32,7 @@ const checkNickname = async (
 
   toggleChecked();
   const data = await response.json();
-  console.log(data);
+  // console.log(data);
   return data;
 };
 
@@ -70,7 +70,7 @@ export default function Nickname({ register, watch }: NicknameProps) {
   }, [nickname]);
 
   useEffect(() => {
-    console.log(isVaild, initialIsFine, !isNicknameChecked);
+    // console.log(isVaild, initialIsFine, !isNicknameChecked);
   }, [nickname]);
 
   const onClickVerificationCheck = () => {

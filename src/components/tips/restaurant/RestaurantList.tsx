@@ -50,7 +50,7 @@ export default function RestaurantList() {
       {!isLoading && filteredRestaurants ? (
         <List>
           {filteredRestaurants.map((el: RestaurantData, idx: number) => {
-            console.log(el);
+            // console.log(el);
             return (
               <RestaurantBox key={idx}>
                 <img src={el.photo} alt={el.name} />
