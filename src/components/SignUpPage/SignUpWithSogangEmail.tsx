@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Recomended from './Recomended';
 import MainText from './MainText';
 import SogangSignUpButton from './SogangSignUpButton';
 import CreateEmailButton from './CreateEmailButton';
@@ -16,7 +15,7 @@ export default function SignUpWithSogangEmail({
   return (
     <SogangEmailContainer>
       <SogangEmailWrapper>
-        <Recomended />
+        {/* <Recomended /> */}
 
         <MainText />
 
@@ -47,6 +46,9 @@ const SogangEmailWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 23.3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   flex-shrink: 0;
   border-radius: 16px;
   background: ${({ theme }) => theme.colors.opacity63};
