@@ -307,12 +307,12 @@ const NotificationPageContainer = styled.div`
   align-items: center;
 
   @media (max-width: 1200px) {
-    padding: 0 10rem;
+    padding: 0 7.7rem;
   }
 
   @media (max-width: 900px) {
-    padding-right: 7.7rem;
-    padding-left: 7.7rem;
+    padding-right: 5rem;
+    padding-left: 5rem;
   }
   @media (max-width: 700px) {
     padding-right: 2rem;

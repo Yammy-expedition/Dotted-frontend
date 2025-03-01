@@ -79,23 +79,31 @@ button {
 
 h1 {
   font-size: 32px;
+  line-height: 1.2; 
 }
 
 h2 {
   font-size: 24px;
+  line-height: 1.3;
 }
 
 h3 {
   font-size: 18.72px;
+  line-height: 1.3;
 }
 
 h4 {
   font-size: 16px;
+  line-height: 1.4;
 }
 
-p{
+p {
   font-size: 16px;
+  line-height: 1.6; 
 }
+
+
+
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
