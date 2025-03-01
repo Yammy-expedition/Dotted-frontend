@@ -36,7 +36,7 @@ const AgreeItemBox = styled.div`
   > label {
     width: 1.9rem;
     height: 1.9rem;
-    margin-right: 1.4rem;
+    margin-right: 1.2rem;
     flex-shrink: 0;
     input {
       width: 100%;
@@ -48,15 +48,16 @@ const AgreeItemBox = styled.div`
   }
 
   > span {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: 20px;
+    color: ${({ theme }) => theme.colors.gray600};
+    font-size: 1.6rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     letter-spacing: -0.8px;
 
     @media (max-width: 410px) {
-      font-size: 15px;
+      font-size: 1.5rem;
+      color: ${({ theme }) => theme.colors.gray800};
     }
   }
 `;
@@ -67,8 +68,8 @@ const CheckBox = styled.div<{ $checked: boolean }>`
   justify-content: center;
   align-items: center;
   margin-right: 1.2rem;
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 1.6rem;
+  height: 1.6rem;
   flex-shrink: 0;
   border-radius: 0.4rem;
   border: 1px solid var(--Gray-Gray_light-gray-500_light, #909090);

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Google = () => {
   const navigate = useNavigate();
@@ -59,9 +60,32 @@ const Google = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <p>Google 로그인 처리 중...</p>
+      <Loading>
+        <ImgWrapper>
+          <img src="/logo-motion.gif" alt="Logo Animation" />
+        </ImgWrapper>
+        <div>구글 로그인 중...</div>
+      </Loading>
     </div>
   );
 };
 
 export default Google;
+const Loading = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.backgroundLayer2};
+`;
+
+const ImgWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10rem 0 3rem 0;
+  img {
+    width: 5rem;
+  }
+`;

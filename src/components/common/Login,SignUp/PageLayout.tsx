@@ -30,8 +30,8 @@ const CircleWrapper = styled.div`
 `;
 
 const PurpleCircle = styled.div`
-  width: 76.6rem;
-  height: 76.6rem;
+  width: 80vw;
+  height: 80vw;
   flex-shrink: 0;
   border-radius: 76.6rem;
   background: radial-gradient(
@@ -44,10 +44,10 @@ const PurpleCircle = styled.div`
 
 const GrayCircle = styled.div`
   position: absolute;
-  top: 31.5rem;
-  left: 65.4rem;
-  width: 59.9rem;
-  height: 59.9rem;
+  top: 30vh;
+  left: 10vw;
+  width: 100vw;
+  height: 100vw;
   flex-shrink: 0;
   border-radius: 59.9rem;
   background: radial-gradient(

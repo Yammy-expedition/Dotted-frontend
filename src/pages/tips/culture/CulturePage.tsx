@@ -1,6 +1,6 @@
 import CultureList from '@/components/tips/culture/CultureList';
 import styled from 'styled-components';
-import SearchIcon from '@/assets/svg/tips/culture/search.svg?react';
+// import SearchIcon from '@/assets/svg/tips/culture/search.svg?react';
 
 export default function CulturePage() {
   return (
@@ -8,9 +8,9 @@ export default function CulturePage() {
       <Header>
         <HeaderTitleBox>
           <h1>Culture</h1>
-          <p>Introduce Korean Culture</p>
+          <p>Introduce Korean and Sogang Culture(Campus traditions)</p>
         </HeaderTitleBox>
-        <HeaderInputBox>
+        {/* <HeaderInputBox>
           <select name="searchType" id="searchType">
             <option value="all">All</option>
             <option value="title">Title</option>
@@ -18,7 +18,7 @@ export default function CulturePage() {
           </select>
           <input type="text" placeholder="Search" />
           <SearchIcon />
-        </HeaderInputBox>
+        </HeaderInputBox> */}
       </Header>
       <CultureList />
     </Main>
@@ -36,7 +36,7 @@ const Main = styled.main`
 `;
 
 const Header = styled.header`
-  padding: 3.7rem 0 4.7rem 0;
+  padding: 2.7rem 0 1.7rem 0;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -53,14 +53,21 @@ const HeaderTitleBox = styled.div`
     line-height: 3.6rem;
     letter-spacing: -1.8px;
     color: ${({ theme }) => theme.colors.gray800};
+    @media (max-width: 700px) {
+      font-size: 2.4rem;
+    }
   }
 
   p {
+    margin: 1rem 0 2rem 0;
     font-size: 1.6rem;
     font-weight: 400;
-    line-height: 3.6rem;
+    line-height: 1.6rem;
     letter-spacing: -0.48px;
     color: ${({ theme }) => theme.colors.gray500};
+    @media (max-width: 700px) {
+      font-size: 1.4rem;
+    }
   }
 `;
 const HeaderInputBox = styled.div`

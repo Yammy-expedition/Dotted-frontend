@@ -213,7 +213,6 @@ const SignUpPageWrapper = styled.form`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.backgroundLayer2};
-  padding-top: 5rem;
 `;
 
 const SignUpTitle = styled.p`
@@ -225,6 +224,10 @@ const SignUpTitle = styled.p`
   line-height: normal;
   letter-spacing: -2px;
   margin-bottom: 2.6rem;
+  padding-top: 5rem;
+  @media (max-width: 400px) {
+    font-size: 3rem;
+  }
 `;
 
 const StyledModal = styled(Modal)``;

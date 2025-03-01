@@ -30,4 +30,7 @@ const WelcomeText = styled.h1`
   line-height: normal;
   letter-spacing: -0.2rem;
   margin-bottom: 2.7rem;
+  @media (max-width: 400px) {
+    font-size: 3rem;
+  }
 `;

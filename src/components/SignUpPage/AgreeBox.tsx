@@ -36,5 +36,5 @@ const AgreeBoxContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.9rem;
+  gap: 1rem;
 `;

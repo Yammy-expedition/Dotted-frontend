@@ -147,6 +147,7 @@ export default function MapModal({
           ))}
         </StudyingSpotDiv>
       )}
+      <h6>Ⓒ copyright by 서강대학교 공식블로그</h6>
     </ModalWrapper>
   );
 }
@@ -229,6 +230,18 @@ const StudyingSpotDiv = styled.div`
 `;
 
 const ModalWrapper = styled.div<{ modalopen: string }>`
+  h6 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: ${({ theme }) => theme.colors.gray500};
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      h6 {
+        color: ${({ theme }) => theme.colors.purple600};
+      }
+    }
+  }
   border-radius: 5px;
   z-index: 100;
   overflow-y: auto;

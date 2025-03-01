@@ -13,7 +13,7 @@ export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
 
   const NavList = [
     { name: 'ABOUT', defaultLink: '/about/notice' },
-    { name: 'TIPS', defaultLink: '/tips/sogang-map' },
+    { name: 'TIPS', defaultLink: '/tips/restaurant' },
     { name: 'COMMUNITY', defaultLink: '/community' },
     { name: 'MARKET', defaultLink: '/market' }
   ];

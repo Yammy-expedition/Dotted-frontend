@@ -14,7 +14,7 @@ export default function MainText() {
 const MainTextWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 `;
 
 const MainTextBox = styled.p`
