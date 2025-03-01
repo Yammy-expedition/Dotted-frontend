@@ -27,16 +27,32 @@ export default function CulturePage() {
 
 const Main = styled.main`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 5rem 12.6rem 2.6rem 12.6rem;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1200px) {
+    padding-left: 7.7rem;
+    padding-right: 7.7rem;
+  }
   @media (max-width: 900px) {
-    padding: 5rem 2.6rem 2.6rem 2.6rem;
+    padding: 5rem 5rem 2.6rem 5rem;
+  }
+  @media (max-width: 700px) {
+    padding: 5rem 2rem 2.6rem 2rem;
   }
 `;
 
 const Header = styled.header`
+
   padding: 2.7rem 0 1.7rem 0;
+
+  width: 100%;
+  max-width: 1287px;
+
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -70,6 +86,7 @@ const HeaderTitleBox = styled.div`
     }
   }
 `;
+
 // const HeaderInputBox = styled.div`
 //   width: 30vw;
 //   height: 4rem;

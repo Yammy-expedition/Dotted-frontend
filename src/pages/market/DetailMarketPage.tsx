@@ -144,6 +144,7 @@ const DetailMarketPageContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
+  max-width: 1287px;
   width: 100%;
   margin-top: 5.7rem;
   padding: 0 23rem;

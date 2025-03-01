@@ -172,7 +172,7 @@ const DetailCommunityPageContainer = styled.div`
 
 const Wrapper = styled.div`
   width: 100%;
-  max-width: 144rem;
+  max-width: 1287px;
   margin-top: 5.7rem;
   padding: 0 23rem;
 
@@ -189,10 +189,9 @@ const Wrapper = styled.div`
 //   margin-bottom: 9rem;
 // `;
 
-// const Text = styled.div`
+// const Text = tyled.div`
 //   padding: 1.5rem;
 //   color: ${({ theme }) => theme.colors.purple600};
-//   font-family: Inter;
 //   font-size: 2rem;
 //   font-style: normal;
 //   font-weight: 600;

@@ -115,7 +115,12 @@ export default function Header({ scrollY }: { scrollY: number }) {
     <HeaderContainer onMouseLeave={() => setHoveredTab('')}>
       <UpWrapper $scrollY={scrollY}>
         <LeftSection>
-          <Logo onClick={() => navigate('/')}>
+          <Logo
+            onClick={() => {
+              setHoveredTab('');
+              navigate('/');
+            }}
+          >
             <img src="/logo.svg" alt="logo" />
             <span>Dotted</span>
           </Logo>
@@ -287,14 +292,29 @@ const HeaderContainer = styled.div`
   top: 0;
   left: 0;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.backgroundLayer2};
+  border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray400};
+  width: 100%;
+  padding: 0 7.7rem;
+
+  @media (max-width: 900px) {
+    padding: 0 5rem;
+  }
+
+  @media (max-width: 700px) {
+    padding: 0 2rem;
+  }
 `;
 
 const UpWrapper = styled.div<{ $scrollY: number }>`
-  padding: 0 7.7rem 0 7.7rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1287px;
   height: 8rem;
   @media (max-width: 700px) {
-    padding-right: 2rem;
-    padding-left: 2em;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     height: 6rem;

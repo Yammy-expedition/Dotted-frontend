@@ -460,7 +460,6 @@ const Title = styled.div`
   margin-bottom: 1rem;
   justify-content: space-between;
   color: ${({ theme }) => theme.colors.gray800};
-  font-family: Pretendard;
   font-size: 2.8rem;
   font-style: normal;
   font-weight: 700;
@@ -476,7 +475,6 @@ const Title = styled.div`
 `;
 const Price = styled.div`
   color: ${({ theme }) => theme.colors.gray800};
-  font-family: Pretendard;
   font-size: 3.2rem;
   font-style: normal;
   font-weight: 700;
