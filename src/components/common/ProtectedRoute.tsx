@@ -2,10 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Header from './header/Header';
 
 export default function ProtectedRoute({ children }: { children: any }) {
   const { pathname } = useLocation();
   const [_, setModalOpen] = useState(false);
+  const [scrollY, __] = useState(0);
 
   //로그인 했으면 true, 안했으면 false
   const isLogined = () => {
@@ -14,17 +16,14 @@ export default function ProtectedRoute({ children }: { children: any }) {
   if (isLogined()) {
     return children;
   } else {
-    if (
-      pathname === '/' ||
-      pathname === '/about/onboarding' ||
-      pathname === '/about/notice'
-    ) {
+    if (pathname === '/' || pathname.split('/')[1] === 'about') {
       return children;
     }
     return (
       <>
+        <Header scrollY={scrollY} />
         <LoginModal setModalOpen={setModalOpen} />
-        {children}
+        {/* {children} */}
       </>
     );
   }

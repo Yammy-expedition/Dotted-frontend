@@ -1,6 +1,8 @@
 export const lightTheme = {
   colors: {
+    opacity63: 'rgba(255, 255, 255, 0.63)',
     purple100: '#f2f0fa',
+    purple200: '#E7E0F5',
     purple450: '#ab93dc',
     purple600: '#9678d3',
     purple650: '#8865cd',
@@ -27,7 +29,9 @@ export const lightTheme = {
 
 export const darkTheme = {
   colors: {
+    opacity63: 'rgba(0, 0, 0, 0.63)',
     purple100: '#53199f',
+    purple200: '#5C1BB0',
     purple450: '#8f4fe3',
     purple600: '#b183ec',
     purple650: '#bc96ee',

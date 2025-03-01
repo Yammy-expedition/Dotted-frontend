@@ -3,7 +3,9 @@ import PurpleLink from '@/assets/svg/SignUpPage/PurPleLinkSVG.svg?react';
 
 export default function CreateEmailButton() {
   return (
-    <CreateEmailButtonBox>
+    <CreateEmailButtonBox
+      onClick={() => window.open('https://dotted.site/about/notice/2')}
+    >
       <CreateEmailText>How to create a Sogang Email?</CreateEmailText>
       <PurpleLinkSVG />
     </CreateEmailButtonBox>
@@ -20,20 +22,20 @@ const CreateEmailButtonBox = styled.div`
   height: 38px;
   flex-shrink: 0;
   border-radius: 24px;
-  background: ${({ theme }) => theme.colors.purple100};
+  background: ${({ theme }) => theme.colors.purple200};
 `;
 
 const CreateEmailText = styled.p`
   color: ${({ theme }) => theme.colors.purple600};
   text-align: center;
-  font-size: 20px;
+  font-size: 1.6rem;
   @media (max-width: 400px) {
-    font-size: 15px;
+    font-size: 1.5rem;
   }
   font-style: normal;
-  font-weight: 300;
+  font-weight: 400;
   line-height: normal;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
 `;
 
 const PurpleLinkSVG = styled(PurpleLink)``;

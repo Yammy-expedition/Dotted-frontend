@@ -215,7 +215,7 @@ const LoginButton = styled.button`
     left: 0;
     bottom: 0;
     width: 0;
-    border-bottom: 4px dashed ${({ theme }) => theme.colors.purple600};
+    /* border-bottom: 4px dashed ${({ theme }) => theme.colors.purple600}; */
     transition: width 0.5s ease;
   }
 

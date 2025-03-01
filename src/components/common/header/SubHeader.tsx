@@ -1,6 +1,6 @@
 import { SubHeaderAnimation } from '@/animations/framer-motion/SubHeaderAnimation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface SubHeaderProps {
@@ -49,12 +49,12 @@ export default function SubHeader({ hoveredTab }: SubHeaderProps) {
             <>
               {aboutsubs.map((sub, idx) => (
                 <SubElement key={idx}>
-                  <a
+                  <Link
                     className={pathname === sub.link ? 'selected' : ''}
-                    href={sub.link}
+                    to={sub.link}
                   >
                     {sub.title}
-                  </a>
+                  </Link>
                   <p>•</p>
                 </SubElement>
               ))}

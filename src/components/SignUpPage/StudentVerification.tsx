@@ -226,7 +226,7 @@ export default function StudentVerificat({
               you are approved.
             </span>
             <span className="Mobile">
-              You can access <span>Community</span> and <span>Market</span>
+              You can access <span>Community</span> and <span>Market</span>{' '}
               after approval.
             </span>
           </div>

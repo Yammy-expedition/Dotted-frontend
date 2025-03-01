@@ -21,5 +21,4 @@ const BackButtonComponent = styled(BackButtonSVG)`
   cursor: pointer;
   background-color: transparent;
   border: none;
-  cursor: pointer;
 `;
