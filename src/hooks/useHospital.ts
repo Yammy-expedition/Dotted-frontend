@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 export interface Hospital {
   id: number;
@@ -25,7 +25,7 @@ const fetchHospitals = async (): Promise<Hospital[]> => {
 };
 
 export const useHospitals = () => {
-  return useQuery<Hospital[]>({
+  return useSuspenseQuery<Hospital[]>({
     queryKey: ['hospitals'],
     queryFn: fetchHospitals
   });

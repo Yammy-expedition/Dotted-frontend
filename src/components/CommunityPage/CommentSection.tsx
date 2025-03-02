@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Comment, PostDetail } from '@/pages/community/DetailCommunityPage';
 import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AComment from './AComment';
 import Locker from '@/assets/svg/MarketPage/Locker.svg?react';
 import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
@@ -18,6 +18,7 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>(post.comments); // 댓글 상태
   const [commentCount, setCommentCount] = useState(post.comment_count); // 댓글 개수 상태
   const [isSecret, setIsSecret] = useState(false);
+  const queryClient = useQueryClient();
 
   // 댓글 추가 함수
   const handleCommentSubmit = async () => {
@@ -34,10 +35,7 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
     };
 
     try {
-      const newComment = await postCommentMutation.mutateAsync(requestData);
-      setComment('');
-      setComments((prev: Comment[]) => [...prev, newComment]);
-      setCommentCount((prev) => prev + 1);
+      await postCommentMutation.mutateAsync(requestData);
     } catch (error) {
       console.error('❌ 댓글 작성 실패:', error);
       alert('댓글 작성에 실패했습니다.');
@@ -63,13 +61,26 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
         }
       );
       return response;
+    },
+    onSuccess: (data) => {
+      setComment('');
+      setComments((prev: Comment[]) => [...prev, data]);
+      setCommentCount((prev) => prev + 1);
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', post.id],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            comments: [...oldData.comments, data],
+            comment_count: oldData.comment_count + 1
+          };
+        }
+      );
+    },
+    onError: (error) => {
+      console.error('❌ 댓글 작성 실패:', error);
     }
-    // onSuccess: (data) => {
-    //   // console.log('✅ 댓글 작성 성공:', data);
-    // },
-    // onError: (error) => {
-    //   // console.error('❌ 댓글 작성 실패:', error);
-    // }
   });
   // console.log(comment);
 

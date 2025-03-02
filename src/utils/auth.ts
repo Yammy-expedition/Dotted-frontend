@@ -78,11 +78,13 @@ export async function fetchWithAuth<T>(
     }
   };
 
-  // console.log(url, finalOptions, 'okay now2');
+  if (url.includes('create') || url.includes('update')) {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  }
   let response = await fetch(url, finalOptions);
 
   // console.log('wait');
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+
   // console.log('go');
 
   // console.log(response, 'okay now3');

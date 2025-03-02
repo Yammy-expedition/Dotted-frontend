@@ -581,8 +581,9 @@ const AccessRestrictedNormal = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  padding: 5.6rem 2rem 0 2rem;
-  width: 51rem;
+  padding: 1rem 2rem 0 2rem;
+  max-width: 51rem;
+  width: 100%;
   height: 23.6rem;
 
   flex-shrink: 0;

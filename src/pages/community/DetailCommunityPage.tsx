@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Posting from '@/components/CommunityPage/Posting';
 import CommentSection from '@/components/CommunityPage/CommentSection';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery
+} from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
 
 // -------------------- 타입 정의 --------------------
@@ -56,13 +60,14 @@ export default function DetailCommunityPage() {
   const postId = Number(id);
   const [isLiked, setIsLiked] = useState(false);
   const [isScraped, setIsScraped] = useState(false);
+  const queryClient = useQueryClient();
 
   // 게시글 상세 조회 API (fetchWithAuth 적용)
   const {
     data: post,
     isLoading,
     isError
-  } = useQuery<PostDetail, Error>({
+  } = useSuspenseQuery<PostDetail, Error>({
     queryKey: ['postDetail', postId],
     queryFn: () =>
       fetchWithAuth<PostDetail>(
@@ -99,6 +104,18 @@ export default function DetailCommunityPage() {
     },
     onSuccess: (data) => {
       setIsLiked(data.is_liked);
+
+      queryClient.setQueryData<PostDetail>(
+        ['postDetail', postId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            is_liked: data.is_liked,
+            like_count: oldData.like_count + (data.is_liked ? 1 : -1)
+          };
+        }
+      );
     },
     onError: (error: any) => {
       console.error(`Error: ${error.message}`);
@@ -121,6 +138,17 @@ export default function DetailCommunityPage() {
     },
     onSuccess: (data) => {
       setIsScraped(data.is_scrapped);
+      queryClient.setQueryData<PostDetail>(
+        ['postDetail', postId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            is_scrapped: data.is_scrapped,
+            scrap_count: oldData.scrap_count + (data.is_scrapped ? 1 : -1)
+          };
+        }
+      );
     },
     onError: (error: any) => {
       console.error(`Error: ${error.message}`);

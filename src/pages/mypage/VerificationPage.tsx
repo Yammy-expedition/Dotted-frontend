@@ -84,7 +84,7 @@ export default function VerificationPage() {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('image_upload', file);
-      let accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) return;
 
       const headers = { Authorization: `Bearer ${accessToken}` };

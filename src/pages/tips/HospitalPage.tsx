@@ -81,6 +81,7 @@ export default function HospitalPage() {
       <Notice>
         <p>Dotted has no connection with the company listed in the service.</p>
       </Notice>
+
       <HospitalListWrapper>
         <ul>
           {filteredHospitals?.map((hospital, idx) => {
@@ -117,6 +118,7 @@ export default function HospitalPage() {
 
 const Main = styled.main`
   min-width: 40rem;
+  height: 100%;
   @media (max-width: 500px) {
     min-width: 30rem;
   }
