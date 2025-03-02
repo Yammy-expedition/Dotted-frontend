@@ -4,8 +4,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Carousel from '@/components/MainPage/Carousel';
 import Tips from '@/components/MainPage/Tips';
 import { useNavigate } from 'react-router-dom';
-import { CommunityPost, EachPost } from '@/types/CommunityPost';
-import { EachMarketPost, MarketPost } from '@/types/MarketPost';
+
 import { lazy, useState } from 'react';
 import { LoginModal } from '@/components/common/ProtectedRoute';
 

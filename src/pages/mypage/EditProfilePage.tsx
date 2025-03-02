@@ -16,14 +16,11 @@ export default function EditProfilePage() {
         'Content-Type': 'application/json'
       };
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_DOMAIN}/api/user/update`,
-        {
-          method: 'PATCH',
-          headers: headers,
-          body: JSON.stringify({ nickname: submitNickname, name: submitName })
-        }
-      );
+      await fetch(`${import.meta.env.VITE_API_DOMAIN}/api/user/update`, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify({ nickname: submitNickname, name: submitName })
+      });
     } catch (error) {
       console.error('Error changing:', error);
     }
@@ -38,13 +35,10 @@ export default function EditProfilePage() {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       };
-      const response = await fetch(
-        `${import.meta.env.VITE_API_DOMAIN}/api/user/delete`,
-        {
-          method: 'DELETE',
-          headers: headers
-        }
-      );
+      await fetch(`${import.meta.env.VITE_API_DOMAIN}/api/user/delete`, {
+        method: 'DELETE',
+        headers: headers
+      });
     } catch (error) {
       console.error('Error changing:', error);
     }
