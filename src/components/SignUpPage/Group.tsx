@@ -29,7 +29,7 @@ export default function Group({ setValue }: GroupProps) {
           { full: 'International Student', short: 'INTER' },
           { full: 'Exchange Student', short: 'EXCHANGE' },
           { full: 'Language Education Center', short: 'LANGUAGE' },
-          { full: 'Others', short: 'OTHER' }
+          { full: 'Others(Indcluding Korean Students)', short: 'OTHER' }
         ].map((item, idx) => (
           <RadioLabel key={idx}>
             <RadioInput
