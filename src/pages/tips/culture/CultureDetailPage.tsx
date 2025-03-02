@@ -58,13 +58,16 @@ const Main = styled.main`
 
 const Header = styled.header`
   display: flex;
+  justify-content: center;
   flex-direction: column;
+
   gap: 2.4rem;
   align-items: center;
   position: relative;
   padding: 7rem 0 1.8rem 0;
 
   > h1 {
+    text-align: center;
     font-size: 3.6rem;
     font-weight: 600;
     letter-spacing: -1.8px;
@@ -76,6 +79,7 @@ const Header = styled.header`
   }
 
   > p {
+    text-align: center;
     font-size: 1.6rem;
     font-weight: 500;
     letter-spacing: -0.8px;

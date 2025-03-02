@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth';
 import Modal from 'react-modal';
 import LoadingStateComponent from '@/components/common/LoadingStateComponent';
+import EXIF from 'exif-js';
 
 Modal.setAppElement('#root');
 
@@ -220,7 +221,7 @@ export default function WriteMarketPage() {
         alert('Failed to update the post. Please try again.');
       }
     } else {
-      // 🔥 새 글 작성 모드
+      // 새 글 작성 모드
       // Filter out null values from previews array
       const validImages = previews.filter(
         (preview): preview is string => preview !== null
@@ -261,17 +262,11 @@ export default function WriteMarketPage() {
     if (file) {
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        // 이미지 파일 배열 업데이트
-        // setImgFiles((prevFiles) => {
-        //   const updatedFiles = [...prevFiles];
-        //   // + 버튼을 누른 순간 null로 자리가 이미 존재
-        //   // 따라서 사진을 추가할 자리의 index를 가져가자!
-        //   updatedFiles[index] = file;
-        //   return updatedFiles;
-        // });
-
-        // 미리보기 배열 업데이트
         setPreviews((prevPreviews) => {
+          const result = reader.result as string;
+          const img = new Image();
+          img.src = result;
+
           const updatedPreviews = [...prevPreviews];
           updatedPreviews[updatedPreviews.length] = reader.result as string;
           return updatedPreviews;
@@ -280,15 +275,76 @@ export default function WriteMarketPage() {
     }
   };
 
-  useEffect(() => {
-    console.log('');
-  }, [previews]);
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (file) {
+      // 기존 이미지 저장 로직 (그대로 유지)
       onSaveImage(file);
+
+      // 대체 접근 방법: 안전하게 EXIF 데이터 시도
+      try {
+        const reader = new FileReader();
+
+        reader.onload = function () {
+          try {
+            // EXIF 라이브러리 오류를 방지하기 위한 안전한 래핑
+            if (reader.result) {
+              console.log('파일 로드 완료, EXIF 데이터 추출 시도...');
+
+              // 이미지 요소를 생성하여 메타데이터 추출 시도
+              const img = new Image();
+              img.onload = function () {
+                console.log('이미지 기본 정보:');
+                console.log('- 너비:', img.width);
+                console.log('- 높이:', img.height);
+
+                // 조심스럽게 EXIF 추출 시도
+                try {
+                  if (typeof EXIF.getData === 'function') {
+                    EXIF.getData(img as any, function (this: any) {
+                      console.log('EXIF 데이터 추출 시도 결과:');
+
+                      // 안전하게 태그 접근
+                      const exifData: any = {};
+
+                      // 주요 태그들 안전하게 접근
+                      const tags = ['Make', 'Model', 'DateTime', 'Orientation'];
+                      tags.forEach((tag) => {
+                        try {
+                          exifData[tag] = EXIF.getTag(this, tag);
+                        } catch (e) {
+                          console.log(`${tag} 추출 실패:`, e);
+                        }
+                      });
+
+                      console.log('추출된 메타데이터:', exifData);
+                    });
+                  } else {
+                    console.log('EXIF.getData 함수를 찾을 수 없습니다.');
+                  }
+                } catch (exifError) {
+                  console.log('EXIF 데이터 추출 중 오류:', exifError);
+                }
+              };
+              const orientation = EXIF.getTag(this, 'Orientation');
+              console.log('이미지 회전:', orientation);
+
+              // 이미지 소스 설정
+              if (typeof reader.result === 'string') {
+                img.src = reader.result;
+              }
+            }
+          } catch (e) {
+            console.log('파일 데이터 처리 중 오류:', e);
+          }
+        };
+
+        // 파일 읽기 시작
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.log('파일 읽기 초기화 중 오류:', error);
+      }
     }
   };
 

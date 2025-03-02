@@ -2,7 +2,7 @@ const firstCotent = () => {
   return (
     <p>
       📢 [Dotted Beta Period & Verification Notice]
-      <br /> 📅 Beta Period: March 1st – March 21st
+      <br /> 📅 Beta Period: March 1st – March 22st
       <br /> Dotted is a private community exclusively for verified Sogang
       students. To fully access the Community and Market, you need to verify
       that you are a Sogang University student.
