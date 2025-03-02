@@ -40,7 +40,7 @@ export default function CommunityMiniBoard({
               onClick={() => onItemClick(`community/detail/${item.id}`)}
             >
               <span>
-                <QuoteIcon /> {item.title}
+                <QuoteIcon /> <span className="title">{item.title}</span>
               </span>
               <span>{formatRelativeTime(item.created_at)}</span>
             </li>
@@ -93,12 +93,28 @@ const CommunityList = styled.div`
       &:not(:last-child) {
         border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
       }
+
       > span {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         display: flex;
         align-items: center;
         gap: 1rem;
         color: ${({ theme }) => theme.colors.gray700};
         font-size: 2rem;
+
+        > span {
+          &.title {
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
         svg {
           width: 1.4rem;
           height: 1.4rem;
@@ -109,6 +125,13 @@ const CommunityList = styled.div`
           font-size: 1.6rem;
           font-weight: 400;
           letter-spacing: -0.8px;
+        }
+
+        &:last-child {
+          display: flex;
+          justify-content: end;
+          width: 7rem;
+          line-height: 2rem;
         }
       }
     }

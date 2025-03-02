@@ -35,7 +35,12 @@ export default function MakrketList({ pagedData }: MarketListProps) {
                 </div>
 
                 <div>
-                  <span className="price">₩ {post.price}</span>
+                  <span className="price">
+                    ₩{' '}
+                    {post.price
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  </span>
                   <span className=" created">
                     {formatRelativeTime(post.created_at)}
                   </span>
