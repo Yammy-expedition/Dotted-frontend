@@ -5,12 +5,18 @@ import Carousel from '@/components/MainPage/Carousel';
 import Tips from '@/components/MainPage/Tips';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { formatRelativeTime } from '@/utils/formatTime';
 import { CommunityPost, EachPost } from '@/types/CommunityPost';
 import { EachMarketPost, MarketPost } from '@/types/MarketPost';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { LoginModal } from '@/components/common/ProtectedRoute';
-import QuoteIcon from '@/assets/svg/MainPage/Quote.svg?react';
+
+const CommunityMiniBoard = lazy(
+  () => import('@/components/MainPage/CommunityMiniBoard')
+);
+const MarketMiniBoard = lazy(
+  () => import('@/components/MainPage/MarketMiniBoard')
+);
+
 async function fetchCommunityPosts(): Promise<EachPost[]> {
   const url = new URL(`${import.meta.env.VITE_API_DOMAIN}/api/posting`);
 
@@ -75,6 +81,7 @@ export default function MainPage() {
       navigate(path);
     }
   };
+
   return (
     <Main>
       <Wrapper>
@@ -83,77 +90,8 @@ export default function MainPage() {
         <Tips />
 
         <MiniBoardWrapper>
-          <MiniCommunity>
-            <Title>
-              <span>Community</span>
-              <span onClick={() => handleClick('/community')}>+ more</span>
-            </Title>
-            <CommunityList>
-              <ul>
-                {onePageCommuData?.map((item, idx) => {
-                  if (idx > 4) return null;
-                  return (
-                    <li
-                      key={idx}
-                      onClick={() => handleClick(`community/detail/${item.id}`)}
-                    >
-                      <span>
-                        <QuoteIcon /> {item.title}
-                      </span>
-                      <span>{formatRelativeTime(item.created_at)}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </CommunityList>
-          </MiniCommunity>
-
-          <MiniMarket>
-            <Title>
-              <span>Market</span>
-              <span onClick={() => handleClick('/market')}>+ more</span>
-            </Title>
-            <MarketListContainer>
-              <ul>
-                {onePageMarketData?.map((post, idx) => {
-                  if (idx > (isMobile ? 3 : uglyZone ? 1 : 2)) return null;
-                  const status = post.status
-                    .toLocaleLowerCase()
-                    .split('_')
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
-                  // console.lg(status);
-                  return (
-                    <li
-                      key={post.id}
-                      onClick={() => handleClick(`market/detail/${post.id}`)}
-                    >
-                      <Tag
-                        className={`${post.status === 'FOR_SALE' ? 'onSale' : 'soldOut'}`}
-                      >
-                        {status}
-                      </Tag>
-                      <MarketImageWrapper>
-                        <img src={post.thumbnail} />
-                      </MarketImageWrapper>
-                      <ItemInfo>
-                        <div className="title">
-                          <span>{post.title}</span>
-                        </div>
-
-                        <div>
-                          <span className="price">₩ {post.price}</span>
-                          <span className=" created">
-                            {formatRelativeTime(post.created_at)}
-                          </span>
-                        </div>
-                      </ItemInfo>
-                    </li>
-                  );
-                })}
-              </ul>
-            </MarketListContainer>
-          </MiniMarket>
+          <CommunityMiniBoard onItemClick={handleClick} />
+          <MarketMiniBoard onItemClick={handleClick} />
         </MiniBoardWrapper>
         {modalOpen && <LoginModal setModalOpen={setModalOpen} />}
       </Wrapper>

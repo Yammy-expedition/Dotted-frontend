@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Posting from '@/components/CommunityPage/Posting';
 import CommentSection from '@/components/CommunityPage/CommentSection';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery
+} from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
 
 // -------------------- 타입 정의 --------------------
@@ -63,7 +67,7 @@ export default function DetailCommunityPage() {
     data: post,
     isLoading,
     isError
-  } = useQuery<PostDetail, Error>({
+  } = useSuspenseQuery<PostDetail, Error>({
     queryKey: ['postDetail', postId],
     queryFn: () =>
       fetchWithAuth<PostDetail>(

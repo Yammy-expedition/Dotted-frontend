@@ -48,7 +48,6 @@ const Main = styled.main`
 `;
 
 const Header = styled.header`
-
   padding: 2.7rem 0 1.7rem 0;
 
   width: 100%;

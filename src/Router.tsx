@@ -35,10 +35,12 @@ import NoticeDetailPage from './pages/about/NoticeDetailPage';
 
 import ScrollToTop from './components/common/ScrollToTop';
 import CultureCreatePage from './pages/admin/CultureCreatePage';
+import { Suspense } from 'react';
+import LoadingStateComponent from './components/common/LoadingStateComponent';
+
 const Router = createBrowserRouter([
   {
     path: '/',
-    // errorElement:
     element: (
       <ProtectedRoute>
         <ScrollToTop />
@@ -55,27 +57,51 @@ const Router = createBrowserRouter([
         children: [
           {
             path: 'restaurant',
-            element: <RestaurantPage />
+            element: (
+              <Suspense fallback={<LoadingStateComponent />}>
+                <RestaurantPage />
+              </Suspense>
+            )
           },
           {
             path: 'hospital',
-            element: <HospitalPage />
+            element: (
+              <Suspense fallback={<LoadingStateComponent />}>
+                <HospitalPage />
+              </Suspense>
+            )
           },
           {
             path: 'faq',
-            element: <FAQPage />
+            element: (
+              <Suspense fallback={<LoadingStateComponent />}>
+                <FAQPage />
+              </Suspense>
+            )
           },
           {
             path: 'clubs',
-            element: <ClubsPage />
+            element: (
+              <Suspense fallback={<LoadingStateComponent />}>
+                <ClubsPage />
+              </Suspense>
+            )
           },
           {
             path: 'culture',
-            element: <CulturePage />
+            element: (
+              <Suspense fallback={<LoadingStateComponent />}>
+                <CulturePage />
+              </Suspense>
+            )
           },
           {
             path: 'culture/:cultureId',
-            element: <CultureDetailPage />
+            element: (
+              <Suspense fallback={<LoadingStateComponent />}>
+                <CultureDetailPage />
+              </Suspense>
+            )
           }
         ]
       },
@@ -91,14 +117,8 @@ const Router = createBrowserRouter([
       {
         path: 'market',
         children: [
-          {
-            path: '',
-            element: <MarketPage />
-          },
-          {
-            path: 'write',
-            element: <WriteMarketPage />
-          },
+          { path: '', element: <MarketPage /> },
+          { path: 'write', element: <WriteMarketPage /> },
           { path: 'detail/:id', element: <DetailMarketPage /> },
           { path: 'detail/:id/edit', element: <WriteMarketPage /> }
         ]
@@ -119,52 +139,22 @@ const Router = createBrowserRouter([
         path: 'mypage',
         element: <MyPageLayout />,
         children: [
-          {
-            path: 'profile',
-            element: <EditProfilePage />
-          },
-          {
-            path: 'verification',
-            element: <VerificationPage />
-          },
-          {
-            path: 'posts',
-            element: <MyPostsPage />
-          },
-          {
-            path: 'comments',
-            element: <MyCommentsPage />
-          },
-          {
-            path: 'scraps',
-            element: <MyScrapsPage />
-          }
+          { path: 'profile', element: <EditProfilePage /> },
+          { path: 'verification', element: <VerificationPage /> },
+          { path: 'posts', element: <MyPostsPage /> },
+          { path: 'comments', element: <MyCommentsPage /> },
+          { path: 'scraps', element: <MyScrapsPage /> }
         ]
       },
       {
         path: 'mypage',
         element: <MyPageLayout />,
         children: [
-          {
-            path: 'profile',
-            element: <EditProfilePage />
-          },
-          {
-            path: 'verification',
-            element: <VerificationPage />
-          },
-          {
-            path: 'posts',
-            element: <MyPostsPage />
-          },
-          {
-            path: 'comments',
-            element: <MyCommentsPage />
-          },
-          {
-            path: 'scraps',
-            element: <MyScrapsPage />
-          }
+          { path: 'profile', element: <EditProfilePage /> },
+          { path: 'verification', element: <VerificationPage /> },
+          { path: 'posts', element: <MyPostsPage /> },
+          { path: 'comments', element: <MyCommentsPage /> },
+          { path: 'scraps', element: <MyScrapsPage /> }
         ]
       }
     ]

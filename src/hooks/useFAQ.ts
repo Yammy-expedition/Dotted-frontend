@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 export interface EachFAQPost {
   id: number;
@@ -22,7 +22,7 @@ const fetchFAQ = async (): Promise<EachFAQPost[]> => {
 };
 
 export const useFAQ = () => {
-  return useQuery<EachFAQPost[]>({
+  return useSuspenseQuery<EachFAQPost[]>({
     queryKey: ['campus_faq'],
     queryFn: fetchFAQ
   });
