@@ -8,7 +8,7 @@ export default function EditProfilePage() {
   const [isAllChecked, setIsAllChecked] = useState(false);
   const handleSubmit = async () => {
     try {
-      let accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) return;
 
       const headers = {
@@ -24,10 +24,6 @@ export default function EditProfilePage() {
           body: JSON.stringify({ nickname: submitNickname, name: submitName })
         }
       );
-      if (response.ok) {
-      } else {
-        console.error('Failed to change user information');
-      }
     } catch (error) {
       console.error('Error changing:', error);
     }
@@ -35,7 +31,7 @@ export default function EditProfilePage() {
 
   const handleDeleteAccount = async () => {
     try {
-      let accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) return;
 
       const headers = {
@@ -49,10 +45,6 @@ export default function EditProfilePage() {
           headers: headers
         }
       );
-      if (response.ok) {
-      } else {
-        console.error('Failed to change user information');
-      }
     } catch (error) {
       console.error('Error changing:', error);
     }

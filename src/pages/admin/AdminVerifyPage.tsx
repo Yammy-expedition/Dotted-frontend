@@ -22,7 +22,7 @@ interface RequestType {
   };
 }
 const fetchProfileData = async () => {
-  let accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) return;
 
   const headers = { Authorization: `Bearer ${accessToken}` };
@@ -48,7 +48,7 @@ const manageRequest = async ({
   status: boolean;
   id: number;
 }) => {
-  let accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) throw new Error('No access token');
 
   const headers = {

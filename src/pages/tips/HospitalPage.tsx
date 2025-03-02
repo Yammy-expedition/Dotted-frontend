@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Left from '@/assets/svg/tips/hospital/left.svg?react';
@@ -6,7 +6,6 @@ import Right from '@/assets/svg/tips/hospital/right.svg?react';
 import Distance from '@/assets/svg/tips/hospital/distance.svg?react';
 import Link from '@/assets/svg/tips/hospital/link.svg?react';
 import { useHospitals } from '@/hooks/useHospital';
-import LoadingStateComponent from '@/components/common/LoadingStateComponent';
 
 const hospitalTabs = [
   'All',
@@ -328,31 +327,4 @@ const HospitalListWrapper = styled.div`
       }
     }
   }
-`;
-
-const Loading = styled.div`
-  width: 100%;
-  height: 70vh;
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-`;
-
-const ImgWrppaer = styled.div`
-  width: 100%;
-  max-width: 20rem;
-
-  display: flex;
-  justify-content: center;
-  > img {
-    width: 100%;
-    object-fit: cover;
-  }
-`;
-const LoadingMSG = styled.div`
-  font-size: 2.1rem;
-  font-weight: 500;
 `;

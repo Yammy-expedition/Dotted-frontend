@@ -53,7 +53,11 @@ export default function CommunityMiniBoard({
 
 // styled components
 const MiniCommunity = styled.div`
-  width: 100%;
+  width: 50%;
+
+  @media (max-width: 865px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.div`
@@ -82,7 +86,6 @@ const CommunityList = styled.div`
   background: ${({ theme }) => theme.colors.backgroundLayer1};
   width: 100%;
   > ul {
-    width: 100%;
     > li {
       cursor: pointer;
       display: flex;
