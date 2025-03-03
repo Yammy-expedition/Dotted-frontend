@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NodeViewProps, NodeViewWrapper } from '@tiptap/react';
-import { NodeSelection } from 'prosemirror-state'; // NodeSelection import 추가
+import { NodeSelection } from 'prosemirror-state';
 import styled from 'styled-components';
 import AlignCenter from '@/assets/svg/tiptap/align_center.svg?react';
 import AlignLeft from '@/assets/svg/tiptap/align_left.svg?react';
 import AlignRight from '@/assets/svg/tiptap/align_right.svg?react';
+
+const MAX_IMAGE_SIZE = 500; // Maximum width or height in pixels
 
 const ResizableImageComponent: React.FC<NodeViewProps> = ({
   node,
@@ -17,7 +19,54 @@ const ResizableImageComponent: React.FC<NodeViewProps> = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
+  const aspectRatioRef = useRef(1); // Store aspect ratio
   const alignment = node.attrs.alignment || 'center';
+  const [isLoading, setIsLoading] = useState(true);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: node.attrs.width || 'auto',
+    height: node.attrs.height || 'auto'
+  });
+
+  // Load image in background and calculate dimensions before showing
+  useEffect(() => {
+    const img = new Image();
+    img.src = node.attrs.src;
+
+    img.onload = () => {
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      aspectRatioRef.current = aspectRatio;
+
+      // Constrain initial size to MAX_IMAGE_SIZE
+      let initialWidth = img.naturalWidth;
+      let initialHeight = img.naturalHeight;
+
+      if (initialWidth > MAX_IMAGE_SIZE || initialHeight > MAX_IMAGE_SIZE) {
+        if (initialWidth >= initialHeight) {
+          initialWidth = MAX_IMAGE_SIZE;
+          initialHeight = initialWidth / aspectRatio;
+        } else {
+          initialHeight = MAX_IMAGE_SIZE;
+          initialWidth = initialHeight * aspectRatio;
+        }
+      }
+
+      // Set dimensions in state and update attributes
+      const newDimensions = {
+        width: `${initialWidth}px`,
+        height: `${initialHeight}px`
+      };
+
+      setImageDimensions(newDimensions);
+      updateAttributes(newDimensions);
+      setIsLoading(false);
+    };
+
+    // Handle error case
+    img.onerror = () => {
+      console.error('Failed to load image:', node.attrs.src);
+      setIsLoading(false);
+    };
+  }, [node.attrs.src]);
 
   const handleResizeStart = (e: React.MouseEvent | React.TouchEvent) => {
     if (!editor.options.editable) return;
@@ -45,8 +94,13 @@ const ResizableImageComponent: React.FC<NodeViewProps> = ({
     const deltaX = currentX - startXRef.current;
     const newWidth = startWidthRef.current + deltaX;
     const minWidth = 50;
+
     if (newWidth >= minWidth && imageRef.current) {
+      // Calculate new height based on aspect ratio
+      const newHeight = newWidth / aspectRatioRef.current;
+
       imageRef.current.style.width = `${newWidth}px`;
+      imageRef.current.style.height = `${newHeight}px`;
     }
   };
 
@@ -55,7 +109,15 @@ const ResizableImageComponent: React.FC<NodeViewProps> = ({
     setIsResizing(false);
     if (imageRef.current) {
       const newWidth = imageRef.current.clientWidth;
-      updateAttributes({ width: `${newWidth}px`, height: 'auto' });
+      const newHeight = newWidth / aspectRatioRef.current;
+
+      const newDimensions = {
+        width: `${newWidth}px`,
+        height: `${newHeight}px`
+      };
+
+      setImageDimensions(newDimensions);
+      updateAttributes(newDimensions);
     }
   };
 
@@ -139,28 +201,41 @@ const ResizableImageComponent: React.FC<NodeViewProps> = ({
     }
   };
 
+  // Calculate placeholder dimensions to match final image size
+  const placeholderStyle = {
+    width: imageDimensions.width,
+    height: imageDimensions.height
+  };
+
   return (
     <ImageWrapper className={`image-alignment-${alignment}`}>
       <ImageContainer
         alignment={alignment}
         selected={selected}
-        editable={editor.options.editable} // ✅ editable 상태 전달
-        draggable={!isResizing && editor.options.editable} // 🚨 editable이 false면 드래그 비활성화
-        onDragStart={editor.options.editable ? handleDragStart : undefined} // 🚨 editable이 false면 드래그 이벤트 제거
+        editable={editor.options.editable}
+        draggable={!isResizing && editor.options.editable}
+        onDragStart={editor.options.editable ? handleDragStart : undefined}
         onClick={handleTap}
         onTouchEnd={handleTap}
         data-image-component="true"
       >
-        <StyledImage
-          ref={imageRef}
-          src={node.attrs.src}
-          alt={node.attrs.alt || ''}
-          title={node.attrs.title || ''}
-          style={{
-            width: node.attrs.width || '100%',
-            height: node.attrs.height || 'auto'
-          }}
-        />
+        {isLoading ? (
+          <Placeholder style={placeholderStyle}>
+            이미지 불러오는 중...
+          </Placeholder>
+        ) : (
+          <StyledImage
+            ref={imageRef}
+            src={node.attrs.src}
+            alt={node.attrs.alt || ''}
+            title={node.attrs.title || ''}
+            style={{
+              width: imageDimensions.width,
+              height: imageDimensions.height,
+              objectFit: 'contain'
+            }}
+          />
+        )}
         {selected && editor.options.editable && (
           <>
             <ResizeHandle
@@ -223,15 +298,9 @@ const ImageContainer = styled.div<{
   position: relative;
   display: inline-block;
   cursor: ${({ editable, selected }) =>
-    !editable
-      ? 'default'
-      : selected
-        ? 'move'
-        : 'pointer'}; // 🚨 editable이 false면 기본 커서로 설정
+    !editable ? 'default' : selected ? 'move' : 'pointer'};
   outline: ${({ selected, theme, editable }) =>
-    selected && editable
-      ? `2px solid ${theme.colors.purple600}`
-      : 'none'}; // 🚨 editable이 false면 아웃라인 제거
+    selected && editable ? `2px solid ${theme.colors.purple600}` : 'none'};
 `;
 
 const StyledImage = styled.img`
@@ -290,4 +359,15 @@ const AlignButton = styled.button`
       width: 15px;
     }
   }
+`;
+
+const Placeholder = styled.div`
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 14px;
+  border-radius: 8px;
+  text-align: center;
 `;

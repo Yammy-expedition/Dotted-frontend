@@ -23,6 +23,7 @@ import styled from 'styled-components';
 import ResizableImage from './ResizableImage';
 import { CommunityData } from '@/pages/community/WriteCommunityPage';
 import { UseFormSetValue, UseFormTrigger, UseFormWatch } from 'react-hook-form';
+import { correctImageOrientation, handleExifOrientation } from '@/utils/exif';
 
 const EditorContainer = styled.div`
   border: 1px solid #e5e6eb;
@@ -171,16 +172,42 @@ const Tiptap = ({ watch, setValue, trigger }: TipTapProps) => {
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files && event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          editor?.chain().focus().setImage({ src: reader.result }).run();
-        }
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    try {
+      // 1️⃣ EXIF에서 오리엔테이션 값 가져오기
+      const { orientation } = await handleExifOrientation(file);
+      console.log(`📸 Detected Orientation: ${orientation}`);
+
+      let finalDataUrl: string | null = null;
+
+      if (orientation !== 1) {
+        // 2️⃣ 오리엔테이션이 1이 아니면 이미지 회전 후 저장
+        const { dataUrl } = await correctImageOrientation(file);
+        finalDataUrl = dataUrl;
+      } else {
+        // 3️⃣ 이미 1이면 원본 사용
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            finalDataUrl = reader.result;
+            editor?.chain().focus().setImage({ src: finalDataUrl }).run();
+          }
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      // 4️⃣ 최종 변환된 Base64 이미지를 에디터에 삽입
+      if (finalDataUrl) {
+        editor?.chain().focus().setImage({ src: finalDataUrl }).run();
+      }
+    } catch (error) {
+      console.error('이미지 처리 중 오류 발생:', error);
     }
   };
 
