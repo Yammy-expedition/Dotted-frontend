@@ -120,7 +120,7 @@ export default function FAQPage() {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: 'blue', textDecoration: 'underline' }}
+                      style={{ color: '#9678D3', textDecoration: 'underline' }}
                     >
                       {url}
                     </a>
@@ -134,7 +134,7 @@ export default function FAQPage() {
                   href={part}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: 'blue', textDecoration: 'underline' }}
+                  style={{ color: '#9678D3', textDecoration: 'underline' }}
                 >
                   {part}
                 </a>
@@ -260,11 +260,16 @@ const Notice = styled.div`
   > span {
     white-space: pre-wrap;
     color: ${({ theme }) => theme.colors.gray400};
-
     font-size: 1.6rem;
-    font-style: normal;
     font-weight: 400;
     line-height: 2rem;
+  }
+  @media (max-width: 430px) {
+    /* display: none; */
+    margin: 1rem 0;
+    span {
+      font-size: 1.4rem;
+    }
   }
 `;
 
@@ -286,9 +291,20 @@ const ArrowWrapper = styled.div<{ $isOpen: boolean }>`
   display: flex;
   align-items: center;
   transition: transform 0.3s ease;
-  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   padding: 0.5rem;
   padding-left: 1.5rem;
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    @media (max-width: 700px) {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+    transform: ${({ $isOpen }) =>
+      $isOpen ? 'rotate(180deg)' : 'rotate(0deg)'};
+    transition: transform 0.3s ease;
+    stroke-width: 1.5;
+  }
 `;
 
 const FAQItem = styled.li<{ $isOpen: boolean }>`
@@ -303,23 +319,24 @@ const FAQItem = styled.li<{ $isOpen: boolean }>`
   }
 
   cursor: pointer;
-  padding: 2.5rem 4rem 2.5rem 2rem;
+  padding: 2rem 2rem 2rem 2rem;
   background-color: ${({ theme, $isOpen }) =>
     $isOpen ? theme.colors.purple100 : ''};
 
   transition: background-color 0.3s ease;
-
+  @media (max-width: 700px) {
+    padding: 1.5rem 1rem 1.5rem 1rem;
+  }
   .question {
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: ${({ theme }) => theme.colors.gray700};
-
     font-size: 2rem;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     line-height: normal;
-    letter-spacing: -0.1rem;
+    letter-spacing: -0.4px;
     cursor: pointer;
 
     @media (max-width: 700px) {
@@ -339,10 +356,10 @@ const FAQItem = styled.li<{ $isOpen: boolean }>`
 
 const Answer = styled.div`
   color: ${({ theme }) => theme.colors.gray700};
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 130%;
+  line-height: 170%;
   letter-spacing: -0.04rem;
   padding: 0 3.8rem;
   max-height: 0;
@@ -358,7 +375,7 @@ const Answer = styled.div`
   &.open {
     border-top: 1px solid ${({ theme }) => theme.colors.purple600};
     max-height: 100rem;
-    padding: 2.5rem 3.8rem;
+    padding: 1rem 1.8rem;
   }
 `;
 
@@ -376,7 +393,10 @@ const PaginationBox = styled.div`
     border: none;
     background: none;
     font-size: 1.6rem;
-
+    display: flex;
+    justify-content: center;
+    color: ${({ theme }) => theme.colors.gray700};
+    align-items: center;
     &.selected {
       background-color: ${({ theme }) => theme.colors.purple600};
       color: ${({ theme }) => theme.colors.gray50};

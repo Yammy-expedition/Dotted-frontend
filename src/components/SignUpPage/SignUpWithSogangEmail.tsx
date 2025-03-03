@@ -15,8 +15,6 @@ export default function SignUpWithSogangEmail({
   return (
     <SogangEmailContainer>
       <SogangEmailWrapper>
-        {/* <Recomended /> */}
-
         <MainText />
 
         <ButtonBoxWrapper>

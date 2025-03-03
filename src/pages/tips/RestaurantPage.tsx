@@ -145,7 +145,7 @@ const RightButton = styled.div`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 1.2rem;
+  gap: 1rem;
   padding: 1.6rem 0;
   flex-wrap: nowrap;
   justify-content: center;
@@ -169,12 +169,14 @@ const Tab = styled.span`
   font-weight: 400;
   letter-spacing: -0.75px;
   color: ${({ theme }) => theme.colors.gray500};
-  padding: 0.7rem 3.2rem;
+  padding: 0.7rem 3rem;
   border-radius: 2.4rem;
   background-color: ${({ theme }) => theme.colors.gray200};
   cursor: pointer;
   white-space: nowrap;
-
+  @media (max-width: 430px) {
+    padding: 0.7rem 2rem;
+  }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: ${({ theme }) => theme.colors.gray300};

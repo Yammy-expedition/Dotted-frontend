@@ -83,7 +83,7 @@ export default function MarketScraps() {
             <Information>
               <h3>{post.title}</h3>
               <span>
-                <p>₩ {post.price}</p>
+                <p>₩ {post.price.toLocaleString()}</p>
                 <p>{dayjs(post.created_at).format('YYYY-MM-DD')}</p>
               </span>
             </Information>
@@ -125,17 +125,17 @@ export default function MarketScraps() {
   );
 }
 
-const Section = styled.section`
-  /* height: 100%; */
-`;
+const Section = styled.section``;
 const MarketContainer = styled.div`
-  height: 80%;
   padding: 2rem 0rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr 1fr;
   gap: 2.4rem;
-  @media (max-width: 1180px) {
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 1130px) {
     grid-template-columns: repeat(2, 1fr);
   }
   @media (max-width: 768px) {
@@ -174,6 +174,7 @@ const PostBox = styled.div`
     height: 100%;
     object-fit: cover;
     transition: scale 0.3s;
+    aspect-ratio: 1.1/1;
   }
   @media (max-width: 768px) {
     grid-template-rows: 1fr;
@@ -205,8 +206,10 @@ const Information = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  min-width: 100%;
+  max-width: 100%;
   h3 {
-    width: 90%;
+    width: 100%;
     height: 2rem;
     font-size: 1.6rem;
     font-weight: 700;
@@ -216,12 +219,22 @@ const Information = styled.div`
     text-overflow: ellipsis;
   }
   span {
-    display: flex;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     justify-content: space-between;
     p {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 400;
       color: ${({ theme }) => theme.colors.gray500};
+      &:first-child {
+        color: ${({ theme }) => theme.colors.gray700};
+        font-weight: 600;
+      }
+      &:last-child {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
   }
 `;

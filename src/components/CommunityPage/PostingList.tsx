@@ -64,13 +64,16 @@ const PostingListWrapper = styled.ul`
   min-height: 50vh;
 
   > li {
-    padding: 1.5rem 0;
+    padding: 1rem 0;
     cursor: pointer;
     width: 100%;
-    height: 9.2rem;
+    height: 8rem;
     display: flex;
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
-
+    @media (max-width: 460px) {
+      height: 7rem;
+      padding: 0.7rem 0;
+    }
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         background-color: ${({ theme }) => theme.colors.gray100};
@@ -85,10 +88,12 @@ const PostingTagContainer = styled.div`
   > div {
     width: 100%;
     height: 100%;
-
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  @media (max-width: 460px) {
+    width: 8rem;
   }
 `;
 
@@ -100,24 +105,27 @@ const PostingInfo = styled.div`
 const PostingTitle = styled.div`
   width: 100%;
   height: 100%;
-
   display: flex;
   align-items: center;
   gap: 1rem;
-
   > span {
     &:first-child {
+      width: fit-content;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       color: ${({ theme }) => theme.colors.gray700};
-      font-size: 2rem;
-      @media (max-width: 460px) {
-        font-size: 1.7rem;
+      font-size: 1.8rem;
+      @media (max-width: 700px) {
+        font-size: 1.5rem;
       }
       font-weight: 600;
       letter-spacing: -0.1rem;
     }
-
+    &:last-child {
+      letter-spacing: 0.2rem;
+    }
     color: ${({ theme }) => theme.colors.gray700};
-
     font-size: 1.6rem;
     @media (max-width: 460px) {
       font-size: 1.3rem;
@@ -178,7 +186,9 @@ const PostingTag = styled.div<{ $color: string }>`
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.065rem;
-
+  @media (max-width: 460px) {
+    font-size: 1.1rem;
+  }
   > div {
     display: flex;
     align-items: center;
