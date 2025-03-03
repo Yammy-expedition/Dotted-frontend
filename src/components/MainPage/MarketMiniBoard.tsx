@@ -98,7 +98,10 @@ export default function MarketMiniBoard({ onItemClick }: MarketMiniBoardProps) {
 
 // styled components
 const MiniMarket = styled.div`
-  width: 100%;
+  width: 50%;
+  @media (max-width: 865px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.div`
