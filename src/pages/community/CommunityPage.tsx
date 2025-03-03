@@ -93,7 +93,7 @@ export default function CommunityPage() {
   return (
     <CommunityPageContainer>
       <Wrapper>
-        <Title>Community</Title>
+        {/* <Title>Community</Title> */}
 
         <TagAndSearch>
           <TagList
@@ -168,7 +168,7 @@ export default function CommunityPage() {
 
 // -------------------- 스타일 컴포넌트 --------------------
 const CommunityPageContainer = styled.div`
-  margin-top: 2.5rem;
+  /* margin-top: 2.5rem; */
   width: 100%;
   padding: 0 24.3rem;
   display: flex;
@@ -184,7 +184,7 @@ const CommunityPageContainer = styled.div`
   }
 
   @media (max-width: 700px) {
-    padding: 0 2rem;
+    padding: 0 1rem;
   }
 `;
 
@@ -193,18 +193,18 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div`
-  width: 100%;
-  color: ${({ theme }) => theme.colors.gray700};
-  font-size: 3.6rem;
-  @media (max-width: 460px) {
-    font-size: 3.3rem;
-  }
-  font-style: normal;
-  font-weight: 700;
-  line-height: 3.6rem;
-  letter-spacing: -0.18rem;
-`;
+// const Title = styled.div`
+//   width: 100%;
+//   color: ${({ theme }) => theme.colors.gray700};
+//   font-size: 3.6rem;
+//   @media (max-width: 460px) {
+//     font-size: 3.3rem;
+//   }
+//   font-style: normal;
+//   font-weight: 700;
+//   line-height: 3.6rem;
+//   letter-spacing: -0.18rem;
+// `;
 
 const TagAndSearch = styled.div`
   display: flex;
@@ -212,6 +212,7 @@ const TagAndSearch = styled.div`
   align-items: end;
   margin-top: 2rem;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
+  gap: 1rem;
 
   @media (max-width: 1260px) {
     flex-direction: column;
@@ -219,6 +220,9 @@ const TagAndSearch = styled.div`
     > ul:first-child {
       margin-bottom: 2rem;
     }
+  }
+  @media (max-width: 460px) {
+    margin-top: 0rem;
   }
 `;
 

@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import NavigateIcon from '@/assets/svg/tips/restaurant/navigate.svg?react';
 import LinkIcon from '@/assets/svg/tips/restaurant/link.svg?react';
+// import NaverIcon from '@/assets/svg/tips/restaurant/navermap.svg?react';
+// import GoogleIcon from '@/assets/svg/tips/restaurant/googlemap.svg?react';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -67,11 +69,13 @@ export default function RestaurantList() {
                     <span className="location__link">
                       <a target="_blank" href={el.naver_map}>
                         <LinkIcon />
-                        {'naver map'}
+                        {/* <NaverIcon /> */}
+                        Naver map
                       </a>
                       <a target="_blank" href={el.google_map}>
                         <LinkIcon />
-                        {'google map'}
+                        {/* <GoogleIcon /> */}
+                        Google map
                       </a>
                     </span>
                   </RestaurantLocation>
@@ -116,22 +120,25 @@ const RestaurantBox = styled.li`
   border-radius: 1.6rem;
   overflow: hidden;
   display: flex;
-  aspect-ratio: 2;
+  aspect-ratio: 3 / 1;
 
   @media (max-width: 900px) {
-    aspect-ratio: unset;
+    aspect-ratio: 1 / 1;
+  }
+
+  @media (max-width: 470px) {
+    aspect-ratio: 1.1 / 1;
   }
 
   > img {
     width: 40%;
-
     height: 100%;
     object-fit: cover;
     flex-shrink: 0;
 
     @media (max-width: 900px) {
       width: 100%;
-      aspect-ratio: 1.2;
+      aspect-ratio: 2 / 1;
       height: auto;
     }
   }
@@ -163,11 +170,11 @@ const RestaurantInfo = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
-  gap: 1rem;
+  gap: 0.7rem;
   > h1 {
-    font-size: 2.4rem;
-    font-weight: 400;
-    letter-spacing: -1px;
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: -0.7px;
     color: ${({ theme }) => theme.colors.gray700};
     @media (max-width: 1000px) {
       font-size: 2rem;
@@ -194,8 +201,8 @@ const RestaurantLocation = styled.div`
     gap: 1rem;
 
     > svg {
-      width: 1.8rem;
-      height: 1.8rem;
+      width: 1.4rem;
+      height: 1.4rem;
     }
 
     > span {
@@ -223,7 +230,7 @@ const RestaurantLocation = styled.div`
       color: ${({ theme }) => theme.colors.gray500};
 
       @media (max-width: 900px) {
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
 
       > svg {

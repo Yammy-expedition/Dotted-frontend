@@ -13,7 +13,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Left from '@/assets/svg/tips/hospital/left.svg?react';
 import Right from '@/assets/svg/tips/hospital/right.svg?react';
-
 const clubTabs = [
   { name: 'All', src: 'all' },
   { name: 'Volunteer', src: 'volunteer' },
@@ -261,7 +260,6 @@ const TabElement = styled.div<{ $active: boolean }>`
   flex-direction: column;
   align-items: center;
   gap: 0.8rem;
-
   > span {
     width: 5rem;
     height: 5rem;
@@ -297,8 +295,10 @@ const TabElement = styled.div<{ $active: boolean }>`
   }
 
   > p {
+    width: 7rem;
     text-align: center;
-    font-size: 1.5rem;
+    line-height: 1.1;
+    font-size: 1.3rem;
     font-weight: 400;
     letter-spacing: -0.75px;
     color: ${({ $active, theme }) =>

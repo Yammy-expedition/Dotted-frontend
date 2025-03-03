@@ -142,7 +142,9 @@ export default function MainPage() {
                         </div>
 
                         <div>
-                          <span className="price">₩ {post.price}</span>
+                          <span className="price">
+                            ₩ {post.price.toLocaleString()}
+                          </span>
                           <span className=" created">
                             {formatRelativeTime(post.created_at)}
                           </span>

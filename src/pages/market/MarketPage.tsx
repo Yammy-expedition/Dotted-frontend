@@ -98,11 +98,10 @@ export default function MarketPage() {
   return (
     <MarketPageContainer>
       <Wrapper>
-        <Title>Market</Title>
+        {/* <Title>Market</Title> */}
         <Notice>
           <span>
             In the market community, you can use the secret comment function
-            {`\n`}
             when sharing sensitive information related to transaction
           </span>
         </Notice>
@@ -173,7 +172,7 @@ export default function MarketPage() {
 }
 
 const MarketPageContainer = styled.div`
-  margin-top: 2.5rem;
+  /* margin-top: 2.5rem; */
   width: 100%;
   padding: 0 24.3rem;
   display: flex;
@@ -189,7 +188,7 @@ const MarketPageContainer = styled.div`
   }
 
   @media (max-width: 700px) {
-    padding: 0 2rem;
+    padding: 0 1rem;
   }
 `;
 
@@ -198,24 +197,23 @@ const Wrapper = styled.div`
   max-width: 1287px;
 `;
 
-const Title = styled.div`
-  width: 100%;
-  color: ${({ theme }) => theme.colors.gray700};
+// const Title = styled.div`
+//   width: 100%;
+//   color: ${({ theme }) => theme.colors.gray700};
 
-  font-size: 3.6rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 3.6rem; /* 100% */
-  letter-spacing: -0.18rem;
-`;
+//   font-size: 3.6rem;
+//   font-style: normal;
+//   font-weight: 700;
+//   line-height: 3.6rem; /* 100% */
+//   letter-spacing: -0.18rem;
+// `;
 
 const Notice = styled.div`
   margin: 2rem 0;
   > span {
     white-space: pre-wrap;
     color: ${({ theme }) => theme.colors.gray400};
-
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-style: normal;
     font-weight: 500;
     line-height: 2rem; /* 125% */
@@ -226,7 +224,8 @@ const TagAndSearch = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: end;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
+  gap: 1rem;
 
   @media (max-width: 1125px) {
     flex-direction: column;

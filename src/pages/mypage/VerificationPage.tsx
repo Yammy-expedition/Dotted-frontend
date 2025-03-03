@@ -270,12 +270,15 @@ const Title = styled.div`
   justify-content: center;
   flex-shrink: 0;
   color: ${({ theme }) => theme.colors.gray700};
-
   font-size: 2.6rem;
   font-style: normal;
   font-weight: 700;
   line-height: 2.6rem; /* 100% */
   letter-spacing: -1.8px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Guide = styled.div`

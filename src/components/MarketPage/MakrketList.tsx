@@ -35,7 +35,7 @@ export default function MakrketList({ pagedData }: MarketListProps) {
                 </div>
 
                 <div>
-                  <span className="price">₩ {post.price}</span>
+                  <span className="price">₩ {post.price.toLocaleString()}</span>
                   <span className=" created">
                     {formatRelativeTime(post.created_at)}
                   </span>
@@ -53,11 +53,10 @@ const Tag = styled.div`
   position: absolute;
   top: 1rem;
   left: 1rem;
-  width: 8.6rem;
+  /* width: 8.6rem; */
   background-color: ${({ theme }) => theme.colors.purple600};
   color: ${({ theme }) => theme.colors.gray50};
   text-align: center;
-
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
@@ -75,6 +74,9 @@ const Tag = styled.div`
     background: ${({ theme }) => theme.colors.gray100};
     color: ${({ theme }) => theme.colors.gray500};
     font-weight: 600;
+  }
+  @media (max-width: 460px) {
+    font-size: 1.2rem;
   }
 `;
 
@@ -103,22 +105,26 @@ const MarketListContainer = styled.div`
       grid-template-columns: repeat(2, 47.5%);
     }
 
-    @media (max-width: 450px) {
+    @media (max-width: 460px) {
       grid-template-columns: repeat(1, 100%);
     }
 
     > li {
+      overflow: hidden;
       width: 100%;
-
       position: relative;
       cursor: pointer;
       aspect-ratio: 0.7833;
       display: flex;
       flex-direction: column;
-
       border-radius: 16px;
       border: 1px solid ${({ theme }) => theme.colors.backgroundBase};
       background: ${({ theme }) => theme.colors.backgroundLayer2};
+      @media (max-width: 460px) {
+        display: grid;
+        grid-template-columns: 30% 1fr;
+        height: 10rem;
+      }
     }
   }
 `;
@@ -126,14 +132,17 @@ const MarketListContainer = styled.div`
 const MarketImageWrapper = styled.div`
   width: 100%;
   height: 70%;
-  border-radius: 16px 16px 0 0;
+  /* border-radius: 16px 16px 0 0; */
   overflow: hidden;
+  @media (max-width: 460px) {
+    height: 100%;
+  }
 
   > img {
     width: 100%;
     height: 100%;
     object-fit: cover; /* 비율을 유지하면서 꽉 채움 */
-    border-radius: 16px 16px 0 0;
+    /* border-radius: 16px 16px 0 0; */
     transition: transform 0.2s ease-in-out;
     transform-origin: center; /* 중심을 기준으로 확대 */ /* 부모와 동일한 border-radius 적용 */
     @media (hover: hover) and (pointer: fine) {

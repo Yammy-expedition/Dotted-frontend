@@ -195,7 +195,7 @@ export default function MarketPosting({
               />
             </span>
           </Title>
-          <Price>₩ {post.price}</Price>
+          <Price>₩ {post.price.toLocaleString()}</Price>
           <Writer>
             <div>
               <Profile />

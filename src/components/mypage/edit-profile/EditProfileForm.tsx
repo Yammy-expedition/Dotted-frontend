@@ -207,6 +207,20 @@ const FieldBox = styled.div`
     color: ${({ theme }) => theme.colors.gray700};
   }
 
+  svg {
+    stroke: ${({ theme }) => theme.colors.gray500};
+    stroke-width: 1;
+    width: 1.6rem;
+    height: 1.6rem;
+    path {
+      stroke-width: 1;
+      stroke: ${({ theme }) => theme.colors.gray500};
+    }
+    @media (max-width: 400px) {
+      /* display: ; */
+    }
+  }
+
   p {
     display: flex;
     align-items: center;
