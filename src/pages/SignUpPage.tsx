@@ -36,7 +36,7 @@ const customStyles = {
 
 export default function SignUpPage() {
   const { state } = useLocation();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [isSogangEmail, setIsSogangEmail] = useState(false);
   const [isCheckedTOS, setisCheckedTOS] = useState(false); // false
   const [isCheckedPP, setisCheckedPP] = useState(false); // false
