@@ -93,7 +93,7 @@ export default function Nickname({ register, watch }: NicknameProps) {
         <div>
           <NicknameSVG /> <span>Nickname</span>
         </div>
-        <SubText>You can change your nickname anytime</SubText>
+        <SubText>You must verify your nickname before proceeding</SubText>
       </Label>
 
       <Wrapper>
@@ -124,7 +124,9 @@ export default function Nickname({ register, watch }: NicknameProps) {
       {showError && hasSpecialChar && (
         <ErrorMsg msg="Nickname cannot contain special characters" />
       )}
-      {initialIsFine && !isNicknameChecked && msg && <ErrorMsg msg={msg} />}
+      {!isNicknameChecked && (
+        <ErrorMsg msg="You must verify your nickname before proceeding" />
+      )}
       {isNicknameChecked && <NiceMsg msg="Verified" />}
     </InputBox>
   );
