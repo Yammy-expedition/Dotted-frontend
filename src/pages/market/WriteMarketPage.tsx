@@ -8,6 +8,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth';
 import Modal from 'react-modal';
 import LoadingStateComponent from '@/components/common/LoadingStateComponent';
+import {
+  correctImageOrientation,
+  handleExifOrientation,
+  OrientationCorrectionResult
+} from '@/utils/exif';
 
 Modal.setAppElement('#root');
 
@@ -155,6 +160,19 @@ export default function WriteMarketPage() {
   const onSubmit = async (data: MarketData) => {
     if (postingMutation.isPending || updateMutation.isPending) return;
     setIsLoading(true);
+    const allImagesCorrect = await checkAllImagesOrientation();
+
+    if (!allImagesCorrect) {
+      setIsLoading(false);
+      alert(
+        '❌ 일부 이미지의 EXIF 오리엔테이션이 1이 아닙니다. 다시 업로드해주세요.'
+      );
+      return;
+    }
+
+    console.log(
+      '✅ 모든 이미지의 오리엔테이션이 1입니다. 제출을 계속 진행합니다.'
+    );
 
     if (editMode && state?.postId) {
       // 🔥 수정 모드 (editMode)
@@ -255,34 +273,75 @@ export default function WriteMarketPage() {
     setPreviews((prevPreviews) => prevPreviews.filter((_, i) => i !== index));
   };
 
-  const onSaveImage = (file: File) => {
-    const reader = new FileReader();
+  const checkAllImagesOrientation = async () => {
+    const files = Array.from(imgFileRef.current?.files || []);
+    const results = await Promise.all(
+      files.map((file) => handleExifOrientation(file))
+    );
 
-    if (file) {
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        // 이미지 파일 배열 업데이트
-        // setImgFiles((prevFiles) => {
-        //   const updatedFiles = [...prevFiles];
-        //   // + 버튼을 누른 순간 null로 자리가 이미 존재
-        //   // 따라서 사진을 추가할 자리의 index를 가져가자!
-        //   updatedFiles[index] = file;
-        //   return updatedFiles;
-        // });
+    console.log('📸 모든 이미지의 EXIF 오리엔테이션 값 확인:', results);
 
-        // 미리보기 배열 업데이트
-        setPreviews((prevPreviews) => {
-          const updatedPreviews = [...prevPreviews];
-          updatedPreviews[updatedPreviews.length] = reader.result as string;
-          return updatedPreviews;
-        });
-      };
-    }
+    // 모든 이미지가 Orientation 1인지 확인
+    const allCorrect = results.every(({ orientation }) => orientation === 1);
+
+    return allCorrect;
   };
 
-  useEffect(() => {
-    console.log('');
-  }, [previews]);
+  const onSaveImage = (file: File) => {
+    correctImageOrientation(file).then(async ({ dataUrl, orientation }) => {
+      console.log('Final Orientation:', orientation);
+
+      if (!dataUrl) {
+        //  데이터 URL이 없면 원래꺼 걍 사용용
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setPreviews((prevPreviews) => {
+            const updatedPreviews = prevPreviews.filter(
+              (p) => p !== reader.result
+            );
+            updatedPreviews.push(reader.result as string);
+            return updatedPreviews;
+          });
+
+          updateFileList(file, true); // 중복 삭제하기기
+        };
+      } else {
+        //  데이터 URL이 있을 경우, 변환된 이미지 사용
+        const blob = await fetch(dataUrl).then((res) => res.blob());
+        const correctedFile = new File([blob], file.name, {
+          type: 'image/jpeg'
+        });
+
+        setPreviews((prevPreviews) => {
+          const updatedPreviews = prevPreviews.filter((p) => p !== dataUrl);
+          updatedPreviews.push(dataUrl);
+          return updatedPreviews;
+        });
+
+        updateFileList(correctedFile, true); //기존 같은 이름의 파일 삭제 후 업데이트
+      }
+    });
+  };
+
+  //  기존 같은 파일을 제거하고 새로운 파일을 FileList에 업데이트
+  const updateFileList = (newFile: File, removeExisting: boolean) => {
+    const dataTransfer = new DataTransfer();
+
+    //  기존 파일에서 같은 이름을 가진 파일을 삭제 (removeExisting 옵션이 true일 때만)
+    Array.from(imgFileRef.current?.files || []).forEach((file) => {
+      if (!removeExisting || file.name !== newFile.name) {
+        dataTransfer.items.add(file);
+      }
+    });
+
+    //  변환된 파일을 추가
+    dataTransfer.items.add(newFile);
+
+    if (imgFileRef.current) {
+      imgFileRef.current.files = dataTransfer.files;
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
