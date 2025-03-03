@@ -8,7 +8,7 @@ export default function EditProfilePage() {
   const [isAllChecked, setIsAllChecked] = useState(false);
   const handleSubmit = async () => {
     try {
-      let accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) return;
 
       const headers = {
@@ -16,18 +16,11 @@ export default function EditProfilePage() {
         'Content-Type': 'application/json'
       };
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_DOMAIN}/api/user/update`,
-        {
-          method: 'PATCH',
-          headers: headers,
-          body: JSON.stringify({ nickname: submitNickname, name: submitName })
-        }
-      );
-      if (response.ok) {
-      } else {
-        console.error('Failed to change user information');
-      }
+      await fetch(`${import.meta.env.VITE_API_DOMAIN}/api/user/update`, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify({ nickname: submitNickname, name: submitName })
+      });
     } catch (error) {
       console.error('Error changing:', error);
     }
@@ -35,24 +28,17 @@ export default function EditProfilePage() {
 
   const handleDeleteAccount = async () => {
     try {
-      let accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) return;
 
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       };
-      const response = await fetch(
-        `${import.meta.env.VITE_API_DOMAIN}/api/user/delete`,
-        {
-          method: 'DELETE',
-          headers: headers
-        }
-      );
-      if (response.ok) {
-      } else {
-        console.error('Failed to change user information');
-      }
+      await fetch(`${import.meta.env.VITE_API_DOMAIN}/api/user/delete`, {
+        method: 'DELETE',
+        headers: headers
+      });
     } catch (error) {
       console.error('Error changing:', error);
     }

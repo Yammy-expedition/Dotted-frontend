@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import BackIcon from '@/assets/svg/tips/culture/back.svg?react';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { TiptapViewOnly } from '@/components/CommunityPage/TipTapViewOnly';
 
 const fetchCultureData = async (id: string) => {
@@ -18,18 +18,10 @@ export default function CultureDetailPage() {
   const navigate = useNavigate();
   const { cultureId } = useParams();
 
-  const {
-    data: articleData,
-    isLoading,
-    error
-  } = useQuery({
+  const { data: articleData } = useSuspenseQuery({
     queryKey: ['cultureDetail', cultureId],
-    queryFn: () => fetchCultureData(cultureId!),
-    enabled: !!cultureId
+    queryFn: () => fetchCultureData(cultureId!)
   });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error...</div>;
 
   return (
     <Main>
@@ -66,13 +58,16 @@ const Main = styled.main`
 
 const Header = styled.header`
   display: flex;
+  justify-content: center;
   flex-direction: column;
+
   gap: 2.4rem;
   align-items: center;
   position: relative;
   padding: 7rem 0 1.8rem 0;
 
   > h1 {
+    text-align: center;
     font-size: 3.6rem;
     font-weight: 600;
     letter-spacing: -1.8px;
@@ -84,6 +79,7 @@ const Header = styled.header`
   }
 
   > p {
+    text-align: center;
     font-size: 1.6rem;
     font-weight: 500;
     letter-spacing: -0.8px;

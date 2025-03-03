@@ -45,7 +45,7 @@ export default function EditProfileForm({
   const [isUserChecked, setIsUserChecked] = useState(false);
   useEffect(() => {
     const fetchProfileData = async () => {
-      let accessToken = localStorage.getItem('accessToken');
+      const accessToken = localStorage.getItem('accessToken');
       if (!accessToken) return;
 
       const headers = { Authorization: `Bearer ${accessToken}` };

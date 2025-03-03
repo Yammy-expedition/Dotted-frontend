@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 const fetchCultureData = async () => {
   const response = await fetch(
@@ -19,9 +19,11 @@ interface CultureData {
 }
 
 export default function CultureList() {
-  const { data, isLoading, error } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ['tipsClubs'],
-    queryFn: fetchCultureData
+    queryFn: fetchCultureData,
+    staleTime: 0,
+    gcTime: 0
   });
   const navigate = useNavigate();
   const [pagedData, setPagedData] = useState<CultureData[]>([]);
@@ -34,10 +36,6 @@ export default function CultureList() {
       setPagedData(data.slice(start, end));
     }
   }, [currentPage, data]);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error...</div>;
-  // console.log(data);
 
   function handleDirectionBtn(targetPage: number) {
     if (targetPage < 1) {
@@ -96,6 +94,7 @@ const ListWrapper = styled.div`
 `;
 
 const List = styled.ul`
+  min-height: 50vh;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);

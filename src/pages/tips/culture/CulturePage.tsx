@@ -27,6 +27,7 @@ export default function CulturePage() {
 
 const Main = styled.main`
   width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,7 +48,6 @@ const Main = styled.main`
 `;
 
 const Header = styled.header`
-
   padding: 2.7rem 0 1.7rem 0;
 
   width: 100%;

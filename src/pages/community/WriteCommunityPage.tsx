@@ -7,8 +7,28 @@ import TagBox from '@/components/WriteCommunityPage/TagBox';
 import { fetchWithAuth } from '@/utils/auth'; // auth.ts에서 정의한 fetchWithAuth를 import
 import Tiptap from '@/components/CommunityPage/TipTap';
 //import Editor from '@/components/WriteCommunityPage/Editor';
+import Modal from 'react-modal';
+import LoadingStateComponent from '@/components/common/LoadingStateComponent';
 
 // -------------------- 타입 정의 --------------------
+Modal.setAppElement('#root');
+
+const customStyles = {
+  content: {
+    inset: '0',
+    padding: '0',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    overflowY: 'hidden' as 'auto' | 'hidden' | 'scroll' | 'visible' | undefined,
+    backgroundColor: 'var(--modal-Background)',
+    zIndex: 9999
+  },
+  overlay: {
+    zIndex: 9999
+  }
+};
+
 export interface CommunityData {
   title: string;
   content: string;
@@ -102,7 +122,6 @@ export default function WriteCommunityPage() {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (!isSubmitted) {
         event.preventDefault();
-        event.returnValue = '';
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -110,6 +129,14 @@ export default function WriteCommunityPage() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [isSubmitted]);
+
+  useEffect(() => {
+    return () => {
+      if (blocker && blocker.reset) {
+        blocker.reset();
+      }
+    };
+  }, []);
 
   // -------------------------------------
   // 1) 게시글 생성 Mutation
@@ -134,16 +161,19 @@ export default function WriteCommunityPage() {
     onSuccess: (data) => {
       // console.log('🎉 글쓰기 성공:', data);
       setIsSubmitted(true);
+
       // blocker가 막고 있다면 해제하고 이동
       if (blocker.state === 'blocked') {
         blocker.reset();
       }
       setTimeout(() => {
-        navigate(`/community/detail/${data.id}`);
+        setisLoading(false);
+        navigate(`/community/detail/${data.id}`, { replace: true });
       }, 1500);
     },
     onError: (error) => {
       console.error('❌ 글쓰기 실패:', error);
+      setisLoading(false);
     }
   });
 
@@ -170,6 +200,8 @@ export default function WriteCommunityPage() {
           body: JSON.stringify(data)
         }
       );
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       return response;
     },
     onSuccess: async (data) => {
@@ -184,11 +216,16 @@ export default function WriteCommunityPage() {
         blocker.reset();
       }
       setTimeout(() => {
+        setisLoading(false);
         navigate(`/community/detail/${data.id}`);
-      }, 100);
+      }, 1500);
     },
     onError: (error) => {
       console.error('❌ 글수정 실패:', error);
+      setisLoading(false);
+      if (blocker.state === 'blocked') {
+        blocker.reset();
+      }
     }
   });
 
@@ -374,6 +411,14 @@ export default function WriteCommunityPage() {
           </SubmitButton>
         )}
       </Wrapper>
+
+      <Modal
+        isOpen={isLoading}
+        style={customStyles}
+        contentLabel="Loading Modal"
+      >
+        <LoadingStateComponent />
+      </Modal>
     </WriteCommunityPageContainer>
   );
 }

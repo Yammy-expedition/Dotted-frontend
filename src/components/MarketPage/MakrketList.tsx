@@ -81,7 +81,7 @@ const Tag = styled.div`
 `;
 
 const MarketListContainer = styled.div`
-  min-height: 100vh;
+  min-height: 50vh;
   width: 100%;
   height: 100%;
   display: flex;

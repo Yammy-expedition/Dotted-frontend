@@ -61,6 +61,7 @@ export default function PostingList({ pagedData }: PostingListProps) {
 
 const PostingListWrapper = styled.ul`
   width: 100%;
+  min-height: 50vh;
 
   > li {
     padding: 1rem 0;

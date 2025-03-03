@@ -1,16 +1,17 @@
-import { Comment } from '@/pages/community/DetailCommunityPage';
+import { Comment, PostDetail } from '@/pages/community/DetailCommunityPage';
 import { useEffect, useRef, useState } from 'react';
 import CommentSVG from '@/assets/svg/CommunityPage/Comment.svg?react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
 import styled from 'styled-components';
 import More from '@/assets/svg/CommunityPage/More.svg?react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ReplySection from './ReplySection';
 import Modal from 'react-modal';
 import Locker from '@/assets/svg/MarketPage/Locker.svg?react';
 import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
 import { formatRelativeTime } from '@/utils/formatTime';
+import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
 
 // 반환 타입을 정의 (필요에 따라 실제 API 스펙에 맞게 수정)
 interface CommentLikeResponse {
@@ -52,6 +53,7 @@ export default function AComment({
   const [openNormalModal, setOpenNormalModal] = useState(false);
   const [isSecret, setIsSecret] = useState(false);
   const moreWrapperRef = useRef<HTMLDivElement | null>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -78,6 +80,21 @@ export default function AComment({
     onSuccess: (data) => {
       setIsCommentLiked(data.is_liked);
       setLikeCount(data.like_count);
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', comment.post], // 댓글이 포함된 게시글 캐시 수정
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.map((c) =>
+              c.id === comment.id
+                ? { ...c, is_liked: data.is_liked, like_count: data.like_count }
+                : c
+            ) // ✅ 해당 댓글의 좋아요 상태 업데이트
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 댓글 좋아요 실패:', error);
@@ -107,6 +124,25 @@ export default function AComment({
     onSuccess: (updatedComment) => {
       setEditedContent(updatedComment.content);
       setIsEditing(false);
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', comment.post],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.map((c) =>
+              c.id === comment.id
+                ? {
+                    ...c,
+                    content: updatedComment.content,
+                    is_secret: updatedComment.is_secret
+                  }
+                : c
+            )
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 댓글 수정 실패:', error);
@@ -144,6 +180,21 @@ export default function AComment({
       // newComment이 Comment 타입이므로, prev의 타입과 일치합니다.
       setReplies((prev) => [...prev, newComment]);
       setRecomment('');
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', comment.post], // 대댓글이 포함된 게시글의 캐시 수정
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.map((c) =>
+              c.id === comment.id
+                ? { ...c, replies: [...c.replies, newComment] }
+                : c
+            )
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 대댓글 작성 실패:', error);
@@ -165,6 +216,17 @@ export default function AComment({
     },
     onSuccess: () => {
       setEditedContent('Deleted Comment');
+      queryClient.setQueryData<PostDetail | MarketPostDetail>(
+        ['postDetail', comment.post], // 댓글이 포함된 게시글의 캐시 수정
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            comments: oldData.comments.filter((c) => c.id !== comment.id)
+          };
+        }
+      );
     },
     onError: (error) => {
       console.error('❌ 댓글 삭제 실패:', error);

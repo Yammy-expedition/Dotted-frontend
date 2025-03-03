@@ -14,10 +14,10 @@ const aboutsubs = [
 
 const tipssubs = [
   { title: 'Sogang Map', link: '/tips/sogang-map' },
-  { title: 'Restaurant', link: '/tips/restaurant' },
-  { title: 'Hospital', link: '/tips/hospital' },
+  { title: 'Restaurant', link: '/tips/restaurant?q=all' },
+  { title: 'Hospital', link: '/tips/hospital?q=all' },
   { title: 'FAQ', link: '/tips/faq' },
-  { title: 'Clubs', link: '/tips/clubs' },
+  { title: 'Clubs', link: '/tips/clubs?q=all' },
   { title: 'Culture', link: '/tips/culture' }
 ];
 

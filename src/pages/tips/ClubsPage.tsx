@@ -10,9 +10,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import SearchBox from '@/components/tips/clubs/SearchBox';
 import ClubsList from '@/components/tips/clubs/ClubsList';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import Left from '@/assets/svg/tips/hospital/left.svg?react';
 import Right from '@/assets/svg/tips/hospital/right.svg?react';
+import LoadingStateComponent from '@/components/common/LoadingStateComponent';
+
 const clubTabs = [
   { name: 'All', src: 'all' },
   { name: 'Volunteer', src: 'volunteer' },
@@ -52,7 +54,7 @@ const fetchClubs = async (): Promise<ClubData[]> => {
 };
 
 export default function ClubsPage() {
-  const { data: clubs } = useQuery({
+  const { data: clubs, isLoading } = useSuspenseQuery({
     queryKey: ['tipsClubs'],
     queryFn: fetchClubs
   });
@@ -116,6 +118,13 @@ export default function ClubsPage() {
       });
     }
   };
+
+  if (isLoading)
+    return (
+      <Main>
+        <LoadingStateComponent />
+      </Main>
+    );
 
   return (
     <Main>

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import NavigateIcon from '@/assets/svg/tips/restaurant/navigate.svg?react';
 import LinkIcon from '@/assets/svg/tips/restaurant/link.svg?react';
@@ -27,7 +27,7 @@ interface RestaurantData {
 
 export default function RestaurantList() {
   const [searchParam, setSearchParam] = useSearchParams();
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useSuspenseQuery({
     queryKey: ['tipsRestaurants'],
     queryFn: fetchRestaurants
   });

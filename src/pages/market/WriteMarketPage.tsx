@@ -6,6 +6,26 @@ import ImgBox from '@/components/MarketPage/ImgBox';
 import { useBlocker, useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth';
+import Modal from 'react-modal';
+import LoadingStateComponent from '@/components/common/LoadingStateComponent';
+
+Modal.setAppElement('#root');
+
+const customStyles = {
+  content: {
+    inset: '0',
+    padding: '0',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden',
+    overflowY: 'hidden' as 'auto' | 'hidden' | 'scroll' | 'visible' | undefined,
+    backgroundColor: 'var(--modal-Background)',
+    zIndex: 9999
+  },
+  overlay: {
+    zIndex: 9999
+  }
+};
 
 interface MarketData {
   title: string;
@@ -47,6 +67,7 @@ export default function WriteMarketPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
 
   const originalImageList = useRef<OriginalImage[]>([]);
 
@@ -81,6 +102,14 @@ export default function WriteMarketPage() {
   }, [blocker, isSubmitted]);
 
   useEffect(() => {
+    return () => {
+      if (blocker && blocker.reset) {
+        blocker.reset();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (!isSubmitted) {
         event.preventDefault();
@@ -113,16 +142,19 @@ export default function WriteMarketPage() {
       setIsSubmitted(true);
       blocker.reset?.();
       setTimeout(() => {
-        navigate('/market');
-      }, 100);
+        setIsLoading(false);
+        navigate('/market', { replace: true });
+      }, 1500);
     },
     onError: (error) => {
+      setIsLoading(false);
       console.error('❌ 글쓰기 실패:', error);
     }
   });
 
   const onSubmit = async (data: MarketData) => {
     if (postingMutation.isPending || updateMutation.isPending) return;
+    setIsLoading(true);
 
     if (editMode && state?.postId) {
       // 🔥 수정 모드 (editMode)
@@ -293,11 +325,13 @@ export default function WriteMarketPage() {
       setIsSubmitted(true);
       blocker.reset?.();
       setTimeout(() => {
+        setIsLoading(false);
         navigate(`/market/detail/${data.id}`);
       }, 100);
     },
     onError: (error) => {
       console.error('❌ 글수정 실패:', error);
+      setIsLoading(false);
     }
   });
 
@@ -359,6 +393,13 @@ export default function WriteMarketPage() {
           )}
         </Form>
       </WriteMarketPageWrapper>
+      <Modal
+        isOpen={isLoading}
+        style={customStyles}
+        contentLabel="Loading Modal"
+      >
+        <LoadingStateComponent />
+      </Modal>
     </WriteMarketPageContainer>
   );
 }

@@ -1,12 +1,15 @@
-import PostingList from '@/components/CommunityPage/PostingList';
 import SearchBar from '@/components/CommunityPage/SearchBar';
 import TagList from '@/components/CommunityPage/TagList';
 import { useSearchPosts } from '@/hooks/useSearchPosts';
 import { CommunityPost, EachPost } from '@/types/CommunityPost';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+
+const PostingList = lazy(
+  () => import('@/components/CommunityPage/PostingList')
+);
 
 const tags = ['All', 'HOT', 'Campus Life', 'Travel', 'Living', 'Others'];
 const POST_PER_PAGE = 8; // 서버에서 받아오는 page 당 개수가 맞다면 굳이 slice 안해도 됨
