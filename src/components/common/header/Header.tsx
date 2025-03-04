@@ -55,6 +55,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
       }
 
       const EventSourceConstructor = EventSourcePolyfill || NativeEventSource;
+
       const evtSource = new EventSourceConstructor(
         `${import.meta.env.VITE_API_DOMAIN}/api/notification/stream`,
         {

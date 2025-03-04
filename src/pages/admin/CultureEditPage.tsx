@@ -54,6 +54,12 @@ export default function CultureEditPage() {
   return (
     <ListWrapper>
       <h1>글 수정 페이지</h1>
+      <h2>1. 글 클릭 후 들어가서 수정한 다음에 update 누르면 수정됩니다.</h2>
+      <h2>
+        2. 만약 썸네일을 넣은 상태에서 수정한다면 수정된 내용을 제출할 때,
+        썸네일을 다시 넣을 필요 없습니다.
+      </h2>
+      <h2>3. 내부에 삭제 버튼으로 글 삭제 가능합니다.</h2>
       <List>
         {pagedData?.map((club: CultureData) => (
           <li
@@ -93,6 +99,9 @@ const ListWrapper = styled.div`
   padding: 5rem;
   width: 100%;
   margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 `;
 
 const List = styled.ul`
@@ -101,14 +110,12 @@ const List = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 3.8rem 4.5rem;
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
   }
-  @media (max-width: 500px) {
-    grid-template-columns: 1fr 1fr;
-  }
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(1, 1fr);
   }
 
   li {

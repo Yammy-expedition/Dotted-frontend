@@ -92,7 +92,12 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
 
       <CommentsListWrapper>
         {comments.map((commentItem, idx) => (
-          <AComment comment={commentItem} origin={origin} key={idx} />
+          <AComment
+            comment={commentItem}
+            origin={origin}
+            postIsMine={post.is_mine}
+            key={idx}
+          />
         ))}
       </CommentsListWrapper>
 
