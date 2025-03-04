@@ -224,6 +224,17 @@ const ItemInfo = styled.div`
         line-height: 2;
       }
     }
+
+    > span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: ${({ theme }) => theme.colors.gray700};
+      font-size: 17px;
+      font-weight: 300;
+      letter-spacing: -1px;
+      line-height: 2;
+    }
   }
   > span {
     line-height: 3rem;
