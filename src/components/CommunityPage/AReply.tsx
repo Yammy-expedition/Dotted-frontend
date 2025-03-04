@@ -230,6 +230,7 @@ export default function AReply({
                       <Locker />
                     </LockerDiv>
                   )}
+                  <CreatedAt>{formatRelativeTime(reply.created_at)}</CreatedAt>
                 </NicknameDiv>
               )
             ) : (
@@ -244,8 +245,6 @@ export default function AReply({
                 </LockerDiv>
               )}
             </ConetentDiv>
-
-            <CreatedAt>{formatRelativeTime(reply.created_at)}</CreatedAt>
           </>
         )}
         {(postIsMine || reply.is_mine || !reply.is_secret) &&
@@ -467,9 +466,11 @@ const Menu = styled.div`
 const Comments = styled.div`
   display: flex;
   gap: 2.1rem;
-  margin-top: 2rem;
-
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  background-color: ${({ theme }) => theme.colors.gray100};
   @media (max-width: 460px) {
+    margin-bottom: 2rem;
     gap: 1rem;
   }
   > div {
@@ -486,16 +487,19 @@ const Comments = styled.div`
         @media (max-width: 460px) {
           font-size: 1.7rem;
         }
-
+        letter-spacing: -0.7px;
         font-weight: 600;
       }
       &:nth-child(2) {
         color: ${({ theme }) => theme.colors.gray700};
-        font-size: 2rem;
+        font-size: 1.7rem;
+
         @media (max-width: 460px) {
-          font-size: 1.7rem;
+          font-size: 1.6rem;
+          letter-spacing: -0.1px;
         }
-        font-weight: 300;
+        font-weight: 400;
+        letter-spacing: -0.2px;
       }
       &:nth-child(3) {
         color: ${({ theme }) => theme.colors.gray500};
@@ -504,6 +508,7 @@ const Comments = styled.div`
           font-size: 1.1rem;
         }
         font-weight: 300;
+        letter-spacing: -0.07rem;
       }
     }
   }
@@ -614,5 +619,5 @@ const CreatedAt = styled.div`
     font-size: 1.1rem;
   }
   font-weight: 300;
-  letter-spacing: -0.07rem;
+  letter-spacing: -0.03rem;
 `;

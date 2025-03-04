@@ -146,7 +146,7 @@ const DetailMarketPageContainer = styled.div`
 const Wrapper = styled.div`
   max-width: 1287px;
   width: 100%;
-  margin-top: 5.7rem;
+  margin-top: 2rem;
   padding: 0 23rem;
 
   @media (max-width: 1200px) {
@@ -164,11 +164,10 @@ const ContentWrapper = styled.div`
   min-height: 12rem;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
   margin-bottom: 3.2rem;
-
-  color: ${({ theme }) => theme.colors.gray800};
-  font-size: 2rem;
+  color: ${({ theme }) => theme.colors.gray600};
+  font-size: 1.8rem;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.06rem;
+  letter-spacing: -0.03rem;
 `;
