@@ -3,7 +3,7 @@ interface ExifOrientationResult {
   orientation: number;
 }
 
-export interface  {
+export interface OrientationCorrectionResult {
   dataUrl: string | null;
   orientation: number;
 }
@@ -104,7 +104,7 @@ const handleExifOrientation = (file: File): Promise<ExifOrientationResult> => {
  */
 const correctImageOrientation = (
   file: File
-): Promise<> => {
+): Promise<OrientationCorrectionResult> => {
   return new Promise((resolve) => {
     handleExifOrientation(file).then(({ orientation }) => {
       console.log(`🛠️ Original Orientation: ${orientation}`);
