@@ -12,11 +12,13 @@ interface PasswordProps {
 }
 
 export default function Password({ register, watch }: PasswordProps) {
-  const password = watch('password');
-  const passwordCheck = watch('passwordCheck');
+  const password = watch('password') || '';
+  const passwordCheck = watch('passwordCheck') || '';
 
   const isVaild =
     (password !== '' || password !== null) && password === passwordCheck;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const isLengthValid = password.length >= 7 && password.length <= 15;
   return (
     <>
       <InputBox>
@@ -34,11 +36,22 @@ export default function Password({ register, watch }: PasswordProps) {
               message: 'Password must be at least 7 characters long'
             },
             maxLength: {
-              value: 17,
-              message: 'Password must be at most 17 characters long'
+              value: 15,
+              message: 'Password must be at most 15 characters long'
+            },
+            validate: {
+              hasSpecialChar: (value) =>
+                /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
+                'Password must include at least one special character'
             }
           })}
         />
+        {!isLengthValid && !isVaild && (
+          <ErrorMsg msg="Password must be between 7 and 15 characters" />
+        )}
+        {!hasSpecialChar && !isVaild && (
+          <ErrorMsg msg="Password must include at least one special character" />
+        )}
       </InputBox>
 
       <InputBox>

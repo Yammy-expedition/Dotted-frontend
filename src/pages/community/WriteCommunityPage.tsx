@@ -251,7 +251,7 @@ export default function WriteCommunityPage() {
     htmlContent: string,
     originalImages: OriginalImage[]
   ): ImagePayload[] => {
-    // 1) 최종 content에서 모든 img src 추출
+    // 1️⃣ 최종 content에서 모든 img src 추출
     const allImgRegex = /<img[^>]*src=["']([^"']+)["'][^>]*>/g;
     const foundSrcList: string[] = [];
     let match;
@@ -259,21 +259,20 @@ export default function WriteCommunityPage() {
       foundSrcList.push(match[1]);
     }
 
-    // 2) 결과로 보낼 image 배열
+    // 2️⃣ 기존 이미지(keep/delete 판단)
     const imagePayload: ImagePayload[] = [];
-    let order = 1;
+    let order = 0;
 
-    // 2-1) 기존 이미지에 대해 keep/delete 판단
     for (const original of originalImages) {
       if (foundSrcList.includes(original.image_url)) {
-        // 에디터 최종 내용에 원본 url이 남아있으면 keep
+        // 기존 이미지가 content에 남아있다면 keep
         imagePayload.push({
           image_id: original.id,
           action: 'keep',
           order: order++
         });
       } else {
-        // 최종 내용에 없으면 delete
+        // 기존 이미지가 content에서 사라졌다면 delete
         imagePayload.push({
           image_id: original.id,
           action: 'delete',
@@ -282,7 +281,7 @@ export default function WriteCommunityPage() {
       }
     }
 
-    // 2-2) 새로 추가된 base64 이미지(add)
+    // 3️⃣ 새로 추가된 Base64 이미지(add)
     for (const src of foundSrcList) {
       if (src.startsWith('data:')) {
         imagePayload.push({
@@ -300,16 +299,26 @@ export default function WriteCommunityPage() {
     let resultContent = htmlContent;
     let imageIndex = 0;
 
-    // base64 이미지를 찾는 정규식
-    const imgTagRegex = /<img[^>]*src=["'](data:[^"']+)["'][^>]*>/g;
+    // 모든 <img> 태그에서 src 값을 추출하는 정규식
+    const imgTagRegex = /<img[^>]*src=["']([^"']+)["'][^>]*>/g;
 
-    // 모든 base64 이미지를 찾아서 중괄호 표현식으로 대체
-    resultContent = resultContent.replace(imgTagRegex, (match) => {
-      // src="data:..." 부분을 src={images[인덱스].image_url} 형태로 대체
-      return match.replace(
-        /src=["']data:[^"']+["']/,
-        `src={images[${imageIndex++}].image_url}`
-      );
+    // 모든 <img> 태그를 순회하면서 처리
+    resultContent = resultContent.replace(imgTagRegex, (match, src) => {
+      const isBase64 = src.startsWith('data:');
+
+      // 🔹 src가 Base64 데이터인 경우 -> {images[index].image_url}로 변환
+      if (isBase64) {
+        const replacedTag = match.replace(
+          /src=["'][^"']+["']/,
+          `src={images[${imageIndex}].image_url}`
+        );
+        imageIndex++; // 🔹 변환한 경우에만 index 증가
+        return replacedTag;
+      }
+
+      // 🔹 src가 일반 URL인 경우 -> 변경하지 않고 그대로 둠
+      imageIndex++; // 일반 이미지도 인덱스 증가
+      return match;
     });
 
     return resultContent;
@@ -320,60 +329,76 @@ export default function WriteCommunityPage() {
   // -------------------------------------
   const onSubmit = async (data: CommunityData) => {
     // 중복 클릭 방지
+    if (postingMutation.isPending || updateMutation.isPending) return;
+
     const currentTag = watch('tag');
     if (!currentTag) {
       alert('Please select a tag');
       return;
     }
 
-    const dataToSend = {
-      title: data.title,
-      content: data.content,
-      images: data.images,
-      tag: data.tag
-    };
+    // 1️⃣ Base64 이미지 추출
+    const extractedImages = extractBase64Images(data.content);
 
-    if (postingMutation.isPending || updateMutation.isPending) return;
-
-    // content 내의 base64 이미지 추출 (create 시 사용)
-    const extractedImages = extractBase64Images(dataToSend.content);
-    const deliciousMeal = replaceBase64WithBracketExpressions(
-      dataToSend.content
+    // 2️⃣ content 내 <img> 태그 src 변환 (Base64 → {images[index].image_url})
+    const transformedContent = replaceBase64WithBracketExpressions(
+      data.content
     );
-    await setValue('content', deliciousMeal);
-    const realDelicious = watch('content');
-    dataToSend.content = realDelicious;
+    await setValue('content', transformedContent);
+    const updatedContent = watch('content');
 
     if (!editMode) {
+      // 3️⃣ [생성 모드] → 변환된 content와 Base64 이미지를 서버로 전송
       const newPostData: CommunityData = {
-        ...dataToSend,
-        images: extractedImages
+        title: data.title,
+        content: updatedContent,
+        images: extractedImages, // Base64 데이터 포함
+        tag: data.tag
       };
+
       try {
         await postingMutation.mutateAsync(newPostData);
       } catch (error) {
         console.error('❌ 글쓰기 실패:', error);
       }
     } else {
+      // 4️⃣ [수정 모드] → 기존 이미지와 비교 후, 변경된 이미지 처리 (keep/delete/add)
       if (!state?.postId) {
         alert('수정할 게시글 ID가 없습니다.');
         return;
       }
 
-      // 1) 이미지 payload 만들기 (keep/delete/add)
+      // 기존 이미지 리스트를 기반으로 keep/delete/add 정리
       const imagePayload = buildImagePayloadForUpdate(
-        data.content,
+        transformedContent,
         originalImageList.current
       );
 
-      // 2) PATCH 보낼 최종 데이터 구성
+      // 5️⃣ 추가된 Base64 이미지를 imagePayload에 반영
+      for (const img of extractedImages) {
+        if (!imagePayload.some((i) => i.image_data === img)) {
+          imagePayload.push({
+            action: 'add',
+            order: imagePayload.length,
+            image_data: img
+          });
+        }
+      }
+
+      // 6️⃣ 최종 content도 변환된 src로 업데이트
+      const updatedTransformedContent =
+        replaceBase64WithBracketExpressions(transformedContent);
+      await setValue('content', updatedTransformedContent);
+      const finalUpdatedContent = watch('content');
+
       const updateData: CommunityUpdateData = {
         title: data.title,
-        content: data.content,
-        images: imagePayload,
+        content: finalUpdatedContent,
+        images: imagePayload, // 기존 이미지 + 추가된 이미지 반영
         tag: data.tag
       };
-      // console.log(updateData);
+
+      console.log('최종 전송 데이터:', updateData);
 
       try {
         await updateMutation.mutateAsync({

@@ -32,31 +32,31 @@ const checkNickname = async (
 
   toggleChecked();
   const data = await response.json();
-  // console.log(data);
   return data;
 };
 
 export default function Nickname({ register, watch }: NicknameProps) {
-  const nickname = watch('nickname');
-  const defaultMsg = 'You need to verify the nickname.';
+  const nickname = watch('nickname') || '';
 
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  const [initialIsFine, setInitialIsFine] = useState(false);
-  const [msg, setMsg] = useState(defaultMsg);
+  const [_, setInitialIsFine] = useState(false);
+  const [__, setMsg] = useState('');
   const mountRef = useRef(false);
 
   const toggleChecked = () => {
     setIsNicknameChecked(true);
   };
 
-  const isVaild = nickname !== '';
+  const isValidLength = nickname.length >= 2;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(nickname);
+  const showError = nickname.length > 0;
 
   const { isLoading, refetch } = useQuery({
-    queryKey: ['nicknameCheck'], // Remove nickname from queryKey
+    queryKey: ['nicknameCheck'],
     queryFn: () => checkNickname(nickname, toggleChecked, setMsg),
     enabled: false,
     staleTime: 5000,
-    retry: false // Prevent automatic retries
+    retry: false
   });
 
   useEffect(() => {
@@ -66,11 +66,7 @@ export default function Nickname({ register, watch }: NicknameProps) {
     }
     setInitialIsFine(true);
     setIsNicknameChecked(false);
-    setMsg(defaultMsg);
-  }, [nickname]);
-
-  useEffect(() => {
-    // console.log(isVaild, initialIsFine, !isNicknameChecked);
+    setMsg('');
   }, [nickname]);
 
   const onClickVerificationCheck = () => {
@@ -78,38 +74,60 @@ export default function Nickname({ register, watch }: NicknameProps) {
       alert('Please write down your nickname');
       return;
     }
-
+    if (!isValidLength) {
+      alert('Nickname must be at least 2 characters long');
+      return;
+    }
+    if (hasSpecialChar) {
+      alert('Nickname cannot contain special characters');
+      return;
+    }
     refetch().catch((err) => {
       console.error('Nickname check failed:', err);
     });
   };
+
   return (
     <InputBox>
       <Label name="nickname">
         <div>
           <NicknameSVG /> <span>Nickname</span>
         </div>
-
-        <SubText>You can change your nickname anytime</SubText>
+        <SubText>You must verify your nickname before proceeding</SubText>
       </Label>
 
       <Wrapper>
         <Input
           type="text"
           placeholder="nickname"
-          {...register('nickname', { required: 'Please your nickname' })}
+          {...register('nickname', {
+            required: 'Please enter your nickname',
+            minLength: {
+              value: 2,
+              message: 'Nickname must be at least 2 characters long'
+            },
+            validate: {
+              noSpecialChar: (value) =>
+                !/[!@#$%^&*(),.?":{}|<>]/.test(value) ||
+                'Nickname cannot contain special characters'
+            }
+          })}
         />
         <VerificationCheckButton
           onClickVerificationCheck={onClickVerificationCheck}
           isLoading={isLoading}
         />
       </Wrapper>
-      {(isVaild && initialIsFine && !isNicknameChecked) ||
-      (initialIsFine && !isNicknameChecked) ? (
-        <ErrorMsg msg={msg} />
-      ) : null}
-
-      {isNicknameChecked && isVaild ? <NiceMsg msg="Verified" /> : null}
+      {showError && !isValidLength && (
+        <ErrorMsg msg="Nickname must be at least 2 characters long" />
+      )}
+      {showError && hasSpecialChar && (
+        <ErrorMsg msg="Nickname cannot contain special characters" />
+      )}
+      {!isNicknameChecked && (
+        <ErrorMsg msg="You must verify your nickname before proceeding" />
+      )}
+      {isNicknameChecked && <NiceMsg msg="Verified" />}
     </InputBox>
   );
 }
@@ -120,7 +138,7 @@ const SubText = styled.span`
   font-size: 16px;
   font-style: normal;
   font-weight: 300;
-  line-height: 36px; /* 225% */
+  line-height: 36px;
   letter-spacing: -0.48px;
 
   @media (max-width: 460px) {
@@ -131,6 +149,5 @@ const SubText = styled.span`
 const Wrapper = styled.div`
   width: 100%;
   position: relative;
-
   display: flex;
 `;

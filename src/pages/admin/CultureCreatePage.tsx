@@ -6,7 +6,7 @@ import CultureTiptap from '@/components/tips/culture/CultureTiptap';
 export interface CultureData {
   title: string;
   content: string;
-  thumbnail?: File;
+  thumbnail_upload?: File;
   college: number;
 }
 
@@ -21,8 +21,8 @@ export default function CultureCreatePage() {
       formData.append('content', data.content);
       formData.append('college', data.college.toString());
 
-      if (data.thumbnail) {
-        formData.append('thumbnail_upload', data.thumbnail);
+      if (data.thumbnail_upload) {
+        formData.append('thumbnail_upload', data.thumbnail_upload);
       }
 
       // console.log(
@@ -50,7 +50,7 @@ export default function CultureCreatePage() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setValue('thumbnail', file);
+      setValue('thumbnail_upload', file);
     }
   };
 
