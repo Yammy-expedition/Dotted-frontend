@@ -245,7 +245,7 @@ export default function AReply({
               )}
             </ConetentDiv>
 
-            <div>{formatRelativeTime(reply.created_at)}</div>
+            <CreatedAt>{formatRelativeTime(reply.created_at)}</CreatedAt>
           </>
         )}
         {(postIsMine || reply.is_mine || !reply.is_secret) &&
@@ -312,6 +312,13 @@ const LockerDiv = styled.div``;
 const ConetentDiv = styled.div`
   display: flex;
   gap: 1rem;
+  color: ${({ theme }) => theme.colors.gray700};
+  font-size: 2rem;
+  @media (max-width: 460px) {
+    font-size: 1.7rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.1rem;
 `;
 
 const NicknameDiv = styled.div`
@@ -598,4 +605,14 @@ const CancelButton = styled.button`
   background: ${({ theme }) => theme.colors.gray400};
   color: ${({ theme }) => theme.colors.gray50};
   border-radius: 0.4rem;
+`;
+
+const CreatedAt = styled.div`
+  color: ${({ theme }) => theme.colors.gray500};
+  font-size: 1.4rem;
+  @media (max-width: 460px) {
+    font-size: 1.1rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.07rem;
 `;
