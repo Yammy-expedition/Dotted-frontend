@@ -29,6 +29,7 @@ export default function EditProfilePage() {
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [deleteAccountModal, setDeleteAccountModal] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const [applyNickname, setApplyNickname] = useState(false);
 
   const handleSubmit = async () => {
     try {
@@ -113,6 +114,30 @@ export default function EditProfilePage() {
           </div>
         </AccessRestrictedWrapper>
       </Modal>
+      <Modal
+        isOpen={applyNickname}
+        style={customStyles}
+        onRequestClose={() => setApplyNickname((prev) => !prev)}
+        contentLabel="example"
+      >
+        <AccessRestrictedWrapper>
+          <div>
+            <AccessRestrictedNormal>
+              <TextNormal>
+                <span>Would you like to apply the changes?</span>
+              </TextNormal>
+            </AccessRestrictedNormal>
+            <ButtonBox>
+              <LaterButton onClick={() => setApplyNickname((prev) => !prev)}>
+                Cancel
+              </LaterButton>
+              <ApplyButton onClick={handleSubmit}>
+                {isLoading ? 'Appling...' : 'Apply'}
+              </ApplyButton>
+            </ButtonBox>
+          </div>
+        </AccessRestrictedWrapper>
+      </Modal>
       <EditProfileForm
         setSubmitNickname={setSubmitNickname}
         setSubmitName={setSubmitName}
@@ -126,7 +151,7 @@ export default function EditProfilePage() {
       <SubmitBtn>
         <button
           className={isAllChecked ? '' : 'unchecked'}
-          onClick={handleSubmit}
+          onClick={() => setApplyNickname(true)}
           disabled={!isAllChecked}
         >
           Submit
@@ -279,13 +304,9 @@ const NowButton = styled.div`
   background: var(--Semantic-Negative-900, #ea3729);
   color: ${({ theme }) => theme.colors.gray50};
 `;
-
-const CreatedAt = styled.div`
-  color: ${({ theme }) => theme.colors.gray500};
-  font-size: 1.4rem;
-  @media (max-width: 460px) {
-    font-size: 1.1rem;
-  }
-  font-weight: 300;
-  letter-spacing: -0.07rem;
+const ApplyButton = styled.div`
+  width: 50%;
+  border-radius: 0px 0px 5px 0px;
+  background: ${({ theme }) => theme.colors.purple600};
+  color: ${({ theme }) => theme.colors.gray50};
 `;
