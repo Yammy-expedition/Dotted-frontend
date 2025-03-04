@@ -159,7 +159,7 @@ const TagWrapper = styled.div`
 
 const Tag = styled.li<{ $selected: boolean }>`
   cursor: pointer;
-  padding: 0.75rem;
+  padding: 0.5rem;
   margin: 0.5rem;
   border-radius: 20px;
 

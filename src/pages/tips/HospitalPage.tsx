@@ -151,7 +151,7 @@ const NaviBar = styled.nav`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   padding: 1.6rem 0;
   overflow-x: auto;
   &::-webkit-scrollbar {
@@ -161,13 +161,15 @@ const NaviBar = styled.nav`
     white-space: nowrap;
     font-size: 1.5rem;
     font-weight: 400;
-    letter-spacing: -0.75px;
+    letter-spacing: -0.45px;
     color: ${({ theme }) => theme.colors.gray500};
-    padding: 0.7rem 3.2rem;
+    padding: 0.7rem 3rem;
     border-radius: 2.4rem;
     background-color: ${({ theme }) => theme.colors.gray200};
     cursor: pointer;
-
+    @media (max-width: 430px) {
+      padding: 0.7rem 2rem;
+    }
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         background-color: ${({ theme }) => theme.colors.gray300};
@@ -263,27 +265,26 @@ const HospitalListWrapper = styled.div`
       border-radius: 1.6rem;
       background: ${({ theme }) => theme.colors.backgroundLayer1};
       .hospital_type {
-        padding: 0.7rem 2rem;
+        padding: 0.7rem 1rem;
         border-radius: 2.4rem;
-        background: ${({ theme }) => theme.colors.purple100};
+        background: ${({ theme }) => theme.colors.gray50};
         color: ${({ theme }) => theme.colors.purple600};
         text-align: center;
-
-        font-size: 1.5rem;
+        box-shadow: rgba(0, 0, 0, 0.1) 1.95px 1.95px 2.6px;
+        font-size: 1.2rem;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
-        letter-spacing: -0.075rem;
+        letter-spacing: -0.1px;
       }
       .hospital_name {
         margin-top: 1.2rem;
         color: ${({ theme }) => theme.colors.gray700};
-
-        font-size: 2.4rem;
+        font-size: 2.2rem;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
-        letter-spacing: -0.12rem;
+        letter-spacing: -0.7px;
       }
       .hospital_distance {
         display: flex;

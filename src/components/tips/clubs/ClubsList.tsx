@@ -112,20 +112,20 @@ const List = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 3rem;
-
+  @media (max-width: 400px) {
+    gap: 1.8rem;
+  }
   li {
     width: inherit;
-
     background-color: ${({ theme }) => theme.colors.backgroundLayer1};
     border-radius: 1.6rem;
     border: 1px solid ${({ theme }) => theme.colors.gray300};
     padding: 1.5rem;
     display: flex;
-    gap: 3rem;
+    gap: 2rem;
 
     @media (max-width: 400px) {
-      flex-direction: column;
-      align-items: center;
+      padding: 1rem;
     }
 
     img {
@@ -134,24 +134,28 @@ const List = styled.ul`
       flex-shrink: 0;
       border-radius: 1.6rem;
       object-fit: contain;
+      @media (max-width: 700px) {
+        width: 8rem;
+        height: 8rem;
+      }
     }
 
     div {
       display: flex;
       flex-direction: column;
-      gap: 1.8rem;
+      gap: 1.2rem;
       padding-top: 0.7rem;
-
       @media (max-width: 400px) {
-        flex-direction: column;
-        align-items: center;
+        gap: 0.7rem;
       }
-
       h3 {
         font-size: 2.2rem;
         font-weight: 600;
         color: ${({ theme }) => theme.colors.purple600};
         letter-spacing: -1.2px;
+        @media (max-width: 400px) {
+          font-size: 1.8rem;
+        }
       }
 
       p {
@@ -162,7 +166,7 @@ const List = styled.ul`
         line-height: 1.2;
 
         @media (max-width: 400px) {
-          text-align: center;
+          /* text-align: center; */
         }
       }
     }
@@ -184,7 +188,10 @@ const PaginationBox = styled.div`
     background: none;
     font-size: 1.6rem;
     font-weight: 400;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.gray600};
     &.selected {
       background-color: ${({ theme }) => theme.colors.purple600};
       color: ${({ theme }) => theme.colors.gray50};

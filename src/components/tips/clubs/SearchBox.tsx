@@ -42,7 +42,7 @@ const Wrapper = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    background-color: ${({ theme }) => theme.colors.backgroundBase};
+    background-color: ${({ theme }) => theme.colors.backgroundLayer1};
     padding: 0 1.7rem;
     border-radius: 5px;
     position: relative;

@@ -30,7 +30,9 @@ export default function MyPageLayout() {
           ))}
         </List>
       </MyPageSideBar>
-      <Outlet />
+      <div style={{ padding: '2rem 2rem' }}>
+        <Outlet />
+      </div>
     </Layout>
   );
 }
@@ -40,26 +42,29 @@ const Layout = styled.div`
   height: 70vh;
   display: grid;
   grid-template-columns: 21rem 1fr;
+  @media (max-width: 900px) {
+    padding: 4rem 2rem 0 8rem;
+  }
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
-    padding: 2rem 2rem 0 2rem;
+    padding: 0;
   }
 `;
 
 const MyPageSideBar = styled.div`
   display: flex;
   flex-direction: column;
-
   > h1 {
     font-size: 3.2rem;
     font-weight: 700;
     line-height: 3.6rem;
-    letter-spacing: -1.6px;
-    color: ${({ theme }) => theme.colors.gray800};
+    letter-spacing: -1px;
+    color: ${({ theme }) => theme.colors.gray700};
   }
 
   @media (max-width: 768px) {
+    padding: 1rem 2rem 0 2rem;
     > h1 {
       font-size: 2.4rem;
     }
@@ -71,13 +76,12 @@ const List = styled.ul`
   flex-direction: column;
   gap: 1.2rem;
   margin-top: 3.6rem;
-
   > li {
     font-size: 1.6rem;
     font-weight: 400;
     line-height: 2.8rem;
-    letter-spacing: -0.8px;
-    color: ${({ theme }) => theme.colors.gray700};
+    letter-spacing: -0.6px;
+    color: ${({ theme }) => theme.colors.gray500};
     cursor: pointer;
 
     @media (hover: hover) and (pointer: fine) {
@@ -86,20 +90,23 @@ const List = styled.ul`
       }
     }
     @media (max-width: 768px) {
-      background-color: ${({ theme }) => theme.colors.gray200};
       padding: 0.6rem 1.2rem;
       border-radius: 5rem;
       flex-shrink: 0;
       font-size: 1.2rem;
+      border: 1px solid ${({ theme }) => theme.colors.gray400};
     }
     &.selected {
-      font-weight: 500;
+      font-weight: 600;
       color: ${({ theme }) => theme.colors.purple600};
+      @media (max-width: 768px) {
+        border: 1px solid ${({ theme }) => theme.colors.purple600};
+      }
     }
   }
   @media (max-width: 768px) {
     flex-direction: row;
-    margin: 1.6rem 0;
+    margin: 1.2rem 0;
     overflow-x: scroll;
     gap: 0.5rem;
     &::-webkit-scrollbar {

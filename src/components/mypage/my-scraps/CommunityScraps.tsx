@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import styled from 'styled-components';
 import EyeIcon from '@/assets/svg/mypage/Eye.svg?react';
 import { useNavigate } from 'react-router-dom';
+import { formatRelativeTime } from '@/utils/formatTime';
 
 interface PostType {
   id: number;
@@ -73,7 +73,7 @@ export default function CommunityScraps() {
               {post.title} [{post.comment_count}]
             </h3>
             <div>
-              <span>{dayjs(post.created_at).format('YYYY/MM/DD')}</span>
+              <span>{formatRelativeTime(post.created_at)}</span>
               <span>•</span>
               <span>
                 <EyeIcon />

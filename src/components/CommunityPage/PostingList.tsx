@@ -80,7 +80,10 @@ const PostingListWrapper = styled.ul`
     flex-wrap: nowrap;
 
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
-
+    @media (max-width: 460px) {
+      height: 7rem;
+      padding: 0.7rem 0;
+    }
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         background-color: ${({ theme }) => theme.colors.gray100};
@@ -100,6 +103,9 @@ const PostingTagContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  @media (max-width: 460px) {
+    width: 8rem;
   }
 `;
 
@@ -191,7 +197,9 @@ const PostingTag = styled.div<{ $color: string }>`
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.065rem;
-
+  @media (max-width: 460px) {
+    font-size: 1.1rem;
+  }
   > div {
     display: flex;
     align-items: center;
