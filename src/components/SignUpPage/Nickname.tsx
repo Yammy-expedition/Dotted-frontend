@@ -39,8 +39,8 @@ export default function Nickname({ register, watch }: NicknameProps) {
   const nickname = watch('nickname') || '';
 
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  const [initialIsFine, setInitialIsFine] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [_, setInitialIsFine] = useState(false);
+  const [__, setMsg] = useState('');
   const mountRef = useRef(false);
 
   const toggleChecked = () => {

@@ -8,11 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth';
 import Modal from 'react-modal';
 import LoadingStateComponent from '@/components/common/LoadingStateComponent';
-import {
-  correctImageOrientation,
-  handleExifOrientation,
-  OrientationCorrectionResult
-} from '@/utils/exif';
+import { correctImageOrientation, handleExifOrientation } from '@/utils/exif';
 
 Modal.setAppElement('#root');
 
