@@ -426,7 +426,11 @@ const TagWrapper = styled.div`
   align-items: center;
 `;
 
-const Text = styled.div``;
+const Text = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 const Tag = styled.div`
   display: inline-flex;
   padding: 0.3rem 1.2rem;
@@ -437,7 +441,7 @@ const Tag = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.07rem;
+  letter-spacing: -0.01rem;
   border-radius: 1.6rem;
   align-items: center;
   justify-content: center;
@@ -457,15 +461,17 @@ const Tag = styled.div`
 const Title = styled.div`
   width: 100%;
   display: flex;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   justify-content: space-between;
   color: ${({ theme }) => theme.colors.gray800};
-  font-size: 2.8rem;
+  font-size: 2.6rem;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 3.6rem; /* 128.571% */
-  letter-spacing: -0.112rem;
-
+  letter-spacing: -0.1px;
+  @media (max-width: 460px) {
+    font-size: 2rem;
+  }
   > span {
     position: relative;
     text-align: center;
@@ -475,12 +481,11 @@ const Title = styled.div`
 `;
 const Price = styled.div`
   color: ${({ theme }) => theme.colors.gray800};
-  font-size: 3.2rem;
+  font-size: 2.6rem;
   font-style: normal;
   font-weight: 700;
   line-height: 3.6rem; /* 112.5% */
   letter-spacing: -0.128rem;
-  margin-bottom: 1.7rem;
 `;
 const Writer = styled.div`
   display: flex;
@@ -491,7 +496,7 @@ const Writer = styled.div`
 
   font-size: 1.4rem;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 400;
   line-height: normal;
   letter-spacing: -0.07rem;
 

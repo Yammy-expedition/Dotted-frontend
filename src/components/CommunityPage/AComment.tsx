@@ -2,6 +2,7 @@ import { Comment, PostDetail } from '@/pages/community/DetailCommunityPage';
 import { useEffect, useRef, useState } from 'react';
 import CommentSVG from '@/assets/svg/CommunityPage/Comment.svg?react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
+// import Profile2 from '@/assets/svg/CommunityPage/Profile2.svg?react';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
 import styled from 'styled-components';
 import More from '@/assets/svg/CommunityPage/More.svg?react';
@@ -276,6 +277,9 @@ export default function AComment({
                     <Locker />
                   </LockerDiv>
                 )}
+                <div className="time">
+                  {formatRelativeTime(comment.created_at)}
+                </div>
               </NicknameDiv>
             )}
             <ConetentDiv>
@@ -286,7 +290,6 @@ export default function AComment({
                 </LockerDiv>
               )}
             </ConetentDiv>
-            <div>{formatRelativeTime(comment.created_at)}</div>
           </>
         )}
         {((!comment.is_secret && !comment.is_deleted) || comment.is_mine) && (
@@ -431,6 +434,15 @@ const NicknameDiv = styled.div`
   gap: 1rem;
   height: 3rem;
   align-items: center;
+  .time {
+    color: ${({ theme }) => theme.colors.gray500};
+    font-size: 1.4rem;
+    @media (max-width: 460px) {
+      font-size: 1.1rem;
+    }
+    font-weight: 300;
+    letter-spacing: -0.07rem;
+  }
 `;
 
 const MoreWrapper = styled.div`
@@ -514,7 +526,9 @@ const CommentButton = styled.button`
 const Comments = styled.li`
   display: flex;
   gap: 2.1rem;
-  margin-bottom: 3.1rem;
+  padding-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
   @media (max-width: 460px) {
     margin-bottom: 2rem;
     gap: 1rem;
@@ -536,16 +550,17 @@ const Comments = styled.li`
           font-size: 1.7rem;
         }
         font-weight: 600;
-        letter-spacing: -0.1rem;
+        letter-spacing: -0.7px;
       }
       &:nth-child(2) {
-        color: ${({ theme }) => theme.colors.gray700};
-        font-size: 2rem;
+        color: ${({ theme }) => theme.colors.gray600};
+        font-size: 1.7rem;
         @media (max-width: 460px) {
-          font-size: 1.7rem;
+          font-size: 1.6rem;
+          letter-spacing: -0.1px;
         }
-        font-weight: 300;
-        letter-spacing: -0.1rem;
+        font-weight: 400;
+        letter-spacing: -0.2px;
       }
       &:nth-child(3) {
         color: ${({ theme }) => theme.colors.gray500};
@@ -557,6 +572,11 @@ const Comments = styled.li`
         letter-spacing: -0.07rem;
       }
     }
+  }
+
+  > svg {
+    width: 2.8rem;
+    height: 2.8rem;
   }
 `;
 
