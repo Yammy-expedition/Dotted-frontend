@@ -32,7 +32,7 @@ export default function EmailInputField({
   return (
     <EmailInputFieldWrapper>
       <div>
-        <span>{emailText}</span>
+        <Title>{emailText}</Title>
         <EmailInput $isSogangEmail={isSogangEmail}>
           <label htmlFor="email">
             <input
@@ -60,6 +60,15 @@ export default function EmailInputField({
   );
 }
 
+const Title = styled.span`
+  color: ${({ theme }) => theme.colors.gray600};
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 36px; /* 200% */
+  letter-spacing: -0.9px;
+`;
+
 const EmailInputFieldWrapper = styled.div`
   width: 100%;
   margin-top: 5rem;
@@ -70,14 +79,6 @@ const EmailInputFieldWrapper = styled.div`
   > div {
     width: 100%;
     max-width: 60.5rem;
-    > span {
-      color: ${({ theme }) => theme.colors.gray600};
-      font-size: 18px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 36px; /* 200% */
-      letter-spacing: -0.9px;
-    }
   }
 `;
 

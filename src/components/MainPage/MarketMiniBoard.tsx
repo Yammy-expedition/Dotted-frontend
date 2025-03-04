@@ -95,7 +95,10 @@ export default function MarketMiniBoard({ onItemClick }: MarketMiniBoardProps) {
 
 // styled components
 const MiniMarket = styled.div`
-  width: 100%;
+  width: 50%;
+  @media (max-width: 865px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.div`
@@ -217,6 +220,17 @@ const ItemInfo = styled.div`
         letter-spacing: -1px;
         line-height: 2;
       }
+    }
+
+    > span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: ${({ theme }) => theme.colors.gray700};
+      font-size: 17px;
+      font-weight: 300;
+      letter-spacing: -1px;
+      line-height: 2;
     }
   }
   > span {

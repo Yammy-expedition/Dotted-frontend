@@ -37,6 +37,8 @@ import ScrollToTop from './components/common/ScrollToTop';
 import CultureCreatePage from './pages/admin/CultureCreatePage';
 import { Suspense } from 'react';
 import LoadingStateComponent from './components/common/LoadingStateComponent';
+import CultureEditPage from './pages/admin/CultureEditPage';
+import CultureEachEditPage from './pages/admin/CultureEachEditPage';
 
 const Router = createBrowserRouter([
   {
@@ -188,7 +190,9 @@ const Router = createBrowserRouter([
     children: [
       { path: 'verify', element: <AdminVerifyPage /> },
       { path: 'notice/write', element: <NoticeWritePage /> },
-      { path: 'culture/create', element: <CultureCreatePage /> }
+      { path: 'culture/create', element: <CultureCreatePage /> },
+      { path: 'culture/edit', element: <CultureEditPage /> },
+      { path: 'culture/edit/detail/:id', element: <CultureEachEditPage /> }
     ]
   }
 ]);

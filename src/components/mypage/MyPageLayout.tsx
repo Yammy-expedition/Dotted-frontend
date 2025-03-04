@@ -39,6 +39,7 @@ export default function MyPageLayout() {
 
 const Layout = styled.div`
   padding: 4rem 8rem 0 8rem;
+  height: 70vh;
   display: grid;
   grid-template-columns: 21rem 1fr;
   @media (max-width: 900px) {

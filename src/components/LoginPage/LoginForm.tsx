@@ -85,10 +85,13 @@ export default function LoginForm() {
       </EmailInputWrapper>
 
       <PasswordWrapper>
-        <PasswordInput eyeOn={eyeOn} register={register} />
-        <EyeStyled $eyeOn={eyeOn} onClick={onClickEyeOn} />
+        <div>
+          <PasswordInput eyeOn={eyeOn} register={register} />
+          <EyeStyled $eyeOn={eyeOn} onClick={onClickEyeOn} />
+        </div>
+
+        {errors.password && <ErrorMsg msg={errors.password.message} />}
       </PasswordWrapper>
-      {errors.password && <ErrorMsg msg={errors.password.message} />}
 
       <OptionBox>
         <div>
@@ -142,17 +145,19 @@ const LoginFormWrapper = styled.form`
 `;
 
 const PasswordWrapper = styled.div`
-  position: relative;
   width: 100%;
   max-width: 60.5rem;
   padding: 0 2rem;
+  > div {
+    position: relative;
+  }
 `;
 
 const EyeStyled = styled(Eye)<{ $eyeOn: boolean }>`
   cursor: pointer;
   position: absolute;
   top: 50%;
-  right: 3rem;
+  right: 2rem;
 
   transform: translateY(-50%);
 

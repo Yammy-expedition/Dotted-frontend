@@ -99,9 +99,7 @@ const CommunityList = styled.div`
 
       > span {
         min-width: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -133,7 +131,8 @@ const CommunityList = styled.div`
         &:last-child {
           display: flex;
           justify-content: end;
-          width: 7rem;
+          min-width: 7rem;
+          margin-left: 2rem;
           line-height: 2rem;
         }
       }

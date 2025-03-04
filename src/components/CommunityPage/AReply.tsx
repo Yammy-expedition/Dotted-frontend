@@ -33,7 +33,13 @@ const customStyles = {
   }
 };
 
-export default function AReply({ reply }: { reply: Comment }) {
+export default function AReply({
+  reply,
+  postIsMine
+}: {
+  reply: Comment;
+  postIsMine: boolean;
+}) {
   const [isCommentLiked, setIsCommentLiked] = useState(reply.is_liked);
   const [likeCount, setLikeCount] = useState(reply.like_count);
   const [openMore, setOpenMore] = useState(false);
@@ -191,7 +197,10 @@ export default function AReply({ reply }: { reply: Comment }) {
 
   return (
     <Comments>
-      {reply.is_secret && !reply.is_mine ? <SecretProfile /> : <Profile />}
+      {!reply.is_deleted &&
+      (!reply.is_secret || postIsMine || reply.is_mine) ? (
+        <Profile />
+      ) : null}
       <div style={{ width: '100%' }}>
         {isEditing ? (
           <CommentInputWrapper>
@@ -212,58 +221,63 @@ export default function AReply({ reply }: { reply: Comment }) {
           </CommentInputWrapper>
         ) : (
           <>
-            {reply.is_secret && !reply.is_mine ? (
-              <div></div>
+            {!reply.is_deleted ? (
+              (postIsMine || reply.is_mine) && (
+                <NicknameDiv>
+                  {reply.user_nickname}
+                  {reply.is_secret && (
+                    <LockerDiv>
+                      <Locker />
+                    </LockerDiv>
+                  )}
+                </NicknameDiv>
+              )
             ) : (
-              <NicknameDiv>
-                {reply.user_nickname}
-                {reply.is_mine && reply.is_secret && (
-                  <LockerDiv>
-                    <Locker />
-                  </LockerDiv>
-                )}
-              </NicknameDiv>
+              <NicknameDiv>Deleted Comment</NicknameDiv>
             )}
+
             <ConetentDiv>
               {editedContent}
-              {reply.is_secret && !reply.is_mine && (
+              {!postIsMine && reply.is_secret && !reply.is_mine && (
                 <LockerDiv>
                   <Locker />
                 </LockerDiv>
               )}
             </ConetentDiv>
-            <div>{formatRelativeTime(reply.created_at)}</div>
+
+            <CreatedAt>{formatRelativeTime(reply.created_at)}</CreatedAt>
           </>
         )}
-        {((!reply.is_secret && !reply.is_deleted) || reply.is_mine) && (
-          <ButtonWrapper>
-            <button onClick={onClickReplyLike}>
-              <Like className={`${isCommentLiked && 'commentLiked'}`} />
-              {likeCount}
-            </button>
-            {reply.content !== 'Deleted Comment' && (
-              <MoreWrapper ref={moreWrapperRef}>
-                <button onClick={() => setOpenMore((prev) => !prev)}>
-                  <More />
-                  {openMore && (
-                    <Menu>
-                      {reply.is_mine ? (
-                        <>
-                          <div onClick={() => setIsEditing(true)}>Edit</div>
-                          <div onClick={() => setOpenNormalModal(true)}>
-                            Delete
-                          </div>
-                        </>
-                      ) : (
-                        <div>Report</div>
-                      )}
-                    </Menu>
-                  )}
-                </button>
-              </MoreWrapper>
-            )}
-          </ButtonWrapper>
-        )}
+        {(postIsMine || reply.is_mine || !reply.is_secret) &&
+          !reply.is_deleted && (
+            <ButtonWrapper>
+              <button onClick={onClickReplyLike}>
+                <Like className={`${isCommentLiked && 'commentLiked'}`} />
+                {likeCount}
+              </button>
+              {reply.content !== 'Deleted Comment' && (
+                <MoreWrapper ref={moreWrapperRef}>
+                  <button onClick={() => setOpenMore((prev) => !prev)}>
+                    <More />
+                    {openMore && (
+                      <Menu>
+                        {reply.is_mine ? (
+                          <>
+                            <div onClick={() => setIsEditing(true)}>Edit</div>
+                            <div onClick={() => setOpenNormalModal(true)}>
+                              Delete
+                            </div>
+                          </>
+                        ) : (
+                          <div>Report</div>
+                        )}
+                      </Menu>
+                    )}
+                  </button>
+                </MoreWrapper>
+              )}
+            </ButtonWrapper>
+          )}
       </div>
       <Modal
         isOpen={openNormalModal}
@@ -298,6 +312,13 @@ const LockerDiv = styled.div``;
 const ConetentDiv = styled.div`
   display: flex;
   gap: 1rem;
+  color: ${({ theme }) => theme.colors.gray700};
+  font-size: 2rem;
+  @media (max-width: 460px) {
+    font-size: 1.7rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.1rem;
 `;
 
 const NicknameDiv = styled.div`
@@ -443,10 +464,6 @@ const Menu = styled.div`
   }
 `;
 
-const SecretProfile = styled.div`
-  width: 2.8rem;
-`;
-
 const Comments = styled.div`
   display: flex;
   gap: 2.1rem;
@@ -588,4 +605,14 @@ const CancelButton = styled.button`
   background: ${({ theme }) => theme.colors.gray400};
   color: ${({ theme }) => theme.colors.gray50};
   border-radius: 0.4rem;
+`;
+
+const CreatedAt = styled.div`
+  color: ${({ theme }) => theme.colors.gray500};
+  font-size: 1.4rem;
+  @media (max-width: 460px) {
+    font-size: 1.1rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.07rem;
 `;

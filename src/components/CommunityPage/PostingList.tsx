@@ -37,11 +37,15 @@ export default function PostingList({ pagedData }: PostingListProps) {
             <PostingTagWrapper tag={post.tag} />
             <div></div>
           </PostingTagContainer>
+
           <PostingInfo>
             <PostingTitle>
+              {/* 제목 */}
               <span>{post.title}</span>
+              {/* 댓글 개수 */}
               <span>[{post.comment_count}]</span>
             </PostingTitle>
+
             <PostingWriter>
               <span>{formatRelativeTime(post.created_at)}</span>
               <span>•</span>
@@ -59,16 +63,22 @@ export default function PostingList({ pagedData }: PostingListProps) {
   );
 }
 
+/* --- 스타일 수정 시작 --- */
 const PostingListWrapper = styled.ul`
   width: 100%;
   min-height: 50vh;
 
   > li {
-    padding: 1rem 0;
+    height: 9.2rem;
+
+    padding: 1.5rem 0;
     cursor: pointer;
     width: 100%;
-    height: 8rem;
+
     display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
     @media (max-width: 460px) {
       height: 7rem;
@@ -83,11 +93,13 @@ const PostingListWrapper = styled.ul`
 `;
 
 const PostingTagContainer = styled.div`
+  flex-shrink: 0;
   width: 10rem;
   height: 50%;
+
   > div {
     width: 100%;
-    height: 100%;
+    height: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,33 +110,38 @@ const PostingTagContainer = styled.div`
 `;
 
 const PostingInfo = styled.div`
-  width: 100%;
-  height: 50%;
+  flex: 1;
+  min-width: 0;
+  gap: 0.7rem;
+
+  display: flex;
+  flex-direction: column;
 `;
 
 const PostingTitle = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  > span {
-    &:first-child {
-      width: fit-content;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: ${({ theme }) => theme.colors.gray700};
-      font-size: 1.8rem;
-      @media (max-width: 700px) {
-        font-size: 1.5rem;
-      }
-      font-weight: 600;
-      letter-spacing: -0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+
+  > span:first-child {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: ${({ theme }) => theme.colors.gray700};
+    font-size: 2rem;
+    @media (max-width: 460px) {
+      font-size: 1.7rem;
     }
-    &:last-child {
-      letter-spacing: 0.2rem;
-    }
+    font-weight: 600;
+    letter-spacing: -0.1rem;
+  }
+
+  > span:last-child {
+    flex-shrink: 0;
+    margin-left: 0.5rem;
     color: ${({ theme }) => theme.colors.gray700};
     font-size: 1.6rem;
     @media (max-width: 460px) {
@@ -132,30 +149,25 @@ const PostingTitle = styled.div`
     }
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
     letter-spacing: -0.08rem;
   }
 `;
 
 const PostingWriter = styled.div`
-  width: 100%;
-  height: 100%;
-
   display: flex;
   align-items: center;
   gap: 1rem;
 
   > span {
-    height: 100%;
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    color: ${({ theme }) => theme.colors.gray500};
 
+    color: ${({ theme }) => theme.colors.gray500};
+    font-size: 1.4rem;
     font-style: normal;
     line-height: normal;
     letter-spacing: -0.07rem;
-    font-size: 1.4rem;
 
     &.nickname {
       font-weight: 500;
@@ -164,18 +176,17 @@ const PostingWriter = styled.div`
     @media (max-width: 460px) {
       font-size: 1.1rem;
     }
-    gap: 0.5rem;
 
     > svg {
       display: flex;
       align-items: center;
-
       @media (max-width: 460px) {
         font-size: 1.1rem;
       }
     }
   }
 `;
+/* --- 스타일 수정 끝 --- */
 
 const PostingTag = styled.div<{ $color: string }>`
   color: ${({ theme }) => theme.colors.gray50};

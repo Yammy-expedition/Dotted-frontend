@@ -37,9 +37,11 @@ const customStyles = {
 
 export default function AComment({
   comment,
-  origin
+  origin,
+  postIsMine
 }: {
   comment: Comment;
+  postIsMine: boolean;
   origin?: string;
 }) {
   const [isCommentLiked, setIsCommentLiked] = useState(comment.is_liked);
@@ -240,11 +242,10 @@ export default function AComment({
 
   return (
     <Comments>
-      {(comment.is_secret || comment.is_deleted) && !comment.is_mine ? (
-        <SecretProfile />
-      ) : (
+      {!comment.is_deleted &&
+      (!comment.is_secret || postIsMine || comment.is_mine) ? (
         <Profile />
-      )}
+      ) : null}
 
       <div style={{ width: '100%' }}>
         {isEditing ? (
@@ -266,61 +267,64 @@ export default function AComment({
           </CommentInputWrapper>
         ) : (
           <>
-            {(comment.is_secret || comment.is_deleted) && !comment.is_mine ? (
-              <div></div>
-            ) : (
-              <NicknameDiv>
-                {comment.user_nickname}
-                {comment.is_mine && origin && comment.is_secret && (
-                  <LockerDiv>
-                    <Locker />
-                  </LockerDiv>
-                )}
-              </NicknameDiv>
-            )}
+            {!comment.is_deleted
+              ? (postIsMine || comment.is_mine) && (
+                  <NicknameDiv>
+                    {comment.user_nickname}
+                    {comment.is_secret && (
+                      <LockerDiv>
+                        <Locker />
+                      </LockerDiv>
+                    )}
+                  </NicknameDiv>
+                )
+              : null}
+
             <ConetentDiv>
               {editedContent}
-              {comment.is_secret && !comment.is_mine && (
+              {!postIsMine && comment.is_secret && !comment.is_mine && (
                 <LockerDiv>
                   <Locker />
                 </LockerDiv>
               )}
             </ConetentDiv>
-            <div>{formatRelativeTime(comment.created_at)}</div>
+
+            <CreatedAt>{formatRelativeTime(comment.created_at)}</CreatedAt>
           </>
         )}
-        {((!comment.is_secret && !comment.is_deleted) || comment.is_mine) && (
-          <ButtonWrapper>
-            <button onClick={onClickCommentLike}>
-              <Like className={`${isCommentLiked && 'commentLiked'}`} />
-              {likeCount}
-            </button>
-            <button onClick={onClickRecomment}>
-              <CommentSVG className={`${isOpenRecomment && 'recomment'}`} />
-            </button>
-            {comment.content !== 'Deleted Comment' && (
-              <MoreWrapper ref={moreWrapperRef}>
-                <button onClick={() => setOpenMore((prev) => !prev)}>
-                  <More />
-                  {openMore && (
-                    <Menu>
-                      {comment.is_mine ? (
-                        <>
-                          <div onClick={() => setIsEditing(true)}>Edit</div>
-                          <div onClick={() => setOpenNormalModal(true)}>
-                            Delete
-                          </div>
-                        </>
-                      ) : (
-                        <div>Report</div>
-                      )}
-                    </Menu>
-                  )}
-                </button>
-              </MoreWrapper>
-            )}
-          </ButtonWrapper>
-        )}
+        {(postIsMine || comment.is_mine || !comment.is_secret) &&
+          !comment.is_deleted && (
+            <ButtonWrapper>
+              <button onClick={onClickCommentLike}>
+                <Like className={`${isCommentLiked && 'commentLiked'}`} />
+                {likeCount}
+              </button>
+              <button onClick={onClickRecomment}>
+                <CommentSVG className={`${isOpenRecomment && 'recomment'}`} />
+              </button>
+              {comment.content !== 'Deleted Comment' && (
+                <MoreWrapper ref={moreWrapperRef}>
+                  <button onClick={() => setOpenMore((prev) => !prev)}>
+                    <More />
+                    {openMore && (
+                      <Menu>
+                        {comment.is_mine ? (
+                          <>
+                            <div onClick={() => setIsEditing(true)}>Edit</div>
+                            <div onClick={() => setOpenNormalModal(true)}>
+                              Delete
+                            </div>
+                          </>
+                        ) : (
+                          <div>Report</div>
+                        )}
+                      </Menu>
+                    )}
+                  </button>
+                </MoreWrapper>
+              )}
+            </ButtonWrapper>
+          )}
 
         <Modal
           isOpen={openNormalModal}
@@ -376,17 +380,15 @@ export default function AComment({
             <CommentButton onClick={handleRecommentSubmit}>Reply</CommentButton>
           </CommentInputWrapper>
         )}
-        {replies.length > 0 && <ReplySection replies={replies} />}
+        {replies.length > 0 && (
+          <ReplySection replies={replies} postIsMine={postIsMine} />
+        )}
       </div>
     </Comments>
   );
 }
 
 const LockerDiv = styled.div``;
-
-const SecretProfile = styled.div`
-  width: 2.8rem;
-`;
 
 const SecretButton = styled.button<{ $isSecret: boolean }>`
   cursor: pointer;
@@ -424,6 +426,14 @@ const SecretButton = styled.button<{ $isSecret: boolean }>`
 const ConetentDiv = styled.div`
   display: flex;
   gap: 1rem;
+
+  color: ${({ theme }) => theme.colors.gray700};
+  font-size: 2rem;
+  @media (max-width: 460px) {
+    font-size: 1.7rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.1rem;
 `;
 
 const NicknameDiv = styled.div`
@@ -537,24 +547,6 @@ const Comments = styled.li`
         }
         font-weight: 600;
         letter-spacing: -0.1rem;
-      }
-      &:nth-child(2) {
-        color: ${({ theme }) => theme.colors.gray700};
-        font-size: 2rem;
-        @media (max-width: 460px) {
-          font-size: 1.7rem;
-        }
-        font-weight: 300;
-        letter-spacing: -0.1rem;
-      }
-      &:nth-child(3) {
-        color: ${({ theme }) => theme.colors.gray500};
-        font-size: 1.4rem;
-        @media (max-width: 460px) {
-          font-size: 1.1rem;
-        }
-        font-weight: 300;
-        letter-spacing: -0.07rem;
       }
     }
   }
@@ -736,4 +728,14 @@ const NowButton = styled.div`
   border-radius: 0px 0px 5px 0px;
   background: var(--Semantic-Negative-900, #ea3729);
   color: ${({ theme }) => theme.colors.gray50};
+`;
+
+const CreatedAt = styled.div`
+  color: ${({ theme }) => theme.colors.gray500};
+  font-size: 1.4rem;
+  @media (max-width: 460px) {
+    font-size: 1.1rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.07rem;
 `;
