@@ -42,6 +42,9 @@ export default function Header({ scrollY }: { scrollY: number }) {
 
   // SSE 관련 useEffect는 그대로 유지
   useEffect(() => {
+    let evtSource: EventSource | null = null;
+    let refreshTimeout: number;
+
     const setupSSE = async () => {
       let accessToken = localStorage.getItem('accessToken');
       if (isTokenExpired(accessToken)) {
@@ -54,9 +57,15 @@ export default function Header({ scrollY }: { scrollY: number }) {
         }
       }
 
-      const EventSourceConstructor = EventSourcePolyfill || NativeEventSource;
+      // 토큰의 만료 시각을 계산 (ms 단위)
+      const payload = JSON.parse(atob(accessToken!.split('.')[1]));
+      const tokenExp = payload.exp * 1000;
+      const now = Date.now();
+      const refreshBuffer = 5000; // 만료 5초 전 미리 재연결
+      const timeUntilRefresh = tokenExp - now - refreshBuffer;
 
-      const evtSource = new EventSourceConstructor(
+      const EventSourceConstructor = EventSourcePolyfill || NativeEventSource;
+      evtSource = new EventSourceConstructor(
         `${import.meta.env.VITE_API_DOMAIN}/api/notification/stream`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -64,31 +73,45 @@ export default function Header({ scrollY }: { scrollY: number }) {
         }
       );
 
+      // 토큰 만료 전, SSE 연결을 재설정하기 위한 타이머 설정
+      if (timeUntilRefresh > 0) {
+        refreshTimeout = window.setTimeout(() => {
+          evtSource?.close();
+          setupSSE(); // 새 토큰으로 다시 연결
+        }, timeUntilRefresh);
+      }
+
       evtSource.onmessage = (event) => {
         try {
-          const newEvent = JSON.parse(event.data);
-          // console.log(newEvent);
-          setNotice((prev) => {
-            if (prev === null) return newEvent;
-            return { ...prev, list: [newEvent.list[0], ...prev.list] };
-          });
+          const newEvent: AllInfoNotification = JSON.parse(event.data);
+          setNotice((prev) =>
+            prev === null
+              ? newEvent
+              : { ...prev, list: [newEvent.list[0], ...prev.list] }
+          );
         } catch (err) {
           console.error('이벤트 데이터 파싱 에러:', err);
         }
       };
 
       evtSource.onerror = async () => {
-        evtSource.close();
+        if (refreshTimeout) {
+          clearTimeout(refreshTimeout);
+        }
+        evtSource?.close();
+        // 1초 후 재설정 (에러 발생 시)
         setTimeout(setupSSE, 1000);
-      };
-
-      return () => {
-        evtSource.close();
-        // console.log('SSE 연결 종료');
       };
     };
 
     setupSSE();
+
+    return () => {
+      evtSource?.close();
+      if (refreshTimeout) {
+        clearTimeout(refreshTimeout);
+      }
+    };
   }, []);
 
   // 모바일 네브 외부 클릭 시 닫히게 하는 useEffect
