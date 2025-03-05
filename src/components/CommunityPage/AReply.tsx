@@ -207,9 +207,10 @@ export default function AReply({
   return (
     <Comments>
       {/* 삭제되지 않은 경우에만 프로필 아이콘 렌더링 */}
-      {!isDeleted && (!reply.is_secret || reply.is_mine || commentIsMine) && (
-        <Profile />
-      )}
+      {((postIsMine && !isDeleted) ||
+        (!isDeleted &&
+          (!reply.is_secret || reply.is_mine || commentIsMine))) && <Profile />}
+      <>{console.log({ postIsMine })}</>
       <div style={{ width: '100%' }}>
         {isEditing ? (
           <CommentInputWrapper>
@@ -243,7 +244,7 @@ export default function AReply({
           </>
         )}
         {/* 삭제된 경우엔 좋아요, 수정, 삭제 버튼 모두 렌더링하지 않음 */}
-        {!isDeleted && (!reply.is_secret || reply.is_mine || commentIsMine) && (
+        {!isDeleted && postIsMine && (
           <ButtonWrapper>
             <button onClick={onClickReplyLike}>
               <Like className={`${isCommentLiked && 'commentLiked'}`} />
@@ -255,16 +256,12 @@ export default function AReply({
                   <More />
                   {openMore && (
                     <Menu>
-                      {reply.is_mine ? (
-                        <>
-                          <div onClick={() => setIsEditing(true)}>Edit</div>
-                          <div onClick={() => setOpenNormalModal(true)}>
-                            Delete
-                          </div>
-                        </>
-                      ) : (
-                        <div>Report</div>
-                      )}
+                      <>
+                        <div onClick={() => setIsEditing(true)}>Edit</div>
+                        <div onClick={() => setOpenNormalModal(true)}>
+                          Delete
+                        </div>
+                      </>
                     </Menu>
                   )}
                 </button>
@@ -305,8 +302,10 @@ const Comments = styled.li`
   display: flex;
   gap: 2.1rem;
   padding-bottom: 2rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
+  background-color: ${({ theme }) => theme.colors.gray100};
+  padding: 2rem;
   @media (max-width: 460px) {
     margin-bottom: 2rem;
     gap: 1rem;
@@ -551,10 +550,49 @@ const CommentButton = styled.button`
 `;
 
 const ButtonWrapper = styled.div`
+  color: ${({ theme }) => theme.colors.gray700};
+  font-size: 1.4rem;
+  @media (max-width: 460px) {
+    font-size: 1.1rem;
+  }
+  font-weight: 300;
+  letter-spacing: -0.07rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 2rem;
+  > button {
+    min-width: 2rem;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    > svg {
+      @media (max-width: 460px) {
+        width: 15px;
+      }
+      &.commentLiked {
+        > path {
+          fill: ${({ theme }) => theme.colors.purple600};
+          stroke: ${({ theme }) => theme.colors.purple600};
+          @media (max-width: 460px) {
+            width: 15px;
+          }
+        }
+      }
+      &.recomment {
+        fill: ${({ theme }) => theme.colors.purple600};
+        stroke: ${({ theme }) => theme.colors.purple600};
+        > path {
+          fill: ${({ theme }) => theme.colors.purple600};
+          stroke: ${({ theme }) => theme.colors.purple600};
+        }
+      }
+    }
+  }
 `;
 
 const CreatedAt = styled.div`
