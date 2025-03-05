@@ -2,7 +2,6 @@ import { Comment, PostDetail } from '@/pages/community/DetailCommunityPage';
 import { useEffect, useRef, useState } from 'react';
 import CommentSVG from '@/assets/svg/CommunityPage/Comment.svg?react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
-// import Profile2 from '@/assets/svg/CommunityPage/Profile2.svg?react';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
 import styled from 'styled-components';
 import More from '@/assets/svg/CommunityPage/More.svg?react';
@@ -46,7 +45,7 @@ export default function AComment({
   origin?: string;
   postId: number;
 }) {
-  // 기타 상태들
+  const [isDeleted, setIsDeleted] = useState(comment.is_deleted);
   const [isCommentLiked, setIsCommentLiked] = useState(comment.is_liked);
   const [likeCount, setLikeCount] = useState(comment.like_count);
   const [isOpenRecomment, setIsOpenRecomment] = useState(false);
@@ -214,14 +213,26 @@ export default function AComment({
       );
     },
     onSuccess: () => {
+      // 로컬 상태 업데이트
       setEditedContent('Deleted Comment');
+      setIsDeleted(true);
+      // 캐시 업데이트: 해당 댓글의 content, is_deleted, user_nickname 변경
       queryClient.setQueryData<PostDetail | MarketPostDetail>(
         ['postDetail', comment.post],
         (oldData) => {
           if (!oldData) return oldData;
           return {
             ...oldData,
-            comments: oldData.comments.filter((c) => c.id !== comment.id)
+            comments: oldData.comments.map((c) =>
+              c.id === comment.id
+                ? {
+                    ...c,
+                    content: 'Deleted Comment',
+                    is_deleted: true,
+                    user_nickname: 'Unknown'
+                  }
+                : c
+            )
           };
         }
       );
@@ -238,8 +249,10 @@ export default function AComment({
 
   return (
     <Comments>
-      {/* 포스트가 내 글이거나, 내가 쓴 댓글이거나, 댓글이 비밀이 아닐 때 프로필 표시 */}
-      {(postIsMine || comment.is_mine || !comment.is_secret) && <Profile />}
+      {/* 삭제된 댓글이면 프로필 아이콘 렌더링 안함 */}
+      {(postIsMine || comment.is_mine || !comment.is_secret) && !isDeleted && (
+        <Profile />
+      )}
       <div style={{ width: '100%' }}>
         {isEditing ? (
           <CommentInputWrapper>
@@ -261,7 +274,8 @@ export default function AComment({
         ) : (
           <>
             <NicknameDiv>
-              {comment.user_nickname}
+              {/* 삭제된 댓글이면 닉네임 'Unknown'으로 표시 */}
+              {isDeleted ? 'Unknown' : comment.user_nickname}
               {comment.is_secret && (
                 <LockerDiv>
                   <Locker />
@@ -272,16 +286,17 @@ export default function AComment({
             <CreatedAt>{formatRelativeTime(comment.created_at)}</CreatedAt>
           </>
         )}
-        {(postIsMine || !comment.is_secret || comment.is_mine) && (
-          <ButtonWrapper>
-            <button onClick={onClickCommentLike}>
-              <Like className={`${isCommentLiked && 'commentLiked'}`} />
-              {likeCount}
-            </button>
-            <button onClick={onClickRecomment}>
-              <CommentSVG className={`${isOpenRecomment && 'recomment'}`} />
-            </button>
-            {comment.content !== 'Deleted Comment' && (
+        {/* 삭제된 댓글이라면 좋아요 및 대댓글 버튼 렌더링 안함 */}
+        {!isDeleted &&
+          (postIsMine || !comment.is_secret || comment.is_mine) && (
+            <ButtonWrapper>
+              <button onClick={onClickCommentLike}>
+                <Like className={`${isCommentLiked && 'commentLiked'}`} />
+                {likeCount}
+              </button>
+              <button onClick={onClickRecomment}>
+                <CommentSVG className={`${isOpenRecomment && 'recomment'}`} />
+              </button>
               <MoreWrapper ref={moreWrapperRef}>
                 <button onClick={() => setOpenMore((prev) => !prev)}>
                   <More />
@@ -301,9 +316,8 @@ export default function AComment({
                   )}
                 </button>
               </MoreWrapper>
-            )}
-          </ButtonWrapper>
-        )}
+            </ButtonWrapper>
+          )}
         <Modal
           isOpen={openNormalModal}
           style={customStyles}
