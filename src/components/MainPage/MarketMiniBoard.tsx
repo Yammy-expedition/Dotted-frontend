@@ -208,6 +208,7 @@ const ItemInfo = styled.div`
   gap: 1.2rem;
   > div {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     &.title {
       > span {
