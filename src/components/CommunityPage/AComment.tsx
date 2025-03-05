@@ -9,11 +9,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ReplySection from './ReplySection';
 import Modal from 'react-modal';
 import Locker from '@/assets/svg/MarketPage/Locker.svg?react';
-import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
+import { fetchWithAuth } from '@/utils/auth';
 import { formatRelativeTime } from '@/utils/formatTime';
 import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
 
-// 반환 타입을 정의 (필요에 따라 실제 API 스펙에 맞게 수정)
 interface CommentLikeResponse {
   is_liked: boolean;
   like_count: number;
@@ -38,12 +37,15 @@ const customStyles = {
 export default function AComment({
   comment,
   origin,
-  postIsMine
+  postIsMine,
+  postId
 }: {
   comment: Comment;
   postIsMine: boolean;
   origin?: string;
+  postId: number;
 }) {
+  // 기타 상태들
   const [isCommentLiked, setIsCommentLiked] = useState(comment.is_liked);
   const [likeCount, setLikeCount] = useState(comment.like_count);
   const [isOpenRecomment, setIsOpenRecomment] = useState(false);
@@ -71,7 +73,7 @@ export default function AComment({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [openMore]);
 
-  // 댓글 좋아요 mutation (반환 타입을 CommentLikeResponse로 지정)
+  // 댓글 좋아요 mutation
   const commentLikeMutation = useMutation<CommentLikeResponse, Error, void>({
     mutationFn: async () => {
       return await fetchWithAuth<CommentLikeResponse>(
@@ -83,17 +85,16 @@ export default function AComment({
       setIsCommentLiked(data.is_liked);
       setLikeCount(data.like_count);
       queryClient.setQueryData<PostDetail | MarketPostDetail>(
-        ['postDetail', comment.post], // 댓글이 포함된 게시글 캐시 수정
+        ['postDetail', comment.post],
         (oldData) => {
           if (!oldData) return oldData;
-
           return {
             ...oldData,
             comments: oldData.comments.map((c) =>
               c.id === comment.id
                 ? { ...c, is_liked: data.is_liked, like_count: data.like_count }
                 : c
-            ) // ✅ 해당 댓글의 좋아요 상태 업데이트
+            )
           };
         }
       );
@@ -107,14 +108,13 @@ export default function AComment({
     commentLikeMutation.mutate();
   };
 
-  // 댓글 수정 mutation (반환 타입을 Comment로 지정)
+  // 댓글 수정 mutation
   const updateCommentMutation = useMutation<Comment, Error, void>({
     mutationFn: async () => {
       const requestData = {
         content: editedContent,
         is_secret: isSecret
       };
-
       return await fetchWithAuth<Comment>(
         `${import.meta.env.VITE_API_DOMAIN}/api/posting/comment/${comment.id}/update`,
         {
@@ -130,7 +130,6 @@ export default function AComment({
         ['postDetail', comment.post],
         (oldData) => {
           if (!oldData) return oldData;
-
           return {
             ...oldData,
             comments: oldData.comments.map((c) =>
@@ -160,16 +159,15 @@ export default function AComment({
     setIsOpenRecomment((prev) => !prev);
   };
 
-  // 대댓글 작성 mutation (반환 타입을 Comment로 지정)
+  // 대댓글 작성 mutation
   const recommentMutation = useMutation<Comment, Error, void>({
     mutationFn: async () => {
       const requestData = {
-        post: comment.post, // 게시글 ID
-        content: recomment.trim(), // 대댓글 내용
-        parent: comment.id, // 원본 댓글 ID
-        is_secret: isSecret // 공개 여부
+        post: comment.post,
+        content: recomment.trim(),
+        parent: comment.id,
+        is_secret: isSecret
       };
-
       return await fetchWithAuth<Comment>(
         `${import.meta.env.VITE_API_DOMAIN}/api/posting/comment/create`,
         {
@@ -179,14 +177,12 @@ export default function AComment({
       );
     },
     onSuccess: (newComment) => {
-      // newComment이 Comment 타입이므로, prev의 타입과 일치합니다.
       setReplies((prev) => [...prev, newComment]);
       setRecomment('');
       queryClient.setQueryData<PostDetail | MarketPostDetail>(
-        ['postDetail', comment.post], // 대댓글이 포함된 게시글의 캐시 수정
+        ['postDetail', comment.post],
         (oldData) => {
           if (!oldData) return oldData;
-
           return {
             ...oldData,
             comments: oldData.comments.map((c) =>
@@ -208,7 +204,7 @@ export default function AComment({
     recommentMutation.mutate();
   };
 
-  // 댓글 삭제 mutation (반환 타입을 void로 지정)
+  // 댓글 삭제 mutation
   const deleteMutation = useMutation<void, Error, void>({
     mutationFn: async () => {
       return await fetchWithAuth<void>(
@@ -219,10 +215,9 @@ export default function AComment({
     onSuccess: () => {
       setEditedContent('Deleted Comment');
       queryClient.setQueryData<PostDetail | MarketPostDetail>(
-        ['postDetail', comment.post], // 댓글이 포함된 게시글의 캐시 수정
+        ['postDetail', comment.post],
         (oldData) => {
           if (!oldData) return oldData;
-
           return {
             ...oldData,
             comments: oldData.comments.filter((c) => c.id !== comment.id)
@@ -242,11 +237,8 @@ export default function AComment({
 
   return (
     <Comments>
-      {!comment.is_deleted &&
-      (!comment.is_secret || postIsMine || comment.is_mine) ? (
-        <Profile />
-      ) : null}
-
+      {/* 포스트가 내 글이거나, 내가 쓴 댓글이거나, 댓글이 비밀이 아닐 때 프로필 표시 */}
+      {(postIsMine || comment.is_mine || !comment.is_secret) && <Profile />}
       <div style={{ width: '100%' }}>
         {isEditing ? (
           <CommentInputWrapper>
@@ -267,65 +259,50 @@ export default function AComment({
           </CommentInputWrapper>
         ) : (
           <>
-            {!comment.is_deleted
-              ? (postIsMine || comment.is_mine) && (
-                  <NicknameDiv>
-                    {comment.user_nickname}
-                    {comment.is_secret && (
-                      <LockerDiv>
-                        <Locker />
-                      </LockerDiv>
-                    )}
-                  </NicknameDiv>
-                )
-              : null}
-
-            <ConetentDiv>
-              {editedContent}
-              {!postIsMine && comment.is_secret && !comment.is_mine && (
+            <NicknameDiv>
+              {comment.user_nickname}
+              {comment.is_secret && (
                 <LockerDiv>
                   <Locker />
                 </LockerDiv>
               )}
-            </ConetentDiv>
-
+            </NicknameDiv>
+            <ConetentDiv>{editedContent}</ConetentDiv>
             <CreatedAt>{formatRelativeTime(comment.created_at)}</CreatedAt>
           </>
         )}
-        {(postIsMine || comment.is_mine || !comment.is_secret) &&
-          !comment.is_deleted && (
-            <ButtonWrapper>
-              <button onClick={onClickCommentLike}>
-                <Like className={`${isCommentLiked && 'commentLiked'}`} />
-                {likeCount}
-              </button>
-              <button onClick={onClickRecomment}>
-                <CommentSVG className={`${isOpenRecomment && 'recomment'}`} />
-              </button>
-              {comment.content !== 'Deleted Comment' && (
-                <MoreWrapper ref={moreWrapperRef}>
-                  <button onClick={() => setOpenMore((prev) => !prev)}>
-                    <More />
-                    {openMore && (
-                      <Menu>
-                        {comment.is_mine ? (
-                          <>
-                            <div onClick={() => setIsEditing(true)}>Edit</div>
-                            <div onClick={() => setOpenNormalModal(true)}>
-                              Delete
-                            </div>
-                          </>
-                        ) : (
-                          <div>Report</div>
-                        )}
-                      </Menu>
-                    )}
-                  </button>
-                </MoreWrapper>
-              )}
-            </ButtonWrapper>
-          )}
-
+        {(postIsMine || !comment.is_secret || comment.is_mine) && (
+          <ButtonWrapper>
+            <button onClick={onClickCommentLike}>
+              <Like className={`${isCommentLiked && 'commentLiked'}`} />
+              {likeCount}
+            </button>
+            <button onClick={onClickRecomment}>
+              <CommentSVG className={`${isOpenRecomment && 'recomment'}`} />
+            </button>
+            {comment.content !== 'Deleted Comment' && (
+              <MoreWrapper ref={moreWrapperRef}>
+                <button onClick={() => setOpenMore((prev) => !prev)}>
+                  <More />
+                  {openMore && (
+                    <Menu>
+                      {comment.is_mine ? (
+                        <>
+                          <div onClick={() => setIsEditing(true)}>Edit</div>
+                          <div onClick={() => setOpenNormalModal(true)}>
+                            Delete
+                          </div>
+                        </>
+                      ) : (
+                        <div>Report</div>
+                      )}
+                    </Menu>
+                  )}
+                </button>
+              </MoreWrapper>
+            )}
+          </ButtonWrapper>
+        )}
         <Modal
           isOpen={openNormalModal}
           style={customStyles}
@@ -381,7 +358,12 @@ export default function AComment({
           </CommentInputWrapper>
         )}
         {replies.length > 0 && (
-          <ReplySection replies={replies} postIsMine={postIsMine} />
+          <ReplySection
+            replies={replies}
+            postIsMine={postIsMine}
+            rootComment={comment.id}
+            commentIsMine={comment.is_mine}
+          />
         )}
       </div>
     </Comments>
@@ -406,7 +388,6 @@ const SecretButton = styled.button<{ $isSecret: boolean }>`
   color: ${({ theme, $isSecret }) =>
     $isSecret ? theme.colors.purple600 : theme.colors.gray400};
   text-align: center;
-
   font-size: 1.6rem;
   @media (max-width: 460px) {
     font-size: 1.3rem;
@@ -426,7 +407,6 @@ const SecretButton = styled.button<{ $isSecret: boolean }>`
 const ConetentDiv = styled.div`
   display: flex;
   gap: 1rem;
-
   color: ${({ theme }) => theme.colors.gray700};
   font-size: 2rem;
   @media (max-width: 460px) {
@@ -441,6 +421,9 @@ const NicknameDiv = styled.div`
   gap: 1rem;
   height: 3rem;
   align-items: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.gray700};
 `;
 
 const MoreWrapper = styled.div`
@@ -468,7 +451,6 @@ const CommentInputWrapper = styled.div`
     height: 100%;
     border-radius: 0.4rem;
     background: ${({ theme }) => theme.colors.gray100};
-
     font-size: 1.6rem;
     @media (max-width: 460px) {
       font-size: 1.3rem;
@@ -489,7 +471,6 @@ const CommentInputWrapper = styled.div`
       height: 100%;
       border-radius: 0.4rem;
       background: ${({ theme }) => theme.colors.gray100};
-
       font-size: 1.6rem;
       @media (max-width: 460px) {
         font-size: 1.3rem;
@@ -510,7 +491,6 @@ const CommentButton = styled.button`
   background: ${({ theme }) => theme.colors.purple600};
   color: ${({ theme }) => theme.colors.gray50};
   text-align: center;
-
   font-size: 1.6rem;
   @media (max-width: 460px) {
     font-size: 1.3rem;
@@ -608,26 +588,21 @@ const Menu = styled.div`
   @media (max-width: 400px) {
     width: 10rem;
   }
-
   flex-shrink: 0;
   border-radius: 0.5rem;
   background: ${({ theme }) => theme.colors.backgroundLayer2};
   box-shadow: 2px 2px 26.1px -3px rgba(0, 0, 0, 0.22);
   color: ${({ theme }) => theme.colors.gray800};
-
   > div {
     text-align: start;
-
     cursor: pointer;
     padding: 1rem 2rem;
     color: ${({ theme }) => theme.colors.gray700};
-
     font-size: 1.6rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     letter-spacing: -0.08rem;
-
     @media (hover: hover) and (pointer: fine) {
       &:hover {
         background-color: ${({ theme }) => theme.colors.gray200};
@@ -677,7 +652,6 @@ const TextNormal = styled.div`
   > span {
     color: ${({ theme }) => theme.colors.gray700};
     text-align: center;
-
     font-size: 2rem;
     @media (max-width: 460px) {
       font-size: 1.7rem;
@@ -704,7 +678,6 @@ const ButtonBox = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-
     font-size: 2rem;
     @media (max-width: 460px) {
       font-size: 1.7rem;

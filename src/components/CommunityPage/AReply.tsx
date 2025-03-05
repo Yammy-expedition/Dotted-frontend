@@ -35,10 +35,14 @@ const customStyles = {
 
 export default function AReply({
   reply,
-  postIsMine
+  postIsMine,
+  rootComment,
+  commentIsMine
 }: {
   reply: Comment;
   postIsMine: boolean;
+  rootComment: number;
+  commentIsMine: boolean;
 }) {
   const [isCommentLiked, setIsCommentLiked] = useState(reply.is_liked);
   const [likeCount, setLikeCount] = useState(reply.like_count);
@@ -197,10 +201,8 @@ export default function AReply({
 
   return (
     <Comments>
-      {!reply.is_deleted &&
-      (!reply.is_secret || postIsMine || reply.is_mine) ? (
-        <Profile />
-      ) : null}
+      {!reply.is_secret || reply.is_mine || commentIsMine ? <Profile /> : null}
+
       <div style={{ width: '100%' }}>
         {isEditing ? (
           <CommentInputWrapper>
@@ -221,34 +223,22 @@ export default function AReply({
           </CommentInputWrapper>
         ) : (
           <>
-            {!reply.is_deleted ? (
-              (postIsMine || reply.is_mine) && (
-                <NicknameDiv>
-                  {reply.user_nickname}
-                  {reply.is_secret && (
-                    <LockerDiv>
-                      <Locker />
-                    </LockerDiv>
-                  )}
-                </NicknameDiv>
-              )
-            ) : (
-              <NicknameDiv>Deleted Comment</NicknameDiv>
-            )}
-
-            <ConetentDiv>
-              {editedContent}
-              {!postIsMine && reply.is_secret && !reply.is_mine && (
+            <NicknameDiv>
+              {reply.user_nickname}
+              {reply.is_secret && (
                 <LockerDiv>
                   <Locker />
                 </LockerDiv>
               )}
-            </ConetentDiv>
+            </NicknameDiv>
 
+            {/* <NicknameDiv>Deleted Comment</NicknameDiv> */}
+
+            <ConetentDiv>{editedContent}</ConetentDiv>
             <CreatedAt>{formatRelativeTime(reply.created_at)}</CreatedAt>
           </>
         )}
-        {(postIsMine || reply.is_mine || !reply.is_secret) &&
+        {(!reply.is_secret || reply.is_mine || commentIsMine) &&
           !reply.is_deleted && (
             <ButtonWrapper>
               <button onClick={onClickReplyLike}>
@@ -468,6 +458,7 @@ const Comments = styled.div`
   display: flex;
   gap: 2.1rem;
   margin-top: 2rem;
+  margin-left: 2.7rem;
 
   @media (max-width: 460px) {
     gap: 1rem;

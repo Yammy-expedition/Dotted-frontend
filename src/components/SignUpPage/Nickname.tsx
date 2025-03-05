@@ -141,6 +141,10 @@ const SubText = styled.span`
   line-height: 36px;
   letter-spacing: -0.48px;
 
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
+
   @media (max-width: 460px) {
     display: none;
   }

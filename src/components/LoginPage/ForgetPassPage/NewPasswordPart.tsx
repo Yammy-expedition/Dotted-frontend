@@ -44,6 +44,12 @@ export default function NewPasswordPart({ email }: NewPasswordPartProps) {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordCheck, setNewPasswordCheck] = useState('');
 
+  const isVaild =
+    (newPassword !== '' || newPassword !== null) &&
+    newPassword === newPasswordCheck;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+  const isLengthValid = newPassword.length >= 7 && newPassword.length <= 15;
+
   const mutation = useMutation({
     mutationFn: () => changePasswordRequest(email, newPassword),
     onSuccess: () => {
@@ -56,11 +62,23 @@ export default function NewPasswordPart({ email }: NewPasswordPartProps) {
     }
   });
 
+  // 이전 코드와 동일하게 7~15자 및 특수문자 포함 여부 검사
+  const validatePassword = (password: string) => {
+    if (password.length < 7 || password.length > 15) {
+      alert('Password must be between 7 and 15 characters long.');
+      return false;
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      alert('Password must include at least one special character.');
+      return false;
+    }
+    return true; // 유효성 검사 통과
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationError = validatePassword(newPassword);
-    if (validationError) {
+    if (!validatePassword(newPassword)) {
       return;
     }
 
@@ -71,20 +89,8 @@ export default function NewPasswordPart({ email }: NewPasswordPartProps) {
     mutation.mutate();
   };
 
-  const validatePassword = (password: string) => {
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters long.');
-      return;
-    }
-    if (/^\d+$/.test(password)) {
-      alert('Password cannot consist of only numbers.');
-      return;
-    }
-    return ''; // 유효성 검사 통과
-  };
-
   return (
-    <NewPasswordPartWrapper>
+    <NewPasswordPartWrapper onSubmit={handleSubmit}>
       <InputWrapper>
         <Label htmlFor="password">New Password</Label>
         <div style={{ width: '100%', position: 'relative' }}>
@@ -99,7 +105,12 @@ export default function NewPasswordPart({ email }: NewPasswordPartProps) {
           <EyeStyled $eyeOn={eyeOn} onClick={onClickEyeOn} />
         </div>
       </InputWrapper>
-
+      {!isLengthValid && !isVaild && (
+        <ErrorMsg msg="Password must be between 7 and 15 characters" />
+      )}
+      {!hasSpecialChar && !isVaild && (
+        <ErrorMsg msg="Password must include at least one special character" />
+      )}
       <InputWrapper>
         <Label htmlFor="passwordCheck">New Password Check</Label>
         <div style={{ width: '100%', position: 'relative' }}>
@@ -113,27 +124,31 @@ export default function NewPasswordPart({ email }: NewPasswordPartProps) {
           />
           <EyeStyled $eyeOn={eyeOn2} onClick={onClickEyeOn2} />
         </div>
-
-        <ErrorMsg msg="Password does not match" />
       </InputWrapper>
-      {newPassword !== '' &&
-        newPasswordCheck !== '' &&
-        newPassword !== newPasswordCheck && (
-          <ErrorMsg msg="Password does not match" />
-        )}
 
-      <SubmitButton onClick={handleSubmit}>
+      <ErrorWrapper>
+        {newPassword !== '' &&
+          newPasswordCheck !== '' &&
+          newPassword !== newPasswordCheck && (
+            <ErrorMsg msg="Password does not match" />
+          )}
+      </ErrorWrapper>
+
+      <SubmitButton type="submit">
         {mutation.isPending ? 'Submitting...' : 'Submit'}
       </SubmitButton>
     </NewPasswordPartWrapper>
   );
 }
 
+const ErrorWrapper = styled.div`
+  margin-bottom: 1.8rem;
+`;
+
 const NewPasswordPartWrapper = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
 `;
 
 const InputWrapper = styled.div`
@@ -141,16 +156,16 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  margin-top: 1.8rem;
 `;
 
 const Label = styled.label`
   width: 100%;
   color: ${({ theme }) => theme.colors.gray700};
-
   font-size: 16px;
   font-style: normal;
   font-weight: 300;
-  line-height: 36px; /* 225% */
+  line-height: 36px;
   letter-spacing: -0.8px;
 `;
 
@@ -161,11 +176,10 @@ const Input = styled.input`
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.colors.gray300};
   background: ${({ theme }) => theme.colors.gray100};
-
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
-  line-height: 36px; /* 180% */
+  line-height: 36px;
   letter-spacing: -0.6px;
 `;
 
@@ -174,9 +188,7 @@ const EyeStyled = styled(Eye)<{ $eyeOn: boolean }>`
   position: absolute;
   top: 50%;
   right: 2rem;
-
   transform: translateY(-50%);
-
   g {
     path {
       stroke: ${({ theme, $eyeOn }) => ($eyeOn ? theme.colors.purple1000 : '')};
@@ -191,13 +203,11 @@ const SubmitButton = styled.button`
   border-radius: 5px;
   background: ${({ theme }) => theme.colors.purple600};
   border: none;
-
   color: ${({ theme }) => theme.colors.gray50};
   text-align: center;
-
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
-  line-height: 36px; /* 180% */
+  line-height: 36px;
   letter-spacing: -1px;
 `;
