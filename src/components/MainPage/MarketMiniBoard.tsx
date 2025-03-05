@@ -225,10 +225,7 @@ const ItemInfo = styled.div`
 
     > span {
       color: ${({ theme }) => theme.colors.gray700};
-      @media (max-width: 900px) {
-        font-size: 11px;
-      }
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 300;
       letter-spacing: -1px;
       line-height: 2;
