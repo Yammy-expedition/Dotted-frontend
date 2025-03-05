@@ -223,11 +223,11 @@ const ItemInfo = styled.div`
     }
 
     > span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       color: ${({ theme }) => theme.colors.gray700};
-      font-size: 17px;
+      @media (max-width: 900px) {
+        font-size: 11px;
+      }
+      font-size: 11px;
       font-weight: 300;
       letter-spacing: -1px;
       line-height: 2;
