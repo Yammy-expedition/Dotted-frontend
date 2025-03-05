@@ -7,6 +7,7 @@ import ProfileIcon from '@/assets/svg/mypage/profile.svg?react';
 import WarningIcon from '@/assets/svg/mypage/warning.svg?react';
 import ModalPortal from '@/components/common/portal/ModalPortal';
 import PasswordModal from './PasswordModal';
+import ErrorMsg from '@/components/SignUpPage/ErrorMsg';
 
 type dataType = {
   name: string;
@@ -165,11 +166,7 @@ export default function EditProfileForm({
           />
           <button onClick={handleValidationCheck}>Validation Check</button>
         </InputBox>
-        {isUserAlready && (
-          <p>
-            <WarningIcon /> You can't use this nickname
-          </p>
-        )}
+        {isUserAlready && <ErrorMsg msg="You can't use this nickname" />}
         {isUserChecked && (
           <p className="success">Validation Checked Successfully</p>
         )}
@@ -208,13 +205,11 @@ const FieldBox = styled.div`
   }
 
   svg {
-    stroke: ${({ theme }) => theme.colors.gray500};
     stroke-width: 1;
     width: 1.6rem;
     height: 1.6rem;
     path {
       stroke-width: 1;
-      stroke: ${({ theme }) => theme.colors.gray500};
     }
     @media (max-width: 400px) {
       /* display: ; */
@@ -224,6 +219,7 @@ const FieldBox = styled.div`
   p {
     display: flex;
     align-items: center;
+    height: 3.6rem;
     gap: 1rem;
     font-size: 1.4rem;
     font-weight: 400;
