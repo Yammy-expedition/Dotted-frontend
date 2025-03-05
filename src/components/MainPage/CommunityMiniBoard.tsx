@@ -106,6 +106,14 @@ const CommunityList = styled.div`
         color: ${({ theme }) => theme.colors.gray700};
         font-size: 2rem;
 
+        @media (max-width: 1200px) {
+          font-size: 1.7rem;
+        }
+
+        @media (max-width: 500px) {
+          font-size: 1.4rem;
+        }
+
         > span {
           &.title {
             flex: 1;
@@ -131,7 +139,7 @@ const CommunityList = styled.div`
         &:last-child {
           display: flex;
           justify-content: end;
-          min-width: 7rem;
+          min-width: 8rem;
           margin-left: 2rem;
           line-height: 2rem;
         }
