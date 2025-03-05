@@ -38,8 +38,7 @@ const customStyles = {
 export default function AComment({
   comment,
   origin,
-  postIsMine,
-  postId
+  postIsMine
 }: {
   comment: Comment;
   postIsMine: boolean;

@@ -4,7 +4,6 @@ import BitrhIcon from '@/assets/svg/mypage/birth.svg?react';
 import KeyIcon from '@/assets/svg/mypage/key.svg?react';
 import NicknameIcon from '@/assets/svg/mypage/nickname.svg?react';
 import ProfileIcon from '@/assets/svg/mypage/profile.svg?react';
-import WarningIcon from '@/assets/svg/mypage/warning.svg?react';
 import ModalPortal from '@/components/common/portal/ModalPortal';
 import PasswordModal from './PasswordModal';
 import ErrorMsg from '@/components/SignUpPage/ErrorMsg';

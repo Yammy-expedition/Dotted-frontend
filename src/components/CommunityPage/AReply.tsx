@@ -36,7 +36,6 @@ const customStyles = {
 export default function AReply({
   reply,
   postIsMine,
-  rootComment,
   commentIsMine
 }: {
   reply: Comment;
