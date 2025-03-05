@@ -415,6 +415,7 @@ const Notice = styled.div`
     }
 
     max-width: 22.4rem;
+    color: ${({ theme }) => theme.colors.gray600};
 
     > span {
       &.PC {
