@@ -128,6 +128,7 @@ const PostingTitle = styled.div`
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 3rem;
 
     color: ${({ theme }) => theme.colors.gray700};
     font-size: 2rem;

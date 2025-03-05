@@ -160,6 +160,13 @@ const ItemInfo = styled.div`
   justify-content: space-between;
   align-items: stretch;
   gap: 1.2rem;
+  min-height: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @media (max-width: 460px) {
+    width: 100%;
+  }
 
   > div {
     display: flex;
