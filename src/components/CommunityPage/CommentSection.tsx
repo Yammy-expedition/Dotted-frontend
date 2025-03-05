@@ -97,6 +97,7 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
             origin={origin}
             postIsMine={post.is_mine}
             key={idx}
+            postId={post.id}
           />
         ))}
       </CommentsListWrapper>

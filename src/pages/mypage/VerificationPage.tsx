@@ -385,25 +385,52 @@ const AttatchImage = styled.div`
 `;
 
 const Notice = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2rem;
+  @media (max-width: 700px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
   position: relative;
   justify-content: space-evenly;
-  margin-bottom: 3.2rem;
+  margin-bottom: 6.2rem;
   > div {
     display: flex;
     flex-direction: column;
-
     align-items: center;
-    width: 22.4rem;
+
+    @media (max-width: 700px) {
+      align-items: start;
+      justify-content: center;
+    }
+
+    max-width: 22.4rem;
+    color: ${({ theme }) => theme.colors.gray600};
 
     > span {
-      color: ${({ theme }) => theme.colors.gray600};
+      &.PC {
+        @media (max-width: 700px) {
+          display: none;
+        }
+      }
+
+      &.Mobile {
+        display: none;
+        @media (max-width: 700px) {
+          display: block;
+        }
+      }
       text-align: center;
 
-      font-size: 1.4rem;
+      font-size: 20px;
+      @media (max-width: 700px) {
+        font-size: 17px;
+        position: absolute;
+        left: 13rem;
+      }
       font-style: normal;
       font-weight: 400;
-      line-height: 1.8rem; /* 180% */
+      line-height: 28px; /* 180% */
       letter-spacing: -0.2px;
 
       > span {

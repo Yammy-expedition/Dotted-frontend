@@ -34,6 +34,10 @@ const Title = styled.span`
   line-height: normal;
   letter-spacing: -2px;
   margin-bottom: 2.6rem;
+
+  @media (max-width: 600px) {
+    font-size: 25px;
+  }
 `;
 
 const Text = styled.span`
@@ -41,6 +45,9 @@ const Text = styled.span`
   text-align: center;
 
   font-size: 24px;
+  @media (max-width: 600px) {
+    font-size: 18px;
+  }
   font-style: normal;
   font-weight: 500;
   line-height: 36px; /* 150% */

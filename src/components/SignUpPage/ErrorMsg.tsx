@@ -7,19 +7,25 @@ interface ErrorMsgProps {
 
 export default function ErrorMsg({ msg }: ErrorMsgProps) {
   return (
-    <div
+    <ErrorWrapper
       style={{
         marginLeft: '0.7rem',
         display: 'flex',
-        alignItems: 'center',
-        gap: '1rem'
+        alignItems: 'center'
       }}
     >
       <ErrorMsgSVG />
       <ErrorText>{msg}</ErrorText>
-    </div>
+    </ErrorWrapper>
   );
 }
+
+const ErrorWrapper = styled.div`
+  gap: 1rem;
+  @media (max-width: 500px) {
+    gap: 0.5rem;
+  }
+`;
 
 const ErrorText = styled.span`
   color: var(--Semantic-Negative-900, #ea3729);
@@ -28,4 +34,8 @@ const ErrorText = styled.span`
   font-weight: 300;
   line-height: 36px; /* 225% */
   letter-spacing: -0.48px;
+
+  @media (max-width: 500px) {
+    font-size: 12px;
+  }
 `;

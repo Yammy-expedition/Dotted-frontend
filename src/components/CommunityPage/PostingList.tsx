@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Eye from '@/assets/svg/CommunityPage/Eye.svg?react';
 import { EachPost } from '@/types/CommunityPost';
 import { useNavigate } from 'react-router-dom';
 import { formatRelativeTime } from '@/utils/formatTime';
@@ -51,10 +50,10 @@ export default function PostingList({ pagedData }: PostingListProps) {
               <span>•</span>
               <span>by</span>
               <span className="nickname">{post.writer_nickname}</span>
-              <span>•</span>
+              {/* <span>•</span>
               <span>
                 <Eye /> {post.view_count}
-              </span>
+              </span> */}
             </PostingWriter>
           </PostingInfo>
         </li>
@@ -129,6 +128,7 @@ const PostingTitle = styled.div`
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 3rem;
 
     color: ${({ theme }) => theme.colors.gray700};
     font-size: 2rem;
