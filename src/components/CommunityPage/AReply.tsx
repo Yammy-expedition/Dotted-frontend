@@ -10,6 +10,7 @@ import { fetchWithAuth } from '@/utils/auth';
 import { formatRelativeTime } from '@/utils/formatTime';
 import Locker from '@/assets/svg/MarketPage/Locker.svg?react';
 import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
+import ReportFlag from '@/assets/svg/CommunityPage/ReportFlag.svg?react';
 
 interface ReplyLikeResponse {
   is_liked: boolean;
@@ -53,6 +54,10 @@ export default function AReply({
   const [isDeleted, setIsDeleted] = useState(reply.is_deleted);
   const moreWrapperRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
+
+  const [openReportModal, setOpenReportModal] = useState(false);
+  const [reportType, setReportType] = useState('');
+  const [reportContent, setReportContent] = useState('');
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -194,6 +199,52 @@ export default function AReply({
     }
   });
 
+  const reportMutation = useMutation<any, Error, void>({
+    mutationFn: async () => {
+      const dataToSend = {
+        report_type: reportType,
+        content_type: 'Comment', // 댓글 신고로 변경
+        object_id: reply.id,
+        reason: reportContent
+      };
+      return await fetchWithAuth<any>(
+        `${import.meta.env.VITE_API_DOMAIN}/api/management/report`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataToSend)
+        }
+      );
+    },
+    onSuccess: () => {
+      setReportContent('');
+      setReportType('');
+      setOpenReportModal(false);
+      alert('Your report has been submitted.');
+    },
+    onError: (error) => {
+      console.error('❌ 신고 실패:', error);
+      alert('Failed to submit the report.');
+    }
+  });
+
+  // 신고 버튼 클릭 시 실행
+  const ReportMutation = () => {
+    if (!reportType) {
+      alert('Please select a report type.');
+      return;
+    }
+    if (!reportContent.trim()) {
+      alert('Please enter a reason for the report.');
+      return;
+    }
+    reportMutation.mutate();
+  };
+
+  const handleReportTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReportType(e.target.value);
+  };
+
   const handleEditSubmit = () => {
     if (!editedContent.trim()) return;
     updateCommentMutation.mutate();
@@ -206,11 +257,10 @@ export default function AReply({
 
   return (
     <Comments>
-      {/* 삭제되지 않은 경우에만 프로필 아이콘 렌더링 */}
+      {/* 프로필 아이콘 렌더링 */}
       {((postIsMine && !isDeleted) ||
         (!isDeleted &&
           (!reply.is_secret || reply.is_mine || commentIsMine))) && <Profile />}
-      <>{console.log({ postIsMine })}</>
       <div style={{ width: '100%' }}>
         {isEditing ? (
           <CommentInputWrapper>
@@ -243,8 +293,8 @@ export default function AReply({
             <CreatedAt>{formatRelativeTime(reply.created_at)}</CreatedAt>
           </>
         )}
-        {/* 삭제된 경우엔 좋아요, 수정, 삭제 버튼 모두 렌더링하지 않음 */}
-        {!isDeleted && postIsMine && (
+        {/* 버튼 렌더링: 삭제되지 않았고, 비밀 댓글이 아닐 경우 또는 postIsMine일 경우 */}
+        {!isDeleted && (!reply.is_secret || postIsMine) && (
           <ButtonWrapper>
             <button onClick={onClickReplyLike}>
               <Like className={`${isCommentLiked && 'commentLiked'}`} />
@@ -256,12 +306,24 @@ export default function AReply({
                   <More />
                   {openMore && (
                     <Menu>
-                      <>
-                        <div onClick={() => setIsEditing(true)}>Edit</div>
-                        <div onClick={() => setOpenNormalModal(true)}>
-                          Delete
+                      {commentIsMine ? (
+                        <>
+                          <div onClick={() => setIsEditing(true)}>Edit</div>
+                          <div onClick={() => setOpenNormalModal(true)}>
+                            Delete
+                          </div>
+                        </>
+                      ) : (
+                        // 내 댓글이 아닌 경우 "Report" 클릭 시 신고 모달 오픈
+                        <div
+                          onClick={() => {
+                            setOpenReportModal(true);
+                            setOpenMore(false);
+                          }}
+                        >
+                          Report
                         </div>
-                      </>
+                      )}
                     </Menu>
                   )}
                 </button>
@@ -270,26 +332,108 @@ export default function AReply({
           </ButtonWrapper>
         )}
       </div>
+      {/* 삭제 모달 */}
       <Modal
         isOpen={openNormalModal}
         style={customStyles}
         onRequestClose={() => setOpenNormalModal((prev) => !prev)}
-        contentLabel="example"
+        contentLabel="Delete Modal"
+      >
+        <AccessRestrictedWrapper>
+          <AccessRestrictedNormal>
+            <TextNormal>
+              <span>Are you sure you want to delete this comment?</span>
+            </TextNormal>
+          </AccessRestrictedNormal>
+          <ButtonBox>
+            <LaterButton onClick={() => setOpenNormalModal((prev) => !prev)}>
+              Cancel
+            </LaterButton>
+            <NowButton onClick={handleDelete}>
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+            </NowButton>
+          </ButtonBox>
+        </AccessRestrictedWrapper>
+      </Modal>
+      {/* 신고 모달 */}
+      <Modal
+        isOpen={openReportModal}
+        style={customStyles}
+        onRequestClose={() => setOpenReportModal((prev) => !prev)}
+        contentLabel="Report Modal"
       >
         <AccessRestrictedWrapper>
           <div>
-            <AccessRestrictedNormal>
-              <TextNormal>
-                <span>Are you sure you want to delete this comment?</span>
-              </TextNormal>
-            </AccessRestrictedNormal>
+            <AccessRestrictedReport>
+              <TextReport>
+                <span>
+                  <div>
+                    <ReportFlag />
+                  </div>
+                  Report
+                </span>
+                <span>Report type</span>
+                <form>
+                  <RadioWrapper>
+                    <HiddenRadio
+                      name="reportType"
+                      value="SPAM"
+                      checked={reportType === 'SPAM'}
+                      onChange={handleReportTypeChange}
+                    />
+                    <RadioLabel>Spam</RadioLabel>
+                  </RadioWrapper>
+                  <RadioWrapper>
+                    <HiddenRadio
+                      name="reportType"
+                      value="ABUSE"
+                      checked={reportType === 'ABUSE'}
+                      onChange={handleReportTypeChange}
+                    />
+                    <RadioLabel>Abuse</RadioLabel>
+                  </RadioWrapper>
+                  <RadioWrapper>
+                    <HiddenRadio
+                      name="reportType"
+                      value="SEXUAL"
+                      checked={reportType === 'SEXUAL'}
+                      onChange={handleReportTypeChange}
+                    />
+                    <RadioLabel>Sexual</RadioLabel>
+                  </RadioWrapper>
+                  <RadioWrapper>
+                    <HiddenRadio
+                      name="reportType"
+                      value="ILLEGAL"
+                      checked={reportType === 'ILLEGAL'}
+                      onChange={handleReportTypeChange}
+                    />
+                    <RadioLabel>Illegal</RadioLabel>
+                  </RadioWrapper>
+                  <RadioWrapper>
+                    <HiddenRadio
+                      name="reportType"
+                      value="OTHERS"
+                      checked={reportType === 'OTHERS'}
+                      onChange={handleReportTypeChange}
+                    />
+                    <RadioLabel>Others</RadioLabel>
+                  </RadioWrapper>
+                </form>
+              </TextReport>
+              <textarea
+                value={reportContent}
+                onChange={(e) => setReportContent(e.target.value)}
+              />
+              <div>
+                <span>Are you sure you want to report this?</span>
+              </div>
+            </AccessRestrictedReport>
             <ButtonBox>
-              <LaterButton onClick={() => setOpenNormalModal((prev) => !prev)}>
-                Cancel
+              <LaterButton onClick={() => setOpenReportModal((prev) => !prev)}>
+                No
               </LaterButton>
-              <NowButton onClick={handleDelete}>
-                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
-              </NowButton>
+              <NowButton onClick={ReportMutation}>Yes</NowButton>
             </ButtonBox>
           </div>
         </AccessRestrictedWrapper>
@@ -297,6 +441,212 @@ export default function AReply({
     </Comments>
   );
 }
+
+const HiddenRadio = styled.input.attrs({ type: 'radio' })`
+  appearance: none;
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 50%;
+  width: 1.25em;
+  height: 1.25em;
+  transition: border 0.5s ease-in-out;
+
+  &:checked {
+    border: 0.4em solid tomato;
+  }
+`;
+
+const RadioLabel = styled.span`
+  font-size: 1.6rem;
+  @media (max-width: 460px) {
+    font-size: 1.3rem;
+  }
+  color: #333;
+`;
+
+const RadioWrapper = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 8px;
+  position: relative;
+  gap: 1.2rem;
+`;
+
+const AccessRestrictedReport = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 3.1rem 5.5rem 3.1rem 5.5rem;
+
+  @media (max-width: 500px) {
+    padding: 2rem 3rem;
+  }
+  width: 100%;
+  max-width: 51rem;
+
+  flex-shrink: 0;
+  border-radius: 5px 5px 0 0;
+  background: ${({ theme }) => theme.colors.backgroundLayer1};
+
+  /* popup */
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.11);
+
+  > textarea {
+    border-radius: 5px;
+    padding: 1rem;
+    min-height: 9rem;
+    margin-bottom: 2.8rem;
+    @media (max-width: 500px) {
+      margin-bottom: 2rem;
+    }
+    resize: none;
+    width: 100%;
+    max-width: 40rem;
+    height: 5.7rem;
+
+    font-size: 1.6rem;
+    @media (max-width: 460px) {
+      font-size: 1.3rem;
+    }
+  }
+
+  > div:last-child {
+    display: flex;
+    justify-content: center;
+
+    color: var(--Gray-Gray_light-gray-700_light, #464646);
+    text-align: center;
+
+    font-size: 1.4rem;
+    @media (max-width: 460px) {
+      font-size: 1.1rem;
+    }
+    font-style: normal;
+    font-weight: 400;
+    line-height: 3.4rem; /* 242.857% */
+    letter-spacing: -0.056rem;
+  }
+`;
+
+const TextReport = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  > span {
+    &:first-child {
+      display: flex;
+      gap: 1.2rem;
+      color: var(--Gray-Gray_light-gray-700_light, #464646);
+      text-align: center;
+
+      font-size: 2rem;
+      @media (max-width: 460px) {
+        font-size: 1.7rem;
+      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: 3.4rem; /* 170% */
+      letter-spacing: -0.08rem;
+    }
+
+    &:nth-child(2) {
+      color: ${({ theme }) => theme.colors.gray400};
+
+      font-size: 1.4rem;
+      @media (max-width: 460px) {
+        font-size: 1.1rem;
+      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: 3.4rem; /* 242.857% */
+      letter-spacing: -0.056rem;
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  > form {
+    margin-bottom: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+
+      color: ${({ theme }) => theme.colors.gray700};
+
+      font-size: 1.6rem;
+      @media (max-width: 460px) {
+        font-size: 1.3rem;
+      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: 3.4rem; /* 212.5% */
+      letter-spacing: -0.064rem;
+
+      > input {
+        &.custom-radio {
+          display: inline-flex;
+          align-items: center;
+          cursor: pointer;
+          margin-bottom: 0.8rem; /* 간격 조정 */
+        }
+
+        /* 라디오 버튼을 숨기고, 커스텀 모양을 만들어줄 예정 */
+        &.custom-radio input[type='radio'] {
+          appearance: none; /* 브라우저 기본 스타일 없애기 */
+          -webkit-appearance: none; /* 크롬/사파리 호환 */
+          width: 1.2rem;
+          height: 1.2rem;
+          margin: 0 0.6rem 0 0; /* 오른쪽 여백(텍스트와 간격) */
+          border: 2px solid #f68512; /* 주황색 테두리 */
+          border-radius: 50%; /* 동그라미 */
+          outline: none;
+          cursor: pointer;
+          position: relative; /* ::before를 위한 위치 기준 */
+        }
+
+        /* 선택되지 않은 상태(hover) 시 효과 */
+        @media (hover: hover) and (pointer: fine) {
+          &.custom-radio input[type='radio']:hover {
+            border-color: #f06f00; /* 살짝 어두운 주황 */
+          }
+        }
+
+        /* 라디오 버튼이 선택된 경우, 안에 점을 찍어준다 */
+        &.custom-radio input[type='radio']:checked::before {
+          content: '';
+          display: block;
+          width: 0.6rem;
+          height: 0.6rem;
+          border-radius: 50%;
+          background-color: #f68512; /* 주황색 내부 */
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        /* 라벨 텍스트 */
+        &.custom-radio span {
+          font-size: 1.4rem;
+          @media (max-width: 460px) {
+            font-size: 1.1rem;
+          }
+          color: #333;
+          user-select: none; /* 드래그 방지 (옵션) */
+        }
+      }
+    }
+  }
+`;
 
 const Comments = styled.li`
   display: flex;
@@ -397,6 +747,15 @@ const AccessRestrictedWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
+  }
 `;
 
 const AccessRestrictedNormal = styled.div`
@@ -437,6 +796,7 @@ const ButtonBox = styled.div`
   display: flex;
   width: 100%;
   height: 7.4rem;
+  max-width: 51rem;
   border-radius: 0 0 5px 5px;
   background: ${({ theme }) => theme.colors.backgroundLayer1};
   > div {

@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import CommentSVG from '@/assets/svg/CommunityPage/Comment.svg?react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
-import styled from 'styled-components';
 import More from '@/assets/svg/CommunityPage/More.svg?react';
+import ReportFlag from '@/assets/svg/CommunityPage/ReportFlag.svg?react';
+import styled from 'styled-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import ReplySection from './ReplySection';
 import Modal from 'react-modal';
@@ -58,6 +59,11 @@ export default function AComment({
   const [isSecret, setIsSecret] = useState(false);
   const moreWrapperRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
+
+  // 신고 관련 state
+  const [openReportModal, setOpenReportModal] = useState(false);
+  const [reportType, setReportType] = useState('');
+  const [reportContent, setReportContent] = useState('');
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -213,10 +219,8 @@ export default function AComment({
       );
     },
     onSuccess: () => {
-      // 로컬 상태 업데이트
       setEditedContent('Deleted Comment');
       setIsDeleted(true);
-      // 캐시 업데이트: 해당 댓글의 content, is_deleted, user_nickname 변경
       queryClient.setQueryData<PostDetail | MarketPostDetail>(
         ['postDetail', comment.post],
         (oldData) => {
@@ -247,9 +251,55 @@ export default function AComment({
     deleteMutation.mutate();
   };
 
+  // 신고하기 mutation
+  const reportMutation = useMutation<any, Error, void>({
+    mutationFn: async () => {
+      const dataToSend = {
+        report_type: reportType,
+        content_type: 'Comment',
+        object_id: comment.id,
+        reason: reportContent
+      };
+      return await fetchWithAuth<any>(
+        `${import.meta.env.VITE_API_DOMAIN}/api/management/report`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dataToSend)
+        }
+      );
+    },
+    onSuccess: () => {
+      setReportContent('');
+      setReportType('');
+      setOpenReportModal(false);
+      alert('Your report has been submitted.');
+    },
+    onError: (error) => {
+      console.error('❌ 신고 실패:', error);
+      alert('Failed to submit the report.');
+    }
+  });
+
+  // 신고 버튼 클릭 시 실행
+  const ReportMutation = () => {
+    if (!reportType) {
+      alert('Please select a report type.');
+      return;
+    }
+    if (!reportContent.trim()) {
+      alert('Please enter a reason for the report.');
+      return;
+    }
+    reportMutation.mutate();
+  };
+
+  const handleReportTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReportType(e.target.value);
+  };
+
   return (
     <Comments>
-      {/* 삭제된 댓글이면 프로필 아이콘 렌더링 안함 */}
       {(postIsMine || comment.is_mine || !comment.is_secret) && !isDeleted && (
         <Profile />
       )}
@@ -274,7 +324,6 @@ export default function AComment({
         ) : (
           <>
             <NicknameDiv>
-              {/* 삭제된 댓글이면 닉네임 'Unknown'으로 표시 */}
               {isDeleted ? 'Unknown' : comment.user_nickname}
               {comment.is_secret && (
                 <LockerDiv>
@@ -286,7 +335,6 @@ export default function AComment({
             <CreatedAt>{formatRelativeTime(comment.created_at)}</CreatedAt>
           </>
         )}
-        {/* 삭제된 댓글이라면 좋아요 및 대댓글 버튼 렌더링 안함 */}
         {!isDeleted &&
           (postIsMine || !comment.is_secret || comment.is_mine) && (
             <ButtonWrapper>
@@ -310,7 +358,14 @@ export default function AComment({
                           </div>
                         </>
                       ) : (
-                        <div>Report</div>
+                        <div
+                          onClick={() => {
+                            setOpenReportModal(true);
+                            setOpenMore(false);
+                          }}
+                        >
+                          Report
+                        </div>
                       )}
                     </Menu>
                   )}
@@ -322,7 +377,7 @@ export default function AComment({
           isOpen={openNormalModal}
           style={customStyles}
           onRequestClose={() => setOpenNormalModal((prev) => !prev)}
-          contentLabel="example"
+          contentLabel="Delete Modal"
         >
           <AccessRestrictedWrapper>
             <div>
@@ -340,6 +395,91 @@ export default function AComment({
                 <NowButton onClick={handleDelete}>
                   {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
                 </NowButton>
+              </ButtonBox>
+            </div>
+          </AccessRestrictedWrapper>
+        </Modal>
+        {/* 신고 모달 */}
+        <Modal
+          isOpen={openReportModal}
+          style={customStyles}
+          onRequestClose={() => setOpenReportModal((prev) => !prev)}
+          contentLabel="Report Modal"
+        >
+          <AccessRestrictedWrapper>
+            <div>
+              <AccessRestrictedReport>
+                <TextReport>
+                  <span>
+                    <div>
+                      <ReportFlag />
+                    </div>
+                    Report
+                  </span>
+                  <span>Report type</span>
+                  <form>
+                    <RadioWrapper>
+                      <HiddenRadio
+                        name="reportType"
+                        value="SPAM"
+                        checked={reportType === 'SPAM'}
+                        onChange={handleReportTypeChange}
+                      />
+                      <RadioLabel>Spam</RadioLabel>
+                    </RadioWrapper>
+                    <RadioWrapper>
+                      <HiddenRadio
+                        name="reportType"
+                        value="ABUSE"
+                        checked={reportType === 'ABUSE'}
+                        onChange={handleReportTypeChange}
+                      />
+                      <RadioLabel>Abuse</RadioLabel>
+                    </RadioWrapper>
+                    <RadioWrapper>
+                      <HiddenRadio
+                        name="reportType"
+                        value="SEXUAL"
+                        checked={reportType === 'SEXUAL'}
+                        onChange={handleReportTypeChange}
+                      />
+                      <RadioLabel>Sexual</RadioLabel>
+                    </RadioWrapper>
+                    <RadioWrapper>
+                      <HiddenRadio
+                        name="reportType"
+                        value="ILLEGAL"
+                        checked={reportType === 'ILLEGAL'}
+                        onChange={handleReportTypeChange}
+                      />
+                      <RadioLabel>Illegal</RadioLabel>
+                    </RadioWrapper>
+                    <RadioWrapper>
+                      <HiddenRadio
+                        name="reportType"
+                        value="OTHERS"
+                        checked={reportType === 'OTHERS'}
+                        onChange={handleReportTypeChange}
+                      />
+                      <RadioLabel>Others</RadioLabel>
+                    </RadioWrapper>
+                  </form>
+                </TextReport>
+                <textarea
+                  value={reportContent}
+                  onChange={(e) => setReportContent(e.target.value)}
+                />
+                <div>
+                  <span>Are you sure you want to report this?</span>
+                </div>
+              </AccessRestrictedReport>
+              <ButtonBox>
+                <LaterButton
+                  onClick={() => setOpenReportModal((prev) => !prev)}
+                >
+                  No
+                </LaterButton>
+                <NowButton onClick={ReportMutation}>Yes</NowButton>
               </ButtonBox>
             </div>
           </AccessRestrictedWrapper>
@@ -409,7 +549,6 @@ const SecretButton = styled.button<{ $isSecret: boolean }>`
   }
   font-style: normal;
   font-weight: 300;
-  line-height: normal;
   letter-spacing: -0.08rem;
   > svg {
     > path {
@@ -468,8 +607,6 @@ const CommentInputWrapper = styled.div`
     resize: none;
     border: none;
     padding: 2rem;
-    width: 100%;
-    height: 100%;
     border-radius: 0.4rem;
     background: ${({ theme }) => theme.colors.gray100};
     font-size: 1.6rem;
@@ -488,8 +625,6 @@ const CommentInputWrapper = styled.div`
       resize: none;
       border: none;
       padding: 2rem;
-      width: 100%;
-      height: 100%;
       border-radius: 0.4rem;
       background: ${({ theme }) => theme.colors.gray100};
       font-size: 1.6rem;
@@ -572,7 +707,6 @@ const Comments = styled.li`
       }
     }
   }
-
   > svg {
     width: 2.8rem;
     height: 2.8rem;
@@ -677,6 +811,15 @@ const AccessRestrictedWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
+  }
 `;
 
 const AccessRestrictedNormal = styled.div`
@@ -717,6 +860,7 @@ const ButtonBox = styled.div`
   display: flex;
   width: 100%;
   height: 7.4rem;
+  max-width: 51rem;
   border-radius: 0 0 5px 5px;
   background: ${({ theme }) => theme.colors.backgroundLayer1};
   > div {
@@ -758,4 +902,196 @@ const CreatedAt = styled.div`
   }
   font-weight: 300;
   letter-spacing: -0.03rem;
+`;
+
+const HiddenRadio = styled.input.attrs({ type: 'radio' })`
+  appearance: none;
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 50%;
+  width: 1.25em;
+  height: 1.25em;
+  transition: border 0.5s ease-in-out;
+
+  &:checked {
+    border: 0.4em solid tomato;
+  }
+`;
+
+const RadioLabel = styled.span`
+  font-size: 1.6rem;
+  @media (max-width: 460px) {
+    font-size: 1.3rem;
+  }
+  color: #333;
+`;
+
+const RadioWrapper = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 8px;
+  position: relative;
+  gap: 1.2rem;
+`;
+
+const AccessRestrictedReport = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 3.1rem 5.5rem 3.1rem 5.5rem;
+
+  @media (max-width: 500px) {
+    padding: 2rem 3rem;
+  }
+  width: 100%;
+  max-width: 51rem;
+  flex-shrink: 0;
+  border-radius: 5px 5px 0 0;
+  background: ${({ theme }) => theme.colors.backgroundLayer1};
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.11);
+
+  > textarea {
+    border-radius: 5px;
+    padding: 1rem;
+    min-height: 9rem;
+    margin-bottom: 2.8rem;
+    @media (max-width: 500px) {
+      margin-bottom: 2rem;
+    }
+    resize: none;
+    width: 100%;
+    max-width: 40rem;
+    height: 5.7rem;
+    font-size: 1.6rem;
+    @media (max-width: 460px) {
+      font-size: 1.3rem;
+    }
+  }
+
+  > div:last-child {
+    display: flex;
+    justify-content: center;
+    color: var(--Gray-Gray_light-gray-700_light, #464646);
+    text-align: center;
+    font-size: 1.4rem;
+    @media (max-width: 460px) {
+      font-size: 1.1rem;
+    }
+    font-style: normal;
+    font-weight: 400;
+    line-height: 3.4rem;
+    letter-spacing: -0.056rem;
+  }
+`;
+
+const TextReport = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  > span {
+    &:first-child {
+      display: flex;
+      gap: 1.2rem;
+      color: var(--Gray-Gray_light-gray-700_light, #464646);
+      text-align: center;
+      font-size: 2rem;
+      @media (max-width: 460px) {
+        font-size: 1.7rem;
+      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: 3.4rem;
+      letter-spacing: -0.08rem;
+    }
+
+    &:nth-child(2) {
+      color: ${({ theme }) => theme.colors.gray400};
+      font-size: 1.4rem;
+      @media (max-width: 460px) {
+        font-size: 1.1rem;
+      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: 3.4rem;
+      letter-spacing: -0.056rem;
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  > form {
+    margin-bottom: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      color: ${({ theme }) => theme.colors.gray700};
+      font-size: 1.6rem;
+      @media (max-width: 460px) {
+        font-size: 1.3rem;
+      }
+      font-style: normal;
+      font-weight: 400;
+      line-height: 3.4rem;
+      letter-spacing: -0.064rem;
+
+      > input {
+        &.custom-radio {
+          display: inline-flex;
+          align-items: center;
+          cursor: pointer;
+          margin-bottom: 0.8rem;
+        }
+
+        &.custom-radio input[type='radio'] {
+          appearance: none;
+          -webkit-appearance: none;
+          width: 1.2rem;
+          height: 1.2rem;
+          margin: 0 0.6rem 0 0;
+          border: 2px solid #f68512;
+          border-radius: 50%;
+          outline: none;
+          cursor: pointer;
+          position: relative;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          &.custom-radio input[type='radio']:hover {
+            border-color: #f06f00;
+          }
+        }
+
+        &.custom-radio input[type='radio']:checked::before {
+          content: '';
+          display: block;
+          width: 0.6rem;
+          height: 0.6rem;
+          border-radius: 50%;
+          background-color: #f68512;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        &.custom-radio span {
+          font-size: 1.4rem;
+          @media (max-width: 460px) {
+            font-size: 1.1rem;
+          }
+          color: #333;
+          user-select: none;
+        }
+      }
+    }
+  }
 `;
