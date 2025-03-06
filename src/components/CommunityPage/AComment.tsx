@@ -504,7 +504,7 @@ export default function AComment({
                   $isSecret={isSecret}
                 >
                   <Locker />
-                  secret comment
+                  <span>secret comment</span>
                 </SecretButton>
               )}
             </label>
@@ -542,17 +542,25 @@ const SecretButton = styled.button<{ $isSecret: boolean }>`
   color: ${({ theme, $isSecret }) =>
     $isSecret ? theme.colors.purple600 : theme.colors.gray400};
   text-align: center;
+
   font-size: 1.6rem;
   @media (max-width: 460px) {
     font-size: 1.3rem;
   }
   font-style: normal;
   font-weight: 300;
+  line-height: normal;
   letter-spacing: -0.08rem;
   > svg {
     > path {
       fill: ${({ theme, $isSecret }) =>
         $isSecret ? theme.colors.purple600 : theme.colors.gray400};
+    }
+  }
+
+  > span {
+    @media (max-width: 700px) {
+      display: none;
     }
   }
 `;
@@ -599,33 +607,25 @@ const MoreWrapper = styled.div`
 const CommentInputWrapper = styled.div`
   width: 100%;
   height: 10rem;
-  display: flex;
-  gap: 1.8rem;
-  textarea {
-    width: 100%;
-    resize: none;
-    border: none;
-    padding: 2rem;
-    border-radius: 0.4rem;
-    background: ${({ theme }) => theme.colors.gray100};
-    font-size: 1.6rem;
-    @media (max-width: 460px) {
-      font-size: 1.3rem;
-    }
-    font-style: normal;
-    font-weight: 300;
-    letter-spacing: -0.08rem;
+
+  @media (max-width: 400px) {
+    height: 12rem;
   }
+  display: flex;
+  justify-content: space-between;
+  gap: 1.8rem;
   label {
     position: relative;
     width: 100%;
     textarea {
-      width: 100%;
       resize: none;
       border: none;
       padding: 2rem;
+      width: 100%;
+      height: 100%;
       border-radius: 0.4rem;
       background: ${({ theme }) => theme.colors.gray100};
+
       font-size: 1.6rem;
       @media (max-width: 460px) {
         font-size: 1.3rem;
