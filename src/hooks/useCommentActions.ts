@@ -123,16 +123,16 @@ export default function useCommentActions({
   });
 
   //--------------------------
-  // 대댓글 작성하기
+  // 댓글 작성하기
   //--------------------------
-  const recommentMutation = useMutation<
+  const commentMutation = useMutation<
     Comment,
     Error,
     { recomment: string; isSecret: boolean }
   >({
     mutationFn: async ({ recomment, isSecret }) => {
       const requestData = {
-        post: comment.post,
+        post: comment.post || null,
         content: recomment.trim(),
         parent: comment.id,
         is_secret: isSecret
@@ -280,7 +280,7 @@ export default function useCommentActions({
   return {
     likeMutation,
     updateMutation,
-    recommentMutation,
+    commentMutation,
     deleteMutation,
     reportMutation
   };

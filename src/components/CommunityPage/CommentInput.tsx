@@ -5,14 +5,14 @@ import styled from 'styled-components';
 type CommentInputProps = {
   commentState: CommentState;
   commentDispatch: React.Dispatch<CommentAction>;
-  handleRecommentSubmit: () => void;
+  handleCommentSubmit: () => void;
   origin?: string;
 };
 
 export default function CommentInput({
   commentState,
   commentDispatch,
-  handleRecommentSubmit,
+  handleCommentSubmit,
   origin
 }: CommentInputProps) {
   return (
@@ -31,7 +31,7 @@ export default function CommentInput({
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              handleRecommentSubmit();
+              handleCommentSubmit();
             }
           }}
         />
@@ -45,7 +45,7 @@ export default function CommentInput({
           </SecretButton>
         )}
       </label>
-      <CommentButton onClick={handleRecommentSubmit}>Reply</CommentButton>
+      <CommentButton onClick={handleCommentSubmit}>Reply</CommentButton>
     </CommentInputWrapper>
   );
 }

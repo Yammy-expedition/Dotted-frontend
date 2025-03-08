@@ -148,7 +148,8 @@ export default function VerificationPage() {
               <span>prove that you are a student at Sogang University.</span>
             </Guide>
             <Example>
-              ex. Student ID Card, Saint Main page Screenshot, Course Records
+              ex. Student ID Card, Saint Main page Screenshot, KLEC homepage
+              screenshot
             </Example>
             <Warnning>
               <div>

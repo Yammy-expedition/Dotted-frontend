@@ -8,7 +8,7 @@ export function useCommentHandlers(comment: Comment, postId: number) {
   const {
     likeMutation,
     updateMutation,
-    recommentMutation,
+    commentMutation,
     deleteMutation,
     reportMutation
   } = useCommentActions({ comment, postId });
@@ -34,9 +34,9 @@ export function useCommentHandlers(comment: Comment, postId: number) {
     });
   };
 
-  const handleRecommentSubmit = () => {
+  const handleCommentSubmit = () => {
     if (!commentState.recomment.trim()) return;
-    recommentMutation.mutate({
+    commentMutation.mutate({
       recomment: commentState.recomment,
       isSecret: commentState.isSecret
     });
@@ -69,7 +69,7 @@ export function useCommentHandlers(comment: Comment, postId: number) {
     modalDispatch,
     onClickCommentLike,
     handleEditSubmit,
-    handleRecommentSubmit,
+    handleCommentSubmit,
     handleDelete,
     ReportMutation
   };

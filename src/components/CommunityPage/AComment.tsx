@@ -2,7 +2,6 @@ import { Comment } from '@/pages/community/DetailCommunityPage';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
 
 import styled from 'styled-components';
-import ReplySection from './ReplySection';
 
 import CommentActions from './CommentActions';
 import CommentModals from './CommentModals';
@@ -10,17 +9,20 @@ import CommentContent from './CommentContent';
 import CommentInput from './CommentInput';
 import { useCommentHandlers } from '@/hooks/useCommentHandlers';
 import { useCommentQueries } from '@/hooks/useCommentQueries';
+import { ALLOWED_DEPTH } from './CommentSection';
 
 export default function AComment({
   comment,
   origin,
   postIsMine,
-  postId
+  postId,
+  depth = 0
 }: {
   comment: Comment;
   postIsMine: boolean;
   origin?: string;
   postId: number;
+  depth?: number;
 }) {
   const { updatedComment } = useCommentQueries(postId, comment);
   const {
@@ -30,7 +32,7 @@ export default function AComment({
     modalDispatch,
     onClickCommentLike,
     handleEditSubmit,
-    handleRecommentSubmit,
+    handleCommentSubmit,
     handleDelete,
     ReportMutation
   } = useCommentHandlers(updatedComment, postId);
@@ -55,6 +57,7 @@ export default function AComment({
               commentDispatch={commentDispatch}
               modalDispatch={modalDispatch}
               onClickCommentLike={onClickCommentLike}
+              depth={depth}
             />
           )}
 
@@ -65,26 +68,37 @@ export default function AComment({
           ReportMutation={ReportMutation}
         />
 
-        {commentState.isOpenRecomment && (
+        {commentState.isOpenRecomment && depth < ALLOWED_DEPTH && (
           <CommentInput
             commentState={commentState}
             commentDispatch={commentDispatch}
-            handleRecommentSubmit={handleRecommentSubmit}
+            handleCommentSubmit={handleCommentSubmit}
             origin={origin}
           />
         )}
-        {updatedComment.replies.length > 0 && (
-          <ReplySection
-            replies={updatedComment.replies}
-            postIsMine={postIsMine}
-            rootComment={comment.id}
-            commentIsMine={comment.is_mine}
-          />
+        {/* 답글 3스택 까지 */}
+        {updatedComment.replies.length > 0 && depth < ALLOWED_DEPTH && (
+          <ReplyList>
+            {updatedComment.replies.map((reply) => (
+              <AComment
+                key={reply.id}
+                comment={reply}
+                postIsMine={postIsMine}
+                postId={postId}
+                depth={depth + 1}
+                origin={origin}
+              />
+            ))}
+          </ReplyList>
         )}
       </div>
     </Comments>
   );
 }
+
+const ReplyList = styled.ul`
+  width: 100%;
+`;
 
 const Comments = styled.li`
   display: flex;

@@ -7,6 +7,7 @@ import { ModalAction, ModalState } from '@/reducers/modalReducer';
 import { useRef } from 'react';
 import { Comment } from '@/pages/market/DetailMarketPage';
 import useClickOutside from '@/hooks/useClickOutsize';
+import { ALLOWED_DEPTH } from './CommentSection';
 
 type CommentActionsProps = {
   updatedComment: Comment;
@@ -15,6 +16,7 @@ type CommentActionsProps = {
   commentDispatch: React.Dispatch<CommentAction>;
   modalDispatch: React.Dispatch<ModalAction>;
   onClickCommentLike: () => void;
+  depth: number;
 };
 
 export default function CommentActions({
@@ -23,7 +25,8 @@ export default function CommentActions({
   modalState,
   commentDispatch,
   modalDispatch,
-  onClickCommentLike
+  onClickCommentLike,
+  depth
 }: CommentActionsProps) {
   const moreWrapperRef = useRef<HTMLDivElement | null>(null);
   useClickOutside(moreWrapperRef, () => modalDispatch({ type: 'CLOSE_MORE' }));
@@ -35,11 +38,13 @@ export default function CommentActions({
         {updatedComment.like_count}
       </button>
 
-      <button onClick={() => commentDispatch({ type: 'TOGGLE_RECOMMENT' })}>
-        <CommentSVG
-          className={`${commentState.isOpenRecomment && 'recomment'}`}
-        />
-      </button>
+      {depth < ALLOWED_DEPTH && (
+        <button onClick={() => commentDispatch({ type: 'TOGGLE_RECOMMENT' })}>
+          <CommentSVG
+            className={`${commentState.isOpenRecomment && 'recomment'}`}
+          />
+        </button>
+      )}
 
       <MoreWrapper ref={moreWrapperRef}>
         <button onClick={() => modalDispatch({ type: 'TOGGLE_MORE' })}>

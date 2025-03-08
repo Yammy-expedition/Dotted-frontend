@@ -6,7 +6,9 @@ import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AComment from './AComment';
 import Locker from '@/assets/svg/MarketPage/Locker.svg?react';
-import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
+import { fetchWithAuth } from '@/utils/auth';
+
+export const ALLOWED_DEPTH = 2;
 
 interface CommentSectionProps {
   post: PostDetail | MarketPostDetail;
@@ -15,8 +17,8 @@ interface CommentSectionProps {
 
 export default function CommentSection({ post, origin }: CommentSectionProps) {
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState<Comment[]>(post.comments); // 댓글 상태
-  const [commentCount, setCommentCount] = useState(post.comment_count); // 댓글 개수 상태
+  const [comments, setComments] = useState<Comment[]>(post.comments);
+  const [commentCount, setCommentCount] = useState(post.comment_count);
   const [isSecret, setIsSecret] = useState(false);
   const queryClient = useQueryClient();
 
@@ -93,11 +95,12 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
       <CommentsListWrapper>
         {comments.map((commentItem, idx) => (
           <AComment
+            key={idx}
             comment={commentItem}
             origin={origin}
             postIsMine={post.is_mine}
-            key={idx}
             postId={post.id}
+            depth={0}
           />
         ))}
       </CommentsListWrapper>

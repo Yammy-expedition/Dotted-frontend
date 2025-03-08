@@ -10,6 +10,7 @@ import {
 } from '@/utils/auth';
 import { formatRelativeTime } from '@/utils/formatTime';
 import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '@/hooks/useNotification';
 
 export interface NotiList {
   id: number;
@@ -31,53 +32,46 @@ export interface AllInfoNotification {
   list: NotiList[];
 }
 
-export default function NotificatoinPage() {
-  const [notice, setNotice] = useState<AllInfoNotification | null>(null);
+export default function NotificationPage() {
   const navigate = useNavigate();
+  const {
+    data: notice,
+    deleteNotification,
+    markAsRead,
+    deleteAllNotifications,
+    markAllAsRead,
+    queryClient
+  } = useNotifications();
 
   useEffect(() => {
-    // 토큰이 없는 경우 연결하지 않음
-    let accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) return;
+
     const runSSE = async () => {
       const EventSourceConstructor = EventSourcePolyfill || NativeEventSource;
       const headers = { Authorization: `Bearer ${accessToken}` };
 
       const evtSource = new EventSourceConstructor(
         `${import.meta.env.VITE_API_DOMAIN}/api/notification/stream`,
-        { headers: headers, withCredentials: true }
+        { headers, withCredentials: true }
       );
 
-      // 토큰 만료 여부 체크, 만료되었다면 갱신 시도
-      if (isTokenExpired(accessToken)) {
-        try {
-          await refreshAccessToken();
-          accessToken = localStorage.getItem('accessToken');
-        } catch (error) {
-          console.error('토큰 갱신 실패:', error);
-          return;
-        }
-      }
-
-      // console.log('SSE 연결됨:', evtSource);
-
       evtSource.onmessage = (event) => {
+        console.log('Asdsad');
         try {
           const newEvent = JSON.parse(event.data);
-          // console.log(newEvent);
-          setNotice((prev) => {
-            if (prev === null) return newEvent;
+          queryClient.setQueryData(
+            ['notifications'],
+            (prev: AllInfoNotification | undefined) => {
+              if (!prev) return newEvent;
+              const updatedList = [newEvent.list[0], ...prev.list];
+              const uniqueList = Array.from(
+                new Map(updatedList.map((item) => [item.id, item])).values()
+              );
 
-            // 기존 리스트와 새 데이터 합치기
-            const updatedList = [newEvent.list[0], ...prev.list];
-
-            // id 기준 중복 제거
-            const uniqueList = Array.from(
-              new Map(updatedList.map((item) => [item.id, item])).values()
-            );
-
-            return { ...prev, list: uniqueList };
-          });
+              return { ...prev, list: uniqueList };
+            }
+          );
         } catch (err) {
           console.error('이벤트 데이터 파싱 에러:', err);
         }
@@ -86,122 +80,19 @@ export default function NotificatoinPage() {
       evtSource.onerror = async (err) => {
         console.error('SSE 에러:', err);
         evtSource.close();
-        // 1초 후 재연결 시도
         setTimeout(runSSE, 1000);
       };
 
       return () => {
         evtSource.close();
-        // console.log('SSE 연결 끊김');
       };
     };
 
     runSSE();
-  }, []);
-
-  async function handleDelete(notificationId: number): Promise<void> {
-    try {
-      // console.log(notificationId);
-      // 실제 API 주소에 맞게 수정 (예: /api/notification/123)
-      await fetchWithAuth<void>(
-        `${import.meta.env.VITE_API_DOMAIN}/api/notification/${notificationId}`,
-        {
-          method: 'DELETE'
-        }
-      );
-      setNotice((prev) => {
-        if (!prev) return prev;
-        const filtered = prev.list.filter((noti) => noti.id != notificationId);
-        return {
-          ...prev,
-          list: filtered,
-          unread_count: prev.unread_count - 1
-        };
-      });
-    } catch (error) {
-      console.error('알림 삭제 실패:', error);
-    }
-  }
-
-  async function handleRead(notificationId: number): Promise<void> {
-    try {
-      await fetchWithAuth<void>(
-        `${import.meta.env.VITE_API_DOMAIN}/api/notification/${notificationId}`,
-        {
-          method: 'PUT'
-        }
-      );
-
-      setNotice((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          list: prev?.list.map((noti) =>
-            noti.id === notificationId ? { ...noti, is_read: true } : noti
-          )
-        };
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  async function handleDeleteAll(): Promise<void> {
-    try {
-      await fetchWithAuth<void>(
-        `${import.meta.env.VITE_API_DOMAIN}/api/notification/all_delete`,
-        {
-          method: 'DELETE'
-        }
-      );
-
-      setNotice((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          list: [],
-          unread_count: 0
-        };
-      });
-
-      // console.log('모든 알림 삭제 성공');
-    } catch (error) {
-      console.error('모든 알림 삭제 실패:', error);
-    }
-  }
-
-  async function handleMarkAllRead(): Promise<void> {
-    try {
-      // 실제 API 주소에 맞게 수정
-      await fetchWithAuth<void>(
-        `${import.meta.env.VITE_API_DOMAIN}/api/notification/all`,
-        {
-          method: 'PUT'
-        }
-      );
-
-      // 읽음 처리 성공 시, state에서 모든 알림의 is_read를 true로
-      setNotice((prev) => {
-        if (!prev) return prev; // 이전 상태가 null이면 그대로 반환
-        const updatedList = prev.list.map((item) => ({
-          ...item,
-          is_read: true
-        }));
-        return {
-          ...prev,
-          list: updatedList,
-          unread_count: 0
-        };
-      });
-
-      // console.log('모든 알림 읽음 처리 성공');
-    } catch (error) {
-      console.error('모든 알림 읽음 처리 실패:', error);
-      // 오류 처리 로직 (알림창, 에러 메시지 등)
-    }
-  }
+  }, [queryClient]);
 
   const handleMarkRead = (id: number, url: string) => {
-    handleRead(id);
+    markAsRead(id);
     navigate(url);
   };
 
@@ -213,35 +104,33 @@ export default function NotificatoinPage() {
           Notification
         </Title>
         <ActionButton>
-          <ReadAll onClick={() => handleMarkAllRead()}>Read all</ReadAll>
-          <DeleteAll onClick={() => handleDeleteAll()}>Delete all</DeleteAll>
+          <ReadAll onClick={markAllAsRead}>Read all</ReadAll>
+          <DeleteAll onClick={deleteAllNotifications}>Delete all</DeleteAll>
         </ActionButton>
         <NotificationListWrapper>
           <ul>
-            {notice?.list.map((item, idx) => {
-              return (
-                <EachNotice
-                  key={idx}
-                  $isRead={item.is_read}
-                  onClick={() =>
-                    handleMarkRead(item.id, item.redirect_url.redirect_url)
-                  }
-                >
-                  <LeftDiv>
-                    <From>{item.notification_type}</From>
-                    <Content>{item.content}</Content>
-                  </LeftDiv>
-                  <RightDiv>
-                    <DeleteButtonWrapper>
-                      <div onClick={() => handleDelete(item.id)}>
-                        <Trashcan />
-                      </div>
-                    </DeleteButtonWrapper>
-                    <Date>{formatRelativeTime(item.created_at)}</Date>
-                  </RightDiv>
-                </EachNotice>
-              );
-            })}
+            {notice?.list.map((item) => (
+              <EachNotice
+                key={item.id}
+                $isRead={item.is_read}
+                onClick={() =>
+                  handleMarkRead(item.id, item.redirect_url.redirect_url)
+                }
+              >
+                <LeftDiv>
+                  <From>{item.notification_type}</From>
+                  <Content>{item.content}</Content>
+                </LeftDiv>
+                <RightDiv>
+                  <DeleteButtonWrapper>
+                    <div onClick={() => deleteNotification(item.id)}>
+                      <Trashcan />
+                    </div>
+                  </DeleteButtonWrapper>
+                  <Date>{formatRelativeTime(item.created_at)}</Date>
+                </RightDiv>
+              </EachNotice>
+            ))}
           </ul>
         </NotificationListWrapper>
       </Wrapper>
