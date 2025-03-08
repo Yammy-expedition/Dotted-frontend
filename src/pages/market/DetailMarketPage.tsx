@@ -53,7 +53,6 @@ export default function DetailMarketPage() {
   const { id } = useParams();
   const postId = Number(id);
   const [isScraped, setIsScraped] = useState(false);
-  const queryClient = useQueryClient();
 
   // API를 통해 상세 게시글을 가져옴 (fetchPostDetail 사용)
   const {
