@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import CommentSection from '@/components/CommunityPage/CommentSection';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import MarketPosting from '@/components/MarketPage/MarketPosting';
 import { fetchPostDetail, scrapPost } from '@/api/marketApi';
 
