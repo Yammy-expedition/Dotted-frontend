@@ -1,13 +1,9 @@
 import styled from 'styled-components';
 import Trashcan from '@/assets/svg/Notification/Trashcan.svg?react';
 import Bell from '@/assets/svg/Notification/Bell.svg?react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-import {
-  fetchWithAuth,
-  isTokenExpired,
-  refreshAccessToken
-} from '@/utils/auth';
+
 import { formatRelativeTime } from '@/utils/formatTime';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '@/hooks/useNotification';
