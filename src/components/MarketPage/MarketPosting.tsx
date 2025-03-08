@@ -196,7 +196,7 @@ export default function MarketPosting({
             </span>
           </Title>
           <Price>
-            ₩ {post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            ₩ {post.price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           </Price>
           <Writer>
             <div>

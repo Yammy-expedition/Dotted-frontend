@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import CommentSection from '@/components/CommunityPage/CommentSection';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import MarketPosting from '@/components/MarketPage/MarketPosting';
-import { fetchWithAuth } from '@/utils/auth'; // auth.ts 경로에 맞게 수정
+import { fetchPostDetail, scrapPost } from '@/api/marketApi';
 
 // -------------------- 타입 정의 --------------------
 export interface MarketPostImage {
@@ -54,23 +54,14 @@ export default function DetailMarketPage() {
   const postId = Number(id);
   const [isScraped, setIsScraped] = useState(false);
 
-  // API를 통해 상세 게시글을 가져옴 (fetchWithAuth 사용)
+  // API를 통해 상세 게시글을 가져옴 (fetchPostDetail 사용)
   const {
     data: post,
     isLoading,
     isError
   } = useQuery<MarketPostDetail, Error>({
     queryKey: ['postDetail', postId],
-    queryFn: () =>
-      fetchWithAuth<MarketPostDetail>(
-        `${import.meta.env.VITE_API_DOMAIN}/api/posting/market/${postId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
+    queryFn: () => fetchPostDetail(postId)
   });
 
   useEffect(() => {
@@ -79,27 +70,15 @@ export default function DetailMarketPage() {
     }
   }, [post]);
 
-  // -------------------- API 호출 함수 --------------------
-  // 게시글 상세 조회는 위의 useQuery에서 fetchWithAuth를 사용하여 호출함
-
-  // 스크랩 Mutation (fetchWithAuth 사용)
+  // 스크랩 Mutation
   const scrapMutation = useMutation({
     mutationFn: async () => {
       // fetchWithAuth 내부에서 토큰 관리가 수행됨
-      return await fetchWithAuth<any>(
-        `${import.meta.env.VITE_API_DOMAIN}/api/posting/${id}/scrap`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id })
-        }
-      );
+      return await scrapPost(postId);
     },
     onSuccess: (data) => {
       setIsScraped(data.is_scrapped);
-      // console.log(data);
+      // query cache 업데이트가 필요하다면 queryClient.invalidateQueries(['postDetail', postId]) 등을 사용
     },
     onError: (error: any) => {
       console.error(`Error: ${error.message}`);
