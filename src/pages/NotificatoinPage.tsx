@@ -1,27 +1,10 @@
 import styled from 'styled-components';
-import Trashcan from '@/assets/svg/Notification/Trashcan.svg?react';
 import Bell from '@/assets/svg/Notification/Bell.svg?react';
-import { useEffect } from 'react';
-import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
-
-import { formatRelativeTime } from '@/utils/formatTime';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '@/hooks/useNotification';
-
-export interface NotiList {
-  id: number;
-  notification_type: string;
-  actor: number;
-  content: string;
-  related_id: number;
-  created_at: string;
-  is_read: boolean;
-  redirect_url: {
-    redirect_url: string;
-    method: string;
-    token_required: string;
-  };
-}
+import useNotificationSSE from '@/hooks/useNotificationSSE';
+import NotificationItem from '@/components/Notification/NotificationItem';
+import { NotiList } from '@/types/NotiList';
 
 export interface AllInfoNotification {
   unread_count: number;
@@ -35,61 +18,10 @@ export default function NotificationPage() {
     deleteNotification,
     markAsRead,
     deleteAllNotifications,
-    markAllAsRead,
-    queryClient
+    markAllAsRead
   } = useNotifications();
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) return;
-
-    const EventSourceConstructor = EventSourcePolyfill || NativeEventSource;
-    const headers = { Authorization: `Bearer ${accessToken}` };
-
-    const evtSource = new EventSourceConstructor(
-      `${import.meta.env.VITE_API_DOMAIN}/api/notification/stream`,
-      { headers, withCredentials: true }
-    );
-
-    evtSource.onmessage = (event) => {
-      try {
-        const newEvent = JSON.parse(event.data);
-        queryClient.setQueryData(
-          ['notifications'],
-          (prev: AllInfoNotification | undefined) => {
-            if (!prev) return newEvent;
-            const updatedList = [newEvent.list[0], ...prev.list];
-            const uniqueList = Array.from(
-              new Map(updatedList.map((item) => [item.id, item])).values()
-            );
-
-            return { ...prev, list: uniqueList };
-          }
-        );
-      } catch (err) {
-        console.error('이벤트 데이터 파싱 에러:', err);
-      }
-    };
-
-    evtSource.onerror = async (err) => {
-      console.error('SSE 에러:', err);
-      evtSource.close();
-
-      // 1초 후 재연결
-      setTimeout(() => {
-        new EventSourceConstructor(
-          `${import.meta.env.VITE_API_DOMAIN}/api/notification/stream`,
-          { headers, withCredentials: true }
-        );
-      }, 1000);
-    };
-
-    // 컴포넌트 언마운트 시 SSE 연결 해제
-    return () => {
-      evtSource.close();
-      console.log('SSE 연결 해제됨');
-    };
-  }, [queryClient]);
+  useNotificationSSE();
 
   const handleMarkRead = (id: number, url: string) => {
     markAsRead(id);
@@ -110,26 +42,11 @@ export default function NotificationPage() {
         <NotificationListWrapper>
           <ul>
             {notice?.list.map((item) => (
-              <EachNotice
-                key={item.id}
-                $isRead={item.is_read}
-                onClick={() =>
-                  handleMarkRead(item.id, item.redirect_url.redirect_url)
-                }
-              >
-                <LeftDiv>
-                  <From>{item.notification_type}</From>
-                  <Content>{item.content}</Content>
-                </LeftDiv>
-                <RightDiv>
-                  <DeleteButtonWrapper>
-                    <div onClick={() => deleteNotification(item.id)}>
-                      <Trashcan />
-                    </div>
-                  </DeleteButtonWrapper>
-                  <Date>{formatRelativeTime(item.created_at)}</Date>
-                </RightDiv>
-              </EachNotice>
+              <NotificationItem
+                item={item}
+                handleMarkRead={handleMarkRead}
+                deleteNotification={deleteNotification}
+              />
             ))}
           </ul>
         </NotificationListWrapper>
@@ -253,83 +170,4 @@ const NotificationListWrapper = styled.div`
       border-bottom: 1px solid ${({ theme }) => theme.colors.gray400};
     }
   }
-`;
-
-const EachNotice = styled.li<{ $isRead: boolean }>`
-  cursor: pointer;
-  padding: 1.5rem 3rem;
-  display: flex;
-  justify-content: space-between;
-  background-color: ${({ theme, $isRead }) =>
-    $isRead ? theme.colors.backgroundLayer2 : theme.colors.purple100};
-  border-top: 1px solid ${({ theme }) => theme.colors.gray400};
-`;
-
-const LeftDiv = styled.div``;
-
-const RightDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const From = styled.div`
-  color: ${({ theme }) => theme.colors.purple600};
-
-  font-size: 1.6rem;
-  @media (max-width: 700px) {
-    font-size: 1.7rem;
-  }
-  font-style: normal;
-  font-weight: 500;
-  line-height: 3.6rem;
-  letter-spacing: -0.08rem;
-`;
-
-const Content = styled.div`
-  color: ${({ theme }) => theme.colors.gray700};
-
-  font-size: 2.4rem;
-  @media (max-width: 700px) {
-    font-size: 2.1rem;
-  }
-  font-style: normal;
-  font-weight: 500;
-  line-height: 3.6rem;
-  letter-spacing: -0.12rem;
-`;
-
-const DeleteButtonWrapper = styled.div`
-  display: flex;
-  justify-content: end;
-
-  > div {
-    cursor: pointer;
-    padding: 0.5rem;
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        border-radius: 100%;
-        background-color: ${({ theme }) => theme.colors.backgroundBase};
-        > svg > g > path {
-          stroke: ${({ theme }) => theme.colors.gray600};
-        }
-      }
-    }
-  }
-`;
-
-const Date = styled.div`
-  color: ${({ theme }) => theme.colors.gray400};
-  text-align: right;
-
-  width: 10rem;
-  font-size: 1.6rem;
-  @media (max-width: 700px) {
-    font-size: 1.3rem;
-  }
-  font-style: normal;
-  font-weight: 500;
-  line-height: 3.6rem;
-  letter-spacing: -0.08rem;
 `;

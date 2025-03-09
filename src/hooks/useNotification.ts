@@ -1,21 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth';
 
-export interface NotiList {
-  id: number;
-  notification_type: string;
-  actor: number;
-  content: string;
-  related_id: number;
-  created_at: string;
-  is_read: boolean;
-  redirect_url: {
-    redirect_url: string;
-    method: string;
-    token_required: string;
-  };
-}
-
 export interface AllInfoNotification {
   unread_count: number;
   list: NotiList[];
