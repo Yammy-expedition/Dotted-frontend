@@ -36,9 +36,7 @@ export default function MainPage() {
     <Main>
       <Wrapper>
         <Carousel />
-
         <Tips />
-
         <MiniBoardWrapper>
           <CommunityMiniBoard onItemClick={handleClick} />
           <MarketMiniBoard onItemClick={handleClick} />

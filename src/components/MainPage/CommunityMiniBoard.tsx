@@ -98,6 +98,7 @@ const CommunityList = styled.div`
       }
 
       > span {
+        line-height: 3rem;
         min-width: 0;
 
         display: flex;
@@ -118,6 +119,7 @@ const CommunityList = styled.div`
           &.title {
             flex: 1;
             min-width: 0;
+
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
