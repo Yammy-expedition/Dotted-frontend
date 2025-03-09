@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import Bell from '@/assets/svg/Notification/Bell.svg?react';
-import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '@/hooks/useNotification';
 import useNotificationSSE from '@/hooks/useNotificationSSE';
 import NotificationItem from '@/components/Notification/NotificationItem';
 import { NotiList } from '@/types/NotiList';
+import NotificationsActions from '@/components/Notification/NotificationsActions';
 
 export interface AllInfoNotification {
   unread_count: number;
@@ -12,21 +12,15 @@ export interface AllInfoNotification {
 }
 
 export default function NotificationPage() {
-  const navigate = useNavigate();
   const {
     data: notice,
     deleteNotification,
-    markAsRead,
     deleteAllNotifications,
-    markAllAsRead
+    markAllAsRead,
+    handleMarkRead
   } = useNotifications();
 
   useNotificationSSE();
-
-  const handleMarkRead = (id: number, url: string) => {
-    markAsRead(id);
-    navigate(url);
-  };
 
   return (
     <NotificationPageContainer>
@@ -35,10 +29,10 @@ export default function NotificationPage() {
           <Bell />
           Notification
         </Title>
-        <ActionButton>
-          <ReadAll onClick={markAllAsRead}>Read all</ReadAll>
-          <DeleteAll onClick={deleteAllNotifications}>Delete all</DeleteAll>
-        </ActionButton>
+        <NotificationsActions
+          markAllAsRead={markAllAsRead}
+          deleteAllNotifications={deleteAllNotifications}
+        />
         <NotificationListWrapper>
           <ul>
             {notice?.list.map((item) => (
@@ -54,55 +48,6 @@ export default function NotificationPage() {
     </NotificationPageContainer>
   );
 }
-
-const ActionButton = styled.div`
-  margin: 0.3rem 0 1rem 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  padding-right: 1rem;
-  gap: 1rem;
-`;
-
-const ReadAll = styled.button`
-  cursor: pointer;
-  color: ${({ theme }) => theme.colors.purple600};
-  text-align: center;
-
-  font-size: 1.6rem;
-  border-radius: 1.6rem;
-  padding: 0 1.5rem;
-
-  font-style: normal;
-  font-weight: 600;
-  line-height: 3.6rem; /* 225% */
-  letter-spacing: -0.048rem;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.purple100};
-    }
-  }
-`;
-
-const DeleteAll = styled.button`
-  cursor: pointer;
-  color: var(--Semantic-Negative-900, #ea3729);
-  text-align: center;
-
-  font-size: 1.6rem;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 3.6rem;
-  letter-spacing: -0.048rem;
-  border-radius: 1.6rem;
-  padding: 0 1.5rem;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--Semantic-Negative-100, #ffebe7);
-    }
-  }
-`;
 
 const NotificationPageContainer = styled.div`
   margin-top: 2.5rem;

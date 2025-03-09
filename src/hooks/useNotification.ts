@@ -1,30 +1,32 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchWithAuth } from '@/utils/auth';
+import { NotiList } from '@/types/NotiList';
+import { useNavigate } from 'react-router-dom';
 
 export interface AllInfoNotification {
   unread_count: number;
   list: NotiList[];
 }
 
-// 🔹 알림 데이터를 가져오는 API 요청 함수
+// 알림 데이터를 가져오자!
 const fetchNotifications = async (): Promise<AllInfoNotification> => {
   return fetchWithAuth<AllInfoNotification>(
     `${import.meta.env.VITE_API_DOMAIN}/api/notification`
   );
 };
 
-// 🔹 React Query를 활용한 커스텀 훅
 export const useNotifications = () => {
   const queryClient = useQueryClient();
-
-  // React Query로 알림 데이터 가져오기
+  const navigate = useNavigate();
   const query = useQuery({
     queryKey: ['notifications'],
     queryFn: fetchNotifications,
-    staleTime: 1000 * 60 * 5 // 5분 동안 캐싱 유지
+    staleTime: 1000 * 60 * 5
   });
 
+  //------------------------------------
   // 알림 삭제
+  //------------------------------------
   const deleteNotification = async (notificationId: number) => {
     await fetchWithAuth<void>(
       `${import.meta.env.VITE_API_DOMAIN}/api/notification/${notificationId}`,
@@ -45,7 +47,9 @@ export const useNotifications = () => {
     );
   };
 
+  //-----------------------------------
   // 알림 읽음 처리
+  //-----------------------------------
   const markAsRead = async (notificationId: number) => {
     await fetchWithAuth<void>(
       `${import.meta.env.VITE_API_DOMAIN}/api/notification/${notificationId}`,
@@ -66,7 +70,9 @@ export const useNotifications = () => {
     );
   };
 
+  //----------------------------------------
   // 모든 알림 삭제
+  //------------------------------------------
   const deleteAllNotifications = async () => {
     await fetchWithAuth<void>(
       `${import.meta.env.VITE_API_DOMAIN}/api/notification/all_delete`,
@@ -76,7 +82,9 @@ export const useNotifications = () => {
     queryClient.setQueryData(['notifications'], { list: [], unread_count: 0 });
   };
 
+  //----------------------------------------
   // 모든 알림 읽음 처리
+  //-----------------------------------------
   const markAllAsRead = async () => {
     await fetchWithAuth<void>(
       `${import.meta.env.VITE_API_DOMAIN}/api/notification/all`,
@@ -96,12 +104,17 @@ export const useNotifications = () => {
     );
   };
 
+  const handleMarkRead = (id: number, url: string) => {
+    markAsRead(id);
+    navigate(url);
+  };
+
   return {
     ...query, // data, isLoading, error 등 제공
     queryClient,
     deleteNotification,
-    markAsRead,
     deleteAllNotifications,
-    markAllAsRead
+    markAllAsRead,
+    handleMarkRead
   };
 };
