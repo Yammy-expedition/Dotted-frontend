@@ -6,7 +6,7 @@ import { fetchWithAuth } from '@/utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 // types/user.ts
 
@@ -51,7 +51,7 @@ export default function ProfileButton() {
     queryFn: fetchUserProfile
   });
   const moreWrapperRef = useRef<HTMLDivElement | null>(null);
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

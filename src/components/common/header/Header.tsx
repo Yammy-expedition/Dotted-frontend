@@ -2,13 +2,12 @@ import styled from 'styled-components';
 import HeaderNav from './header-items/HeaderNav';
 import AlarmButton from './header-items/AlarmButton';
 import ProfileButton from './header-items/ProfileButton';
-//import LanguageButton from './header-items/LanguageButton';
 import { useEffect, useState, useRef } from 'react';
 import SubHeader from './SubHeader';
 import { useNavigate } from 'react-router-dom';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { isTokenExpired, refreshAccessToken } from '@/utils/auth';
-import LanguageButton from './header-items/LanguageButton';
+// import LanguageButton from './header-items/LanguageButton';
 import { useTranslation } from 'react-i18next';
 
 export interface NotiList {
@@ -179,7 +178,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
               </LoginButton>
             </LoginSignup>
           )}
-          <LanguageButton />
+          {/* <LanguageButton /> */}
         </RightSection>
       </UpWrapper>
 
