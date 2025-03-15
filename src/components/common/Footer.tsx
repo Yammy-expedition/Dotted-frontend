@@ -2,8 +2,11 @@ import styled from 'styled-components';
 import Logo from './Logo';
 import Instagram from '@/assets/svg/footer/Instagram.svg?react';
 import Mail from '@/assets/svg/footer/Mail.svg?react';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <FooterContainer>
       <LeftSection>
@@ -16,13 +19,13 @@ export default function Footer() {
             href="https://rustic-tulip-dff.notion.site/Privacy-Policy-1a72493912ca808ab6eec4647468fb5c"
             target="_blank"
           >
-            Privacy Policy
+            {t('footer.privacy')}
           </a>
           <a
             href="https://rustic-tulip-dff.notion.site/Terms-of-Service-1a72493912ca80258a20e709cf6b9e27"
             target="_blank"
           >
-            Terms of Service
+            {t('footer.terms')}
           </a>
         </PolicyWrapper>
       </LeftSection>

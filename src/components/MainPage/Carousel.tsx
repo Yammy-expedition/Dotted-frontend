@@ -30,6 +30,15 @@ export default function Carousel() {
             <img src="https://i.imgur.com/BoS5hzk.png" alt="banner2" />
           </div>
         </SlideContent>
+        <SlideContent>
+          <div
+            onClick={() =>
+              navigate('https://join-dotted-73222.waveon.me/pages/0')
+            }
+          >
+            <img src="https://i.imgur.com/DuYzGO1.jpeg" alt="banner3" />
+          </div>
+        </SlideContent>
       </StyledSlider>
     </CarouselWrapper>
   );

@@ -9,10 +9,12 @@ import Culture from '@/assets/svg/MainPage/Culture.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { LoginModal } from '../common/ProtectedRoute';
+import { useTranslation } from 'react-i18next';
 
 export default function Tips() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const isLogined = () => {
     return !!localStorage.getItem('accessToken');
   };
@@ -25,31 +27,31 @@ export default function Tips() {
   };
   return (
     <TipsWrapper>
-      <Title>Tips for Sogang</Title>
+      <Title>{t('main.tips.title')}</Title>
       <Contents>
         <Item onClick={() => handleTipClick('/tips/sogang-map')}>
           <SogangMap />
-          <span>Sogang Map</span>
+          <span>{t('main.tips.sogangmap')}</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/restaurant')}>
           <Restaurant />
-          <span>Restaurant</span>
+          <span>{t('main.tips.restaurant')}</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/hospital')}>
           <Hospital />
-          <span>Hospital</span>
+          <span>{t('main.tips.hospital')}</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/faq')}>
           <FAQ />
-          <span>FAQ</span>
+          <span>{t('main.tips.faq')}</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/clubs')}>
           <Clubs />
-          <span>Clubs</span>
+          <span>{t('main.tips.clubs')}</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/culture')}>
           <Culture />
-          <span>Culture</span>
+          <span>{t('main.tips.culture')}</span>
         </Item>
       </Contents>
       {modalOpen && <LoginModal setModalOpen={setModalOpen} />}
