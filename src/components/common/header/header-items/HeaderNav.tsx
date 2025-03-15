@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,15 +9,21 @@ interface HeaderNavProps {
 export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const path = pathname.split('/')[1];
 
   const NavList = [
-    { name: 'ABOUT', defaultLink: '/about/onboarding' },
-    { name: 'TIPS', defaultLink: '/tips/restaurant' },
-    { name: 'COMMUNITY', defaultLink: '/community' },
-    { name: 'MARKET', defaultLink: '/market' }
+    { name: 'about', defaultLink: '/about/onboarding' },
+    { name: 'tips', defaultLink: '/tips/restaurant' },
+    { name: 'community', defaultLink: '/community' },
+    { name: 'market', defaultLink: '/market' }
   ];
+  const navList: Record<string, string> = {
+    about: t('header.about'),
+    tips: t('header.tips'),
+    community: t('header.community'),
+    market: t('header.market')
+  };
 
   function handleMouseEnter(e: React.MouseEvent<HTMLDivElement>) {
     setHoveredTab(e.currentTarget.innerText);
@@ -27,11 +34,11 @@ export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
       {NavList.map((nav, idx) => (
         <div
           key={idx}
-          className={path === nav.name.toLowerCase() ? 'selected' : ''}
+          className={path === nav.name ? 'selected' : ''}
           onMouseEnter={handleMouseEnter}
           onClick={() => navigate(nav.defaultLink)}
         >
-          {nav.name}
+          {navList[nav.name]}
         </div>
       ))}
     </NavWrapper>

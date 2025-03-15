@@ -1,0 +1,34 @@
+{
+  "header": {
+    "login": "Login",
+    "signup": "Sign up",
+    "about": "ABOUT",
+    "tips": "TIPS",
+    "community": "COMMUNITY",
+    "market": "MARKET"
+  },
+  "main": {
+    "tips": {
+      "title": "Tips for Sogang",
+      "sogangmap": "Sogang Map",
+      "restaurant": "Restaurant",
+      "hospital": "Hospital",
+      "faq": "FAQ",
+      "clubs": "Clubs",
+      "culture": "Culture"
+    },
+    "community": {
+      "more": "more"
+    },
+    "market": {
+      "more": "more",
+      "forsale": "For Sale",
+      "reserved": "Reserved",
+      "soldout": "Sold Out"
+    }
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}

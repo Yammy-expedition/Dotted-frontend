@@ -8,6 +8,8 @@ import SubHeader from './SubHeader';
 import { useNavigate } from 'react-router-dom';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { isTokenExpired, refreshAccessToken } from '@/utils/auth';
+import LanguageButton from './header-items/LanguageButton';
+import { useTranslation } from 'react-i18next';
 
 export interface NotiList {
   id: number;
@@ -35,6 +37,8 @@ export default function Header({ scrollY }: { scrollY: number }) {
   const [notice, setNotice] = useState<AllInfoNotification | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const mobileNavRef = useRef<HTMLDivElement>(null);
+
+  const { t } = useTranslation();
 
   const isLogined = () => {
     return !!localStorage.getItem('accessToken');
@@ -163,19 +167,19 @@ export default function Header({ scrollY }: { scrollY: number }) {
             <>
               <AlarmButton notice={notice} />
               <ProfileButton />
-              {/* <LanguageButton /> */}
             </>
           ) : (
             <LoginSignup>
               <LoginButton onClick={() => navigate('/login')}>
-                <span>Login</span>
+                <span>{t('header.login')}</span>
               </LoginButton>
               <span>/</span>
               <LoginButton onClick={() => navigate('/sign-up')}>
-                <span>Sign Up</span>
+                <span>{t('header.signup')}</span>
               </LoginButton>
             </LoginSignup>
           )}
+          <LanguageButton />
         </RightSection>
       </UpWrapper>
 

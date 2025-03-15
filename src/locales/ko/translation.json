@@ -1,0 +1,35 @@
+{
+  "header": {
+    "login": "로그인",
+    "signup": "회원가입",
+    "about": "어바웃 Dotted",
+    "tips": "팁스 포 서강",
+    "community": "커뮤니티",
+    "market": "장터"
+  },
+  "main": {
+    "tips": {
+      "title": "팁스 포 서강",
+      "sogangmap": "서강대 지도",
+      "restaurant": "근처 맛집",
+      "hospital": "근처 병원",
+      "faq": "자주 묻는 질문",
+      "clubs": "동아리",
+      "culture": "서강 컬쳐"
+    },
+    "community": {
+      "title": "커뮤니티",
+      "more": "더보기"
+    },
+    "market": {
+      "more": "더보기",
+      "forsale": "판매중",
+      "reserved": "예약중",
+      "soldout": "판매완료"
+    }
+  },
+  "footer": {
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관"
+  }
+}
