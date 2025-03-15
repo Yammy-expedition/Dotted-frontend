@@ -5,12 +5,11 @@ import { MarketPostDetail } from '@/pages/market/DetailMarketPage';
 export async function fetchPostDetail(
   postId: number
 ): Promise<MarketPostDetail> {
+  const postType = window.location.pathname.includes('/market');
   return await fetchWithAuth<MarketPostDetail>(
-    `${import.meta.env.VITE_API_DOMAIN}/api/posting/market/${postId}`,
-    {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    }
+    postType
+      ? `${import.meta.env.VITE_API_DOMAIN}/api/posting/market/${postId}`
+      : `${import.meta.env.VITE_API_DOMAIN}/api/posting/${postId}`
   );
 }
 

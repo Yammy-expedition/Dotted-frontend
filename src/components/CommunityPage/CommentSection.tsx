@@ -125,7 +125,7 @@ export default function CommentSection({ post, origin }: CommentSectionProps) {
               $isSecret={isSecret}
             >
               <Locker />
-              <span>secret comment</span>
+              <span>Secret comment</span>
             </SecretButton>
           )}
         </label>

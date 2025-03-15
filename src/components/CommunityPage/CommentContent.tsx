@@ -45,14 +45,20 @@ export default function CommentContent({
   ) : (
     <>
       <NicknameDiv>
-        {updatedComment.is_deleted ? 'Unknown' : updatedComment.user_nickname}
+        {!updatedComment.is_deleted
+          ? updatedComment.is_secret
+            ? updatedComment.content
+            : updatedComment.user_nickname
+          : updatedComment.content}
         {updatedComment.is_secret && (
           <LockerDiv>
             <Locker />
           </LockerDiv>
         )}
       </NicknameDiv>
-      <ConetentDiv>{updatedComment.content}</ConetentDiv>
+      {!updatedComment.is_deleted && !updatedComment.is_secret && (
+        <ConetentDiv>{updatedComment.content}</ConetentDiv>
+      )}
       <CreatedAt>{formatRelativeTime(updatedComment.created_at)}</CreatedAt>
     </>
   );

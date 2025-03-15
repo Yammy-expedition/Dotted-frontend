@@ -81,6 +81,7 @@ export async function fetchWithAuth<T>(
   if (url.includes('create') || url.includes('update')) {
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }
+  console.log('fetching', url, finalOptions);
   let response = await fetch(url, finalOptions);
 
   // console.log('wait');
