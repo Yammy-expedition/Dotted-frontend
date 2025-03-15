@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function useSignUpModal(step: number, isSogangEmail: boolean) {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -15,6 +17,7 @@ export function useSignUpModal(step: number, isSogangEmail: boolean) {
     closeModal();
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    navigate('/login', { replace: true });
   };
 
   const onClickNow = () => {

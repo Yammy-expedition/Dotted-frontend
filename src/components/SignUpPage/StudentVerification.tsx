@@ -248,9 +248,11 @@ const StudentVerificationLayout = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 0 2rem;
+  overflow: auto;
 `;
 
 const StudentVerificationWrapper = styled.div`
+  margin-top: 5.6rem;
   max-width: 94.2rem;
 `;
 

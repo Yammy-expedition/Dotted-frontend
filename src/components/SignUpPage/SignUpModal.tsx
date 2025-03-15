@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Modal from 'react-modal';
 import AccessRestrictedModal from './AccessRestrictedModal';
 
@@ -14,8 +15,7 @@ const customStyles = {
   content: {
     width: '100%',
     height: '100%',
-    overflow: 'hidden',
-    overflowY: 'hidden' as 'auto' | 'hidden' | 'scroll' | 'visible' | undefined,
+    overflow: 'auto',
     backgroundColor: 'var(--Modal-Background)'
   }
 };
@@ -26,6 +26,18 @@ export default function SignUpModal({
   onClickLater,
   onClickNow
 }: SignUpModalProps) {
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden'; // 스크롤 막기
+    } else {
+      document.body.style.overflow = 'auto'; // 스크롤 다시 활성화
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto'; // 컴포넌트가 언마운트될 때 스크롤 복구
+    };
+  }, [isModalOpen]);
+
   return (
     <Modal
       isOpen={isModalOpen}

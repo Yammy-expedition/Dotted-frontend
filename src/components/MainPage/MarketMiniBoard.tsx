@@ -229,6 +229,12 @@ const ItemInfo = styled.div`
       font-weight: 300;
       letter-spacing: -1px;
       line-height: 2;
+
+      &.price {
+        @media (max-width: 1400px) {
+          font-size: 12px;
+        }
+      }
     }
   }
   > span {

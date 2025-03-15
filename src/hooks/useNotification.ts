@@ -75,7 +75,7 @@ export const useNotifications = () => {
   //------------------------------------------
   const deleteAllNotifications = async () => {
     await fetchWithAuth<void>(
-      `${import.meta.env.VITE_API_DOMAIN}/api/notification/all_delete`,
+      `${import.meta.env.VITE_API_DOMAIN}/api/notification/all`,
       { method: 'DELETE' }
     );
 

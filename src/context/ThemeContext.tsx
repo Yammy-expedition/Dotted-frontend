@@ -14,7 +14,7 @@ export const GlobalThemeProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [themeMode, setThemeMode] = useState('lightMode');
+  const [themeMode, setThemeMode] = useState('darkMode');
 
   //로컬스토리지에 저장된 테마가 없으면 lightTheme으로 설정
   useEffect(() => {

@@ -34,7 +34,7 @@ export default function Footer() {
           <a href="https://www.instagram.com/join.dotted/" target="_blank">
             <Instagram />
           </a>
-          <Mail />
+          {/* <Mail /> */}
         </SVGWrapper>
         <ContactWrapper>
           <span>Email</span>

@@ -112,10 +112,10 @@ export default function Posting({
           <span>•</span>
           <span>by</span>
           <span>{post.writer_nickname}</span>
-          <span>•</span>
+          {/* <span>•</span>
           <span>
             <Eye /> {post.view_count}
-          </span>
+          </span> */}
         </PostingWriter>
       </InfoWrapper>
 

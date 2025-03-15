@@ -40,6 +40,7 @@ export function useCommentHandlers(comment: Comment, postId: number) {
       recomment: commentState.recomment,
       isSecret: commentState.isSecret
     });
+    commentDispatch({ type: 'SET_RECOMMENT', payload: '' });
   };
 
   const handleDelete = () => {

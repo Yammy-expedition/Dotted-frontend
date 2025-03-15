@@ -54,19 +54,23 @@ content: none;
 table {
 border-collapse: collapse;
 border-spacing: 0;
+color: ${({ theme }) => theme.colors.gray800};
 }
 
 u {
   text-decoration:underline;
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 em{
   font-style:italic;
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 
 strong {
-    font-weight:bold
+    font-weight:bold;
+    color: ${({ theme }) => theme.colors.gray800};
 }
 
 
@@ -74,32 +78,38 @@ button {
   cursor:pointer;
   border:none;
   background-color:transparent;
+  color: ${({ theme }) => theme.colors.gray800};
   
 }
 
 h1 {
   font-size: 32px;
   line-height: 1.2; 
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 h2 {
   font-size: 24px;
   line-height: 1.3;
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 h3 {
   font-size: 18.72px;
   line-height: 1.3;
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 h4 {
   font-size: 16px;
   line-height: 1.4;
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 p {
   font-size: 16px;
   line-height: 1.6; 
+  color: ${({ theme }) => theme.colors.gray800};
 }
 
 
