@@ -33,7 +33,10 @@ export default function Carousel() {
         <SlideContent>
           <div
             onClick={() =>
-              navigate('https://join-dotted-73222.waveon.me/pages/0')
+              window.open(
+                'https://join-dotted-73222.waveon.me/pages/0',
+                '_blank'
+              )
             }
           >
             <img src="https://i.imgur.com/DuYzGO1.jpeg" alt="banner3" />
@@ -144,6 +147,16 @@ const SlideContent = styled.div`
   font-size: 2rem;
 
   > div {
+    max-width: 1440px;
+    > img {
+      @media (max-width: 900px) {
+        height: 15rem;
+      }
+
+      object-fit: cover;
+    }
+  }
+  > a {
     max-width: 1440px;
     > img {
       @media (max-width: 900px) {
