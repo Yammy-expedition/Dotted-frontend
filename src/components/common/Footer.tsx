@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Logo from './Logo';
 import Instagram from '@/assets/svg/footer/Instagram.svg?react';
-import Mail from '@/assets/svg/footer/Mail.svg?react';
 import { useTranslation } from 'react-i18next';
 
 export default function Footer() {

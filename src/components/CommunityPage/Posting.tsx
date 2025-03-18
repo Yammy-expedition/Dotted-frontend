@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Eye from '@/assets/svg/CommunityPage/Eye.svg?react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
 import Scrap from '@/assets/svg/CommunityPage/Scrap.svg?react';
