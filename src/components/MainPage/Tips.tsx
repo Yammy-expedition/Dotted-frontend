@@ -25,6 +25,10 @@ export default function Tips() {
       navigate(path);
     }
   };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <TipsWrapper>
       <Title>{t('main.tips.title')}</Title>
@@ -54,7 +58,7 @@ export default function Tips() {
           <span>{t('main.tips.culture')}</span>
         </Item>
       </Contents>
-      {modalOpen && <LoginModal setModalOpen={setModalOpen} />}
+      {modalOpen && <LoginModal closeModal={closeModal} />}
     </TipsWrapper>
   );
 }

@@ -3,10 +3,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Carousel from '@/components/MainPage/Carousel';
 import Tips from '@/components/MainPage/Tips';
-import { useNavigate } from 'react-router-dom';
-
-import { lazy, useState } from 'react';
+import { lazy } from 'react';
 import { LoginModal } from '@/components/common/ProtectedRoute';
+import useModal from '@/hooks/Mainpage/useModal';
+import useHandleNavigation from '@/hooks/Mainpage/useHandleNavigation';
 
 const CommunityMiniBoard = lazy(
   () => import('@/components/MainPage/CommunityMiniBoard')
@@ -16,21 +16,8 @@ const MarketMiniBoard = lazy(
 );
 
 export default function MainPage() {
-  const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const isLogined = () => {
-    return !!localStorage.getItem('accessToken');
-  };
-  const handleClick = (path: string) => {
-    // console.log('path', path);
-
-    if (!isLogined()) {
-      setModalOpen(true);
-    } else {
-      navigate(path);
-    }
-  };
+  const { modalOpen, openModal, closeModal } = useModal();
+  const handleClick = useHandleNavigation(openModal);
 
   return (
     <Main>
@@ -41,7 +28,7 @@ export default function MainPage() {
           <CommunityMiniBoard onItemClick={handleClick} />
           <MarketMiniBoard onItemClick={handleClick} />
         </MiniBoardWrapper>
-        {modalOpen && <LoginModal setModalOpen={setModalOpen} />}
+        {modalOpen && <LoginModal closeModal={closeModal} />}
       </Wrapper>
     </Main>
   );

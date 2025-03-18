@@ -59,7 +59,10 @@ const From = styled.div`
 
   font-size: 1.6rem;
   @media (max-width: 700px) {
-    font-size: 1.7rem;
+    font-size: 1.3rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 1rem;
   }
   font-style: normal;
   font-weight: 500;
@@ -73,6 +76,9 @@ const Content = styled.div`
   font-size: 2.4rem;
   @media (max-width: 700px) {
     font-size: 2.1rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 1.8rem;
   }
   font-style: normal;
   font-weight: 500;
@@ -108,6 +114,9 @@ const Date = styled.div`
   font-size: 1.6rem;
   @media (max-width: 700px) {
     font-size: 1.3rem;
+  }
+  @media (max-width: 500px) {
+    font-size: 1rem;
   }
   font-style: normal;
   font-weight: 500;

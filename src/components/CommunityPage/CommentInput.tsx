@@ -41,7 +41,7 @@ export default function CommentInput({
             $isSecret={commentState.isSecret}
           >
             <Locker />
-            <span>secret comment</span>
+            <span>Secret comment</span>
           </SecretButton>
         )}
       </label>

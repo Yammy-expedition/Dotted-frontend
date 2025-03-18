@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './header/Header';
+import useModal from '@/hooks/Mainpage/useModal';
 
 export default function ProtectedRoute({ children }: { children: any }) {
   const { pathname } = useLocation();
-  const [_, setModalOpen] = useState(false);
+  const { closeModal } = useModal();
   const [scrollY, __] = useState(0);
 
   //로그인 했으면 true, 안했으면 false
@@ -22,23 +23,19 @@ export default function ProtectedRoute({ children }: { children: any }) {
     return (
       <>
         <Header scrollY={scrollY} />
-        <LoginModal setModalOpen={setModalOpen} />
+        <LoginModal closeModal={closeModal} />
         {/* {children} */}
       </>
     );
   }
 }
 
-export const LoginModal = ({
-  setModalOpen
-}: {
-  setModalOpen: (modalOpen: boolean) => void;
-}) => {
+export const LoginModal = ({ closeModal }: { closeModal: () => void }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   function handleCloseClick(pathname: string) {
     if (pathname === '/') {
-      setModalOpen(false);
+      closeModal();
     } else {
       navigate('/');
     }

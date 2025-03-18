@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Eye from '@/assets/svg/CommunityPage/Eye.svg?react';
 import Profile from '@/assets/svg/CommunityPage/Profile.svg?react';
 import Like from '@/assets/svg/CommunityPage/Like.svg?react';
 import Scrap from '@/assets/svg/CommunityPage/Scrap.svg?react';
@@ -112,10 +111,10 @@ export default function Posting({
           <span>•</span>
           <span>by</span>
           <span>{post.writer_nickname}</span>
-          <span>•</span>
+          {/* <span>•</span>
           <span>
             <Eye /> {post.view_count}
-          </span>
+          </span> */}
         </PostingWriter>
       </InfoWrapper>
 
