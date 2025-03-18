@@ -31,16 +31,13 @@ export default function Carousel() {
           </div>
         </SlideContent>
         <SlideContent>
-          <div
-            onClick={() =>
-              window.open(
-                'https://join-dotted-73222.waveon.me/pages/0',
-                '_blank'
-              )
-            }
+          <a
+            href="https://join-dotted-73222.waveon.me/pages/0"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <img src="https://i.imgur.com/DuYzGO1.jpeg" alt="banner3" />
-          </div>
+          </a>
         </SlideContent>
       </StyledSlider>
     </CarouselWrapper>
