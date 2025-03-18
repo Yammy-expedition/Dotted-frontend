@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function useSignUp() {
   const { state } = useLocation();
-  const [step, setStep] = useState(4);
+  const [step, setStep] = useState(1);
   const [isSogangEmail, setIsSogangEmail] = useState(false);
   const [isCheckedTOS, setisCheckedTOS] = useState(false); // false
   const [isCheckedPP, setisCheckedPP] = useState(false); // false
