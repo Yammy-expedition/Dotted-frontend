@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import { isTokenExpired, refreshAccessToken } from '@/utils/auth';
 // import LanguageButton from './header-items/LanguageButton';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 export interface NotiList {
   id: number;
@@ -37,7 +37,7 @@ export default function Header({ scrollY }: { scrollY: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const mobileNavRef = useRef<HTMLDivElement>(null);
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   const isLogined = () => {
     return !!localStorage.getItem('accessToken');

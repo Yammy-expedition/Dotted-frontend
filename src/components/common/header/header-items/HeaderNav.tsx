@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ interface HeaderNavProps {
 export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const path = pathname.split('/')[1];
 
   const NavList = [

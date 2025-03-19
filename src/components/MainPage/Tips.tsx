@@ -9,12 +9,12 @@ import Culture from '@/assets/svg/MainPage/Culture.svg?react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { LoginModal } from '../common/ProtectedRoute';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 export default function Tips() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const isLogined = () => {
     return !!localStorage.getItem('accessToken');
   };
