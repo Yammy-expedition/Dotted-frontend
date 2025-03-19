@@ -31,31 +31,38 @@ export default function Tips() {
   };
   return (
     <TipsWrapper>
-      <Title>{t('main.tips.title')}</Title>
+      {/* <Title>{t('main.tips.title')}</Title> */}
+      <Title>Tips for Sogang</Title>
       <Contents>
         <Item onClick={() => handleTipClick('/tips/sogang-map')}>
           <SogangMap />
-          <span>{t('main.tips.sogangmap')}</span>
+          {/* <span>{t('main.tips.sogangmap')}</span> */}
+          <span>Sogang map</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/restaurant')}>
           <Restaurant />
-          <span>{t('main.tips.restaurant')}</span>
+          {/* <span>{t('main.tips.restaurant')}</span> */}
+          <span>Restaurant</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/hospital')}>
           <Hospital />
-          <span>{t('main.tips.hospital')}</span>
+          {/* <span>{t('main.tips.hospital')}</span> */}
+          <span>Hospital</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/faq')}>
           <FAQ />
-          <span>{t('main.tips.faq')}</span>
+          {/* <span>{t('main.tips.faq')}</span> */}
+          <span>FAQ</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/clubs')}>
           <Clubs />
-          <span>{t('main.tips.clubs')}</span>
+          {/* <span>{t('main.tips.clubs')}</span> */}
+          <span>Clubs</span>
         </Item>
         <Item onClick={() => handleTipClick('/tips/culture')}>
           <Culture />
-          <span>{t('main.tips.culture')}</span>
+          {/* <span>{t('main.tips.culture')}</span> */}
+          <span>Culture</span>
         </Item>
       </Contents>
       {modalOpen && <LoginModal closeModal={closeModal} />}

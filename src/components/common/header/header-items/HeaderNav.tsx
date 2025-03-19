@@ -19,10 +19,14 @@ export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
     { name: 'market', defaultLink: '/market' }
   ];
   const navList: Record<string, string> = {
-    about: t('header.about'),
-    tips: t('header.tips'),
-    community: t('header.community'),
-    market: t('header.market')
+    about: 'ABOUT',
+    tips: 'TIPS',
+    community: 'COMMUNITY',
+    market: 'MARKET'
+    // about: t('header.about'),
+    // tips: t('header.tips'),
+    // community: t('header.community'),
+    // market: t('header.market'),
   };
 
   function handleMouseEnter(e: React.MouseEvent<HTMLDivElement>) {
