@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ interface HeaderNavProps {
 export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const path = pathname.split('/')[1];
 
   const NavList = [
@@ -19,10 +19,14 @@ export default function HeaderNav({ setHoveredTab }: HeaderNavProps) {
     { name: 'market', defaultLink: '/market' }
   ];
   const navList: Record<string, string> = {
-    about: t('header.about'),
-    tips: t('header.tips'),
-    community: t('header.community'),
-    market: t('header.market')
+    about: 'ABOUT',
+    tips: 'TIPS',
+    community: 'COMMUNITY',
+    market: 'MARKET'
+    // about: t('header.about'),
+    // tips: t('header.tips'),
+    // community: t('header.community'),
+    // market: t('header.market'),
   };
 
   function handleMouseEnter(e: React.MouseEvent<HTMLDivElement>) {
