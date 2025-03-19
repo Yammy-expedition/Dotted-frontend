@@ -48,7 +48,6 @@ const CarouselWrapper = styled.section`
   border-radius: 5px;
   width: 100%;
   height: 24.9rem;
-  background-color: gray;
   @media (max-width: 900px) {
     height: 15rem;
   }
