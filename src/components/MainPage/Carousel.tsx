@@ -25,11 +25,11 @@ export default function Carousel() {
             <img src="https://i.imgur.com/RbKFnzZ.png" alt="banner1" />
           </div>
         </SlideContent>
-        <SlideContent>
+        {/* <SlideContent>
           <div onClick={() => navigate('/about/notice/1')}>
             <img src="https://i.imgur.com/BoS5hzk.png" alt="banner2" />
           </div>
-        </SlideContent>
+        </SlideContent> */}
         <SlideContent>
           <a
             href="https://join-dotted-73222.waveon.me/pages/0"
