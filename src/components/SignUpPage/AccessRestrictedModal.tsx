@@ -32,7 +32,7 @@ export default function AccessRestrictedModal({
             <span>
               <span>
                 <ColorPurple>Beta period</ColorPurple>: Free access to Community
-                and Market until June 24th without verification. After that
+                and Market until September 1st without verification. After that
                 date, only verified students will have full access.
               </span>
             </span>
@@ -67,7 +67,7 @@ export default function AccessRestrictedModal({
             <span>
               <span>
                 <ColorPurple>Beta period</ColorPurple>: Free access to Community
-                and Market until June 24th without verification. After that
+                and Market until September 1st without verification. After that
                 date, only verified students will have full access.
               </span>
             </span>
